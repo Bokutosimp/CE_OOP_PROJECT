@@ -1,9 +1,22 @@
-# This is OOP project built by KMITL students
+# CE_OOP_PROJECT
 
-## This project is a clone of EBAY website
+This project is a simplified clone of the eBay website, developed by KMITL students as part of an Object-Oriented Programming (OOP) course assignment.
 
-## Things to know
+## Features
 
-- this project made by student so don't expect much
-- this project not clone all the feature of ebay just some of it
-- this project is a project to sent to professor
+- **User Management**: Register and manage user accounts.
+- **Item Listings**: Create, view, and manage product listings.
+- **Bidding System**: Place bids on items and track bidding history.
+- **Shopping Cart**: Add items to a cart and proceed to checkout.
+- **Order Processing**: Manage orders from creation to completion.
+- **Discount Codes**: Apply discount codes during checkout for promotional offers.
+
+## Getting Started
+
+To run this project locally, ensure you have Python installed. Then, follow these steps:
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/Bokutosimp/CE_OOP_PROJECT.git
+   cd CE_OOP_PROJECT
+   ```
