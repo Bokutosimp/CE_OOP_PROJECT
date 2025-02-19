@@ -51,3 +51,6 @@ class BitItem:
     
     def is_ended(self):
         return self.__status == "Ended"
+    
+    def is_price_valid(self, price : float):
+        return price > self.__current_price
