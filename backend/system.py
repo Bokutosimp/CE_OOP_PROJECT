@@ -1,7 +1,7 @@
-from item import Item
-from user_class import User
-from discount_code import Code
-from category import Category
+from .item import Item
+from .user_class import User
+from .discount_code import Code
+from .category import Category
 
 class System:
    def __init__(self):

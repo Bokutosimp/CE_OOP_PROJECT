@@ -1,4 +1,4 @@
-from user_class import Seller
+from .user_class import Seller
 
 class Item:
    def __init__(self,name :str , price:float,amount:int, owner:Seller) :

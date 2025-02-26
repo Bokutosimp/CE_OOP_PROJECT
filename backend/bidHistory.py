@@ -1,4 +1,4 @@
-from item import Item
+from .item import Item
 class BidHistory:
     def __init__(self,item:Item):
         self.__item = item

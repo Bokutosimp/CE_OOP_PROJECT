@@ -1,7 +1,7 @@
-from item import Item
+from .item import Item
 from datetime import datetime
-from biddingHistory import BiddingHistory
-from user_class import User
+from .biddingHistory import BiddingHistory
+from .user_class import User
 
 class BitItem:
     def __init__(self, item : Item):
@@ -12,6 +12,7 @@ class BitItem:
         self.__status = "Not Started"
         self.__end_time = None
         self.__start_time = None
+        self.__picture = None
         
     def start(self):
         self.__start_time = datetime.now()

@@ -1,6 +1,6 @@
-from itemInCart import ItemInCart
-from discount_code import Code
-from user_class import User
+from .itemInCart import ItemInCart
+from .discount_code import Code
+from .user_class import User
 class order:
     def __init__(self,total_amount,shipping_fee,item_price,list_item:ItemInCart):
         self.__total_amount = total_amount

@@ -1,5 +1,5 @@
-from cart import Cart
-from item import Item
+from .cart import Cart
+from .item import Item
 
 
 class User:

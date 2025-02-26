@@ -1,4 +1,4 @@
-from user_class import Seller
+from .user_class import Seller
 
 class Code :
    def __init__(self,ID:str,name:str):

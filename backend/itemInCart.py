@@ -1,4 +1,4 @@
-from item import Item
+from .item import Item
 
 class ItemInCart:
    def __init__(self,item:Item,amount:int,isSelected:bool):
