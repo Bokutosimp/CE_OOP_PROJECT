@@ -1,3 +1,6 @@
 from fasthtml.common import *
 
-app,rt = fast_app()
+rt = fast_app()
+
+@rt('/buy')
+def get(): return Div('abc')

@@ -1,4 +1,4 @@
-from .cart import Cart
+from .item import Cart
 from .item import Item
 
 

@@ -1,14 +1,15 @@
-from .item import Item
-from .user_class import User
+# from .item import Item
+# from .user_class import User
 from .discount_code import Code
 from .category import Category
+from .item import *
 
 class System:
    def __init__(self):
-      self.__list_items = list[Item] = []
-      self.__list_users = list[User] = []
-      self.__list_codes = list[Code] = []
-      self.__list_categories = list[Category] = []
+      self.__list_items:list[Item] = []
+      self.__list_users:list[User] = []
+      self.__list_codes:list[Code] = []
+      self.__list_categories:list[Category] = []
       
    def search_item(self,query:str = ''):
       #return list of items
