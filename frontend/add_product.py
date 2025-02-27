@@ -17,14 +17,14 @@ def add_product_page():
                    style="background: #0074bd; color: white; border-radius: 5px; padding: 10px; border: none; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s;"),
             enctype="multipart/form-data",
             style="display: flex; flex-direction: column; gap: 15px; width: 50%; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1); color: #222;",
-            action="/submit", method="post"
+            action="/seller/add/submit"
         ),
         style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
     )
 
-@rt('/submit', methods=['POST'])
+@rt('/seller/add/submit')
 def post():
-    print("🔥 /submit received a request!")  # Debug log
+    print("🔥 /submit received a request!")  
     return Main(
         H1("✅ Product Added Successfully!", 
            style="text-align: center; color: #222; background: #0074bd; padding: 20px; border-radius: 10px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);"),
