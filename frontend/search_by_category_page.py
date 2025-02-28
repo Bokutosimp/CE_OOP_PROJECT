@@ -1,7 +1,7 @@
 from fasthtml.common import *
 from mock.items import items
 
-def category_page(category):
+def search_by_category_page(category):
    filtered_items = [item for item in items if category in [cat for cat in item["category"]]]
    if filtered_items:
       return Div(

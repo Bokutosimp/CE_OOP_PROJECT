@@ -1,6 +1,5 @@
 from fasthtml.common import *
 from layout import layout
-from component.nav import nav
 from cart import cart
 from main_page import main_page
 from stylesheet import stylesheet
@@ -9,7 +8,7 @@ from add_product import *
 from add_bid_product import *
 from item_page import item_page
 from search_page import search_page
-from category_page import category_page
+from search_by_category_page import search_by_category_page
 
 css = stylesheet
 app,rt = fast_app(live=True,hdrs=(picolink,Style(css)))
@@ -26,7 +25,7 @@ def get():
 
 @rt('/category/{category}')
 def get(category:str):
-    return (layout(content=category_page(category)))
+    return (layout(content=search_by_category_page(category)))
 
 @rt('/search/')
 def get(keyword:str):
