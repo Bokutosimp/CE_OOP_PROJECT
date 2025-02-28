@@ -7,6 +7,7 @@ class Item:
       self.__amount = amount
       if not isinstance(owner,Seller): return "Owner must be a seller"
       self.__owner = owner
+      self.__category = None
       
    def check_availlability(self,quantity:int):
       pass
