@@ -32,6 +32,7 @@ class System:
    def save_discount_code(self,ID, discount_percent):
       pass
 
+
    def show_success_message():
       return "So good "
    
@@ -40,3 +41,5 @@ class System:
    
    def update_top_bidder(self):
       pass
+
+print('test gay')
