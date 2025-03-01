@@ -1,5 +1,4 @@
 from fasthtml.common import *
-import layout 
 from add_product import add_product_page
 
 app, rt = fast_app()
@@ -83,7 +82,7 @@ def product_management():
             Div(
                  Label(Input(type="number", id="amount", placeholder="Amount", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
                 
-                # ปุ่มปิด Popup
+              
                 Button("Submit", onclick="document.getElementById('popup').style.display='none'; document.getElementById('amount').value = '';",
                        style="background: #0074bd; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer; margin-top: 10px;"),
 
