@@ -6,7 +6,9 @@ from stylesheet import stylesheet
 from seller import product_management
 from add_product import *
 from add_bid_product import *
-
+from item_page import item_page
+from search_page import search_page
+from search_by_category_page import search_by_category_page
 
 css = stylesheet
 app,rt = fast_app(live=True,hdrs=(picolink,Style(css)))
@@ -19,9 +21,21 @@ def get():
 
 @rt('/cart')
 def get():
-    return (
-        layout(content=cart())
-    )
+    return (layout(content=cart()))
+
+@rt('/category/{category}')
+def get(category:str):
+    return (layout(content=search_by_category_page(category)))
+
+@rt('/search/')
+def get(keyword:str):
+    return layout(search_page(keyword))
+
+@rt('/item/{id}')
+def get(id:str):
+    return (layout(content=item_page(id)))
+    
+
 @rt('/seller')
 def get():
     return(
