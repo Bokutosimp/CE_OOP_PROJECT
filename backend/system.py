@@ -42,4 +42,9 @@ class System:
    def update_top_bidder(self):
       pass
 
+   def retrieve_bid_data() :
+      pass
+
+   def retrieve_order_data() :
+      pass
 print('test gay')

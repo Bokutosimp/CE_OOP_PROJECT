@@ -42,6 +42,12 @@ class Customer(User):
       #true --> add to cart
       #false --> item out of stock
       pass
+
+   def view_order_history() :
+      pass
+
+   def veiw_bid_history():
+      pass
       
 class Seller(Customer):
    def __init__(self, name, user_id, email, phone_number, username, password, birth_date,gender,address:str,e_bux:float,store_name:str,store_address:str):
