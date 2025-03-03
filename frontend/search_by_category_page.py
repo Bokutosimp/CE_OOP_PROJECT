@@ -2,7 +2,7 @@ from fasthtml.common import *
 from mock.items import items
 
 def search_by_category_page(category):
-   filtered_items = [item for item in items if category in [cat for cat in item["category"]]]
+   filtered_items = [item for item in items if category.lower() in [cat.lower() for cat in item["category"]]]
    if filtered_items:
       return Div(
          H2(category,style="color:black;"),
