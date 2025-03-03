@@ -9,6 +9,7 @@ from add_bid_product import *
 from item_page import item_page
 from search_page import search_page
 from search_by_category_page import search_by_category_page
+from create_category import *
 
 css = stylesheet
 app,rt = fast_app(live=True,hdrs=(picolink,Style(css)))
@@ -58,5 +59,12 @@ def get():
 def get():
     return layout(content=post_bid())
 
+@rt('/admin/create_category')
+def get():
+    return create_category()
+
+@rt('/admin/create_category')
+def post(category_name:str,category_description:str):
+    return post_create_category(category_name,category_description)
 
 serve(port=1111)

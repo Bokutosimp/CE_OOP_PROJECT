@@ -32,6 +32,9 @@ class System:
    def save_discount_code(self,ID, discount_percent):
       pass
 
+   def create_category(self, name:str, description:str):
+      self.__list_categories.append(Category(name,description))
+      return 'Category created'
 
    def show_success_message():
       return "So good "
