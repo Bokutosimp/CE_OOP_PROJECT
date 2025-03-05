@@ -1,7 +1,7 @@
 from .item import Item
 from datetime import datetime
 from .biddingHistory import BiddingHistory
-from .user_class import User
+from .item import User
 
 class BitItem:
     def __init__(self, item : Item):
