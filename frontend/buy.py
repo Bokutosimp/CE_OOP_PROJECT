@@ -1,9 +1,7 @@
 from fasthtml.common import *
 
-app, rt = fast_app()
 
-@rt('/')
-def get():
+def buy():
     return Body(
         
         Header(
@@ -85,5 +83,3 @@ def get():
         
         style="background-color: #EEEEEE; min-height: 100vh; margin: 0;",
     )
-
-serve()
