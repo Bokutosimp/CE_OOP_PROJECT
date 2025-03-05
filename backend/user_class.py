@@ -1,4 +1,4 @@
-from .cart import Cart
+from .item import Cart
 from .item import Item
 
 
@@ -41,6 +41,12 @@ class Customer(User):
       #call check_availlability
       #true --> add to cart
       #false --> item out of stock
+      pass
+
+   def view_order_history() :
+      pass
+
+   def view_bid_history():
       pass
       
 class Seller(Customer):

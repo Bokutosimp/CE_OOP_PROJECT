@@ -6,3 +6,7 @@ class BidHistory:
         
     def set_status(self,status:str):
         self.__status = status
+    
+
+
+    
