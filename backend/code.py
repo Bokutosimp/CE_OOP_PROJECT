@@ -15,3 +15,13 @@ class Discount(Code):
       super().__init__(ID,name)
       self.__percentage = percentage
       self.__owner = owner
+      
+def name(self):
+   return self.__name
+      
+def Verify(self,putin:str):
+   for i in name:
+      if i == putin:
+         return True
+      else:
+         return False
