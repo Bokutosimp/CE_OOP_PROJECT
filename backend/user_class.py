@@ -46,7 +46,7 @@ class Customer(User):
    def view_order_history() :
       pass
 
-   def veiw_bid_history():
+   def view_bid_history():
       pass
       
 class Seller(Customer):

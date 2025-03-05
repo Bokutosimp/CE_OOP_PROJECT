@@ -1,4 +1,5 @@
 from fasthtml.common import *
+from stylesheet import *
 
 def nav():
     return Nav(
@@ -7,7 +8,7 @@ def nav():
         Form(
           Input(type='text',placeholder='Search',id="keyword",
           style="""border-radius:50px; color:black; width:80%; border:solid 3px black; height:45px; margin-bottom:0px; background:white;""",),
-          Button('Search',style="""background:rgb(12, 18, 176); border-radius:50px; color:white; height:45px; padding:0; width:20%; margin-bottom:0px;""",type="submit"),
+          Button('Search', className = "button",style="""background:rgb(12, 18, 176); border-radius:50px; color:white; height:45px; padding:0; width:20%; margin-bottom:0px;""",type="submit"),
           method="GET",
           action="/search",
           style="width:100%; display:flex; flex-direction:row; gap:10px; margin-bottom:0px;",
