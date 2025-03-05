@@ -7,6 +7,8 @@ from seller import product_management
 from add_product import *
 from add_bid_product import *
 from item_page import item_page
+from bid_page import bid_page
+from review_page import review_page
 from search_page import search_page
 from search_by_category_page import search_by_category_page
 from create_category import *
@@ -36,6 +38,13 @@ def get(keyword:str):
 def get(id:str):
     return (layout(content=item_page(id)))
     
+@rt('/bid/{id}')
+def get(id:str):
+    return (layout(content=bid_page(id)))
+
+@rt('/review/{id}')
+def get(id:str):
+    return (layout(content=review_page(id)))
 
 @rt('/seller')
 def get():
