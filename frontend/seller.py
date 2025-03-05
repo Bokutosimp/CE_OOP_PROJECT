@@ -2,6 +2,7 @@ from fasthtml.common import *
 from stylesheet import *
 from add_product import add_product_page
 from mock.items import items
+from mock.users import users
 
 
 app, rt = fast_app()
@@ -22,7 +23,7 @@ def product_management():
                         style='width: 50px; height: 50px; object-fit: cover; border-radius: 50%;' 
                     ),
                     Div(
-                        H5('Gojo Satoru', style='font-size: 16px; margin: 0; color: #333;'), 
+                        H5(users[11]['store_name'], style='font-size: 16px; margin: 0; color: #333;'), 
                         P(
                             "อิมาเดโม เอากะ ซุนเดรุ อิมาเดโมเอาวะ ซุนเดรุ ดนนาอิโนริโม โคโตบะโม",
                             style='margin: 0; font-size: 14px; color: gray;'
@@ -43,7 +44,7 @@ def product_management():
                 """ 
             ),
             style="display: flex; justify-content: center; padding: 20px;"
-        ),
+        ), 
 
         Grid(
             *[

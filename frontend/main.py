@@ -12,6 +12,7 @@ from review_page import review_page
 from search_page import search_page
 from search_by_category_page import search_by_category_page
 from create_category import *
+from history_item import *
 
 css = stylesheet
 app,rt = fast_app(live=True,hdrs=(picolink,Style(css)))
@@ -75,5 +76,9 @@ def get():
 @rt('/admin/create_category')
 def post(category_name:str,category_description:str):
     return post_create_category(category_name,category_description)
+
+@rt('/history')
+def get():
+    return  layout(content=order_history_page())
 
 serve(port=1111)

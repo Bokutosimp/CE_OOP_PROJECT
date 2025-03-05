@@ -124,8 +124,6 @@ class Seller(Customer):
       super().__init__(customer.get_name, customer.get_user_id, customer.get_email, customer.get_phone_number, customer.get_username, customer.get_password,customer.get_birth_date,customer.get_gender,customer.get_address,customer.get_e_bux,customer.get_cart)
       self.__store_name = store_name
       self.__store_address = store_address
-      self.__description = description
-
 
    def __str__(self):
       return f"Role:seller Username:{self.get_username}"
