@@ -1,6 +1,6 @@
 from .itemInCart import ItemInCart
 from .discount_code import Code
-from .user_class import User
+from .item import User
 from .order import order
 from .shippingStatus import ShippingStatus
 
