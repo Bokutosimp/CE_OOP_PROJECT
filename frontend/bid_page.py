@@ -1,9 +1,9 @@
 from fasthtml.common import *
-from mock.bid_items import items
+from mock.bid_items import bid_items
 
 def bid_page(id):
    try:
-      item = [items[i] for i in range(len(items)) if items[i]['id'] == int(id)][0]
+      item = [bid_items[i] for i in range(len(bid_items)) if bid_items[i]['id'] == int(id)][0]
       return Div(
             Div(Img(src=item['image']),style="width:50%; height:auto; border-radius:15px; overflow:hidden;"),
             Div(

@@ -1,4 +1,4 @@
-items = [
+bid_items = [
     {"id": 1, "name": "Apple", "number": 0.5, "amount": 50, "category": ["Fruits"], "image": "https://cdn.pixabay.com/photo/2016/07/07/16/46/dice-1502706_640.jpg"},
     {"id": 2, "name": "Banana", "number": 0.9, "amount": 30, "category": ["Fruits", "Tropical Fruits"], "image": "https://cdn.pixabay.com/photo/2016/07/07/16/46/dice-1502706_640.jpg"},
     {"id": 3, "name": "Orange", "number": 1.1, "amount": 40, "category": ["Fruits", "Tropical Fruits"], "image": "https://cdn.pixabay.com/photo/2016/07/07/16/46/dice-1502706_640.jpg"},

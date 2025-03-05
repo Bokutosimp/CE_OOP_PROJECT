@@ -6,7 +6,4 @@ stylesheet ="""
                color:black; 
                text-decoration:none;
             }
-            ::placeholder{
-               color:black;
-            }  
          """
