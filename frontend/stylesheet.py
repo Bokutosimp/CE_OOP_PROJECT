@@ -12,5 +12,4 @@ stylesheet ="""
                border-radius: 50px; 
                padding: 8px 12px;
             }
-            
          """

@@ -12,6 +12,8 @@ from review_page import review_page
 from search_page import search_page
 from search_by_category_page import search_by_category_page
 from create_category import *
+sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
+from backend.system import main_system
 
 css = stylesheet
 app,rt = fast_app(live=True,hdrs=(picolink,Style(css)))
