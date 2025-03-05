@@ -1,4 +1,5 @@
 from fasthtml.common import *
+from stylesheet import *
 from add_product import add_product_page
 
 app, rt = fast_app()
@@ -28,8 +29,8 @@ def product_management():
                     ),
                     style='display: flex; align-items: center;'  
                 ),
-                Button("Add Product", onclick="window.location.href='/seller/add';", style="background: #0074bd; color: white; border-radius: 5px; padding: 10px 15px; border: none; margin-top: 10px;"),
-                Button("Add Bid Product", onclick="window.location.href='/seller/add_bid';", style="background: #0074bd; margin-left : 10px ;color: white; border-radius: 5px; padding: 10px 15px; border: none; margin-top: 10px;"),
+                Button("Add Product", onclick="window.location.href='/seller/add';", className = "button" , style="margin : 10px"),
+                Button("Add Bid Product", onclick="window.location.href='/seller/add_bid';", className = "button"),
                 style = """
                     width: 100%;    
                     border-radius: 8px; 
@@ -58,8 +59,8 @@ def product_management():
                         style='display: flex; align-items: center; padding: 10px;'
                     ),
                     Div(
-                        Button("Stock", onclick="document.getElementById('popup').style.display='flex'" ,style="background: #0074bd; color: white; border-radius: 5px; padding: 8px 12px; border: none;"),
-                        Button("Ship", style="background: #ff9900; color: white; border-radius: 5px; padding: 8px 12px; border: none; margin-left: 10px;"),
+                        Button("Stock", onclick="document.getElementById('popup').style.display='flex'" , className = "button"),
+                        Button("Ship", className = "button" , style="background-color : orange"),
                         style="display: flex; justify-content: space-between; margin-top: 15px;"
                     ),
                     style = """
