@@ -1,4 +1,4 @@
-from category import Category
+from .category import Category
 from typing import Literal
 
 class Item:
@@ -21,6 +21,18 @@ class Item:
    @property 
    def get_name(self)-> str:
       return self.__name
+   @property
+   def get_category(self) -> list[Category]:
+      return self.__category
+   @property
+   def get_price(self) -> float:
+      return self.__price
+   @property
+   def get_amount(self) -> int:
+      return self.__amount
+   @property
+   def get_image(self) -> str:
+      return self.__image
    def check_availlability(self,quantity:int):
       pass
 

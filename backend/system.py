@@ -1,6 +1,6 @@
-from discount_code import Code
-from category import Category
-from item import *
+from .discount_code import Code
+from .category import Category
+from .item import *
 import uuid
 
 class System:
@@ -21,18 +21,38 @@ class System:
    def get_categories(self,query:str = '') -> list[Category]:
       if(query == ''): return self.__list_categories
       else: return [category for category in self.__list_categories if query in category.get_name]
+      
+   def get_category_by_id(self,id:str):
+      for cat in self.__list_categories:
+         if cat.get_id == id:
+            return cat
+      return 'Not found'
    
-   def get_item(self,query:str = ''):
+   def get_items(self,query:str = ''):
       if(query == ''):
          return self.__list_items
       else:
          return [item for item in self.__list_items if query in item.get_name]
+      
+   def get_item_by_id(self,id:str):
+      for item in self.__list_items: 
+         if item.get_id == id: return item
+      return None
       
    def get_users(self,query:str = ''):
       if(query == ''):
          return self.__list_users
       else:
          return [user for user in self.__list_users if query in user.get_name]
+      
+   def get_items_by_category(self,category_id:str) -> list[Item]:
+      filtered_items:list[Item] = []
+      for item in self.__list_items:
+         for category in item.get_category:
+            print(category.get_id,category_id)
+            if category.get_id.lower() == category_id.lower():
+               filtered_items.append(item)
+      return filtered_items
    def get_user_by_id(self,id:str):
       for user in self.__list_users:
          if user.get_user_id == id:
@@ -65,7 +85,7 @@ class System:
       self.__list_codes.append(Code(name,discount_percent))
       return 'Code created'
       
-   def create_item(self,current_user_id:str,name:str, price:float, amount:int,category_id:list[str],img=''):
+   def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img=''):
       if not self.__validate_name(name,self.__list_items): raise Exception('Item already exist')
       current_user = self.get_user_by_id(current_user_id)
       if current_user == None: raise Exception('User not found')
@@ -76,7 +96,7 @@ class System:
             if category.get_id == id:
                category_list.append(category)
       if len(category_list) == 0: raise Exception('Category not found')
-      self.__list_items.append(Item(uuid.uuid4(),name,price,amount,current_user,category_list,img))
+      self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list))
       return 'Item created'
    
    def view_item(self,itemId:str):
@@ -114,9 +134,9 @@ class System:
 
 
 def createInstance():
-   from mock.items import items
-   from mock.category import categories
-   from mock.users import users
+   from .mock.items import items
+   from .mock.category import categories
+   from .mock.users import users
    main_system = System()
    #create category
    [main_system.create_category(category['id'],category['name'],category['description']) for category in categories]
@@ -134,8 +154,11 @@ def createInstance():
    [print(user) for user in users_instance]
    #create item
    for item in items:
-      main_system.create_item('sell001',item['name'],item['price'],item['amount'],['1','2'],item['image'])
-   items_instance = main_system.get_item()
+      main_system.create_item('sell001',item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])
+   items_instance = main_system.get_items()
    [print(item) for item in items_instance]
+   print('result of search by category',main_system.get_items_by_category(main_system.get_categories()[0].get_id))
+   print('result of search item by id',main_system.get_item_by_id(items_instance[0].get_id))
+   return main_system
 
 main_system = createInstance()
