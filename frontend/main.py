@@ -14,6 +14,7 @@ from search_by_category_page import search_by_category_page
 from create_category import *
 from history_item import *
 from buy import buy
+from login import *
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
@@ -25,7 +26,15 @@ app,rt = fast_app(live=True,hdrs=(picolink,Style(css)))
 def get():
     return (
         layout(content=main_page()))
-    
+
+@rt('/login')
+def get():
+    return login_form()
+
+@rt('/login')
+def post(session,username:str,password:str):
+    print(username,password)
+    return login_method(session,username,password)
 
 @rt('/cart')
 def get():
