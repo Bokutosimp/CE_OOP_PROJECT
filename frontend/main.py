@@ -13,6 +13,8 @@ from search_page import search_page
 from search_by_category_page import search_by_category_page
 from create_category import *
 from history_item import *
+from buy import buy
+
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
 
@@ -83,4 +85,7 @@ def post(category_name:str,category_description:str):
 def get():
     return  layout(content=order_history_page())
 
+@rt('/purchase')
+def get():
+    return layout(content=buy())
 serve(port=1111)
