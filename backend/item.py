@@ -64,10 +64,12 @@ class Customer(User):
       pass
       
 class Seller(Customer):
-   def __init__(self, name, user_id, email, phone_number, username, password, birth_date,gender,address:str,e_bux:float,store_name:str,store_address:str):
+   def __init__(self, name, user_id, email, phone_number, username, password, birth_date,gender,address:str,e_bux:float,store_name:str,store_address:str ,  description : str) :
       super().__init__(name, user_id, email, phone_number, username, password,birth_date,gender,address,e_bux)
       self.__store_name = store_name
       self.__store_address = store_address
+      self.__description = description
+
 
 
    def add_item(self,name : str, price : float, amount : int, category : str):
