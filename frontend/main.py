@@ -13,6 +13,8 @@ from search_page import search_page
 from search_by_category_page import search_by_category_page
 from create_category import *
 from history_item import *
+from Shipping_status import *
+from buy import *
 
 css = stylesheet
 app,rt = fast_app(live=True,hdrs=(picolink,Style(css)))
@@ -22,7 +24,14 @@ def get():
     return (
         layout(content=main_page()))
     
+@rt('/OrderHistory/ShippingStatus/{id}')
+def get(id:str):
+    return layout(content=check_status(id))
 
+@rt('/payment')
+def get():
+    return layout(content=payment())
+    
 @rt('/cart')
 def get():
     return (layout(content=cart()))

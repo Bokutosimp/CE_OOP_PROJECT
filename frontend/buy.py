@@ -2,9 +2,8 @@ from fasthtml.common import *
 
 app, rt = fast_app()
 
-@rt('/')
-def get():
-    return Body(
+def payment():
+     Body(
         
         Header(
             H1(
@@ -22,8 +21,8 @@ def get():
                 H2("Pay with", style="color: #000000;"),
                 Div(
                     Label(Input(type="radio", name="payment", value="E-bux"), "E-bux", style="color: #000000;"),
-                    Label(Input(type="radio", name="payment", value="Credit Card"), "Credit Card", style="color: #000000;"),
-                    Label(Input(type="radio", name="payment", value="PayPal"), "PayPal", style="color: #000000;"),
+                    Label(Input(type="radio", name="payment", value="NULL"), "NULL", style="color: #000000;"),
+                    Label(Input(type="radio", name="payment", value="null"), "null", style="color: #000000;"),
                     style="text-align: left; margin-bottom: 20px;",
                 ),
                 style="background-color: #EEEEEE; flex: 1; padding: 10px; height: 30%;",
@@ -68,14 +67,16 @@ def get():
             style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 100%; justify-content: center; align-items: center;",
         ),
         
-        # Button to Open Dialog
-        
-        
         # JavaScript for Dialog
         Script(
             """
             function openDialog() {
-                document.getElementById('dialog').style.display = 'flex';
+                const selectedPayment = document.querySelector('input[name="payment"]:checked');
+                if (selectedPayment && selectedPayment.value === 'E-bux') {
+                    document.getElementById('dialog').style.display = 'flex';
+                } else {
+                    alert('Please select E-bux as the payment method to proceed.');
+                }
             }
             function closeDialog() {
                 document.getElementById('dialog').style.display = 'none';
@@ -85,5 +86,3 @@ def get():
         
         style="background-color: #EEEEEE; min-height: 100vh; margin: 0;",
     )
-
-serve()

@@ -6,7 +6,8 @@ class Code :
       self.__name = name
       
    def verify_code(self,input):
-      pass
+      if input == self.__name:
+         return True
 
 class FreeDelivery(Code):
    def __init__(self,ID:str,name:str,minimum:float):
