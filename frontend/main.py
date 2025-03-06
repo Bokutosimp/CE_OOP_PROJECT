@@ -83,11 +83,10 @@ def get(id:str,session):
 def get(id:str,session):
     return (layout(review_page(id),session))
 
-
 @rt('/seller')
-@auth(['Seller'])
-def get(session):
-    return(layout(product_management(),session))
+@auth(['Seller', 'Admin'])
+def get(session, request: Request):
+    return layout(product_management(request), session)
 
 @rt('/seller/add')
 def get(session):

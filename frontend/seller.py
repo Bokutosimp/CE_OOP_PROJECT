@@ -3,11 +3,22 @@ from stylesheet import *
 from add_product import add_product_page
 from mock.items import items
 from mock.users import users
+from backend.system import *
 
 
 app, rt = fast_app()
-def product_management():
+
+
+
+def product_management(request: Request):
+    user_id = request.query_params.get("user_id", "์NO DATA!!!!")
+    # user_name = System.get_user_by_id(users,user_id)
+    for user in users :
+        if user['user_id'] == user_id :
+            seller = user
+
     return Main(
+        
         Div(
             H1("Product Management", style="text-align: center; margin-bottom: 20px; color: #222;"),  
             style="background: #f7f7f7; padding: 20px; border-bottom: 2px solid #ddd;"
@@ -22,7 +33,7 @@ def product_management():
                     #     style='width: 50px; height: 50px; object-fit: cover; border-radius: 50%;' 
                     # ),
                     Div(
-                        H5(users[11]['store_name'], style='font-size: 16px; margin: 0; color: #333;'), 
+                        H5(seller['store_name'], style='font-size: 16px; margin: 0; color: #333;'), 
                         P(
                             "อิมาเดโม เอากะ ซุนเดรุ อิมาเดโมเอาวะ ซุนเดรุ ดนนาอิโนริโม โคโตบะโม",
                             style='margin: 0; font-size: 14px; color: gray;'
@@ -74,7 +85,7 @@ def product_management():
                         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
                         margin-bottom: 20px;
                     """
-                ) for item in items
+                ) for item in items if item['owner'] == seller['user_id']
             ],
             style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px; background: #f7f7f7;"
         ),
@@ -102,5 +113,6 @@ def product_management():
             id="edit-popup",
             style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;"
         ),
-        style="background: #fff; min-height: 100vh; font-family: Arial, sans-serif;"
+        style="background: #fff; min-height: 100vh; font-family: Arial, sans-serif;" 
+        
     )
