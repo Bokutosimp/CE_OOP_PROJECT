@@ -97,11 +97,12 @@ class Admin(User):
 
       
 class Customer(User):
-   def __init__(self, name, user_id, email, phone_number, username, password, birth_date, gender,address:str,e_bux:float,cart:Cart):
+   def __init__(self, name, user_id, email, phone_number, username, password, birth_date, gender,address:str,e_bux:float=0,cart:Cart=Cart()):
       super().__init__(name, user_id, email, phone_number, username, password,birth_date,gender)
       self.__address = address
       self.__e_bux = e_bux
       self.__cart = cart
+      self.__order_history = []
       
    def __str__(self):
       return f"Role:customer Username:{self.get_username}"
