@@ -17,7 +17,5 @@ def login_method(session,username:str,password:str):
    if result == None:
       return Script("alert('Invalid username or password'); window.location.href = '/login';")
    else:
-      session.setdefault('user_id',result[0])
-      session.setdefault('user_role',result[1])
-      return Div(f'hello wolrd, {session['user_id']},{session['user_role']}')
-      
+      session['auth'] = result
+      return Redirect('/')

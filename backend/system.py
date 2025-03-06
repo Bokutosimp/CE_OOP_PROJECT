@@ -38,7 +38,7 @@ class System:
       if(query == ''):
          return self.__list_items
       else:
-         return [item for item in self.__list_items if query in item.get_name]
+         return [item for item in self.__list_items if query.lower() in item.get_name.lower()]
       
    def get_item_by_id(self,id:str):
       for item in self.__list_items: 
@@ -76,7 +76,9 @@ class System:
       self.__list_users.append(Admin(name, user_id, email, phone_number, username, password, birth_date,gender))
       return 'Admin created'
    
-   def create_customer(self,name, user_id, email, phone_number, username, password, birth_date,gender,address:str,e_bux:float):
+   def create_customer(self,name:str, user_id:str, email:str, phone_number:int, username:str, password:str, birth_date,gender,address:str,e_bux:float=0):
+      if not self.__validate_name(email,self.__list_users): raise Exception('Email already exist')
+      if not self.__validate_name(username,self.__list_users): raise Exception('username already exist')
       cart = Cart()
       self.__list_users.append(Customer(name, user_id, email, phone_number, username, password, birth_date,gender,address,e_bux,cart))
       return 'Customer created'
