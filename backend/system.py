@@ -108,12 +108,19 @@ class System:
       return 'Item created'
    
    def view_item(self,itemId:str):
-      #return item
-      pass
+      for item in self.__list_items :
+         if item.get_id == itemId  :
+           return item 
+      return "Item not found"
    
    
-   def save_item(self,name : str, price : float, amount : int, category : str):
-      pass
+   def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img=''):
+    try:
+        item_id = str(uuid.uuid4())
+        self.create_item(user_id, item_id, name, price, amount, [category_id], img)
+        return 'Item saved successfully'
+    except Exception as e:
+        return 'Error'
 
    def save_stock(self ,name : str , amount):
       pass
