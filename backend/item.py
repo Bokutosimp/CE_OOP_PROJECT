@@ -1,5 +1,6 @@
-from category import Category
+from .category import Category
 from typing import Literal
+from .system import *
 
 class Item:
    def __init__(self,id:str,name :str , price:float,amount:int, owner:object,image:str,category:list[Category]):
@@ -21,6 +22,18 @@ class Item:
    @property 
    def get_name(self)-> str:
       return self.__name
+   @property
+   def get_category(self) -> list[Category]:
+      return self.__category
+   @property
+   def get_price(self) -> float:
+      return self.__price
+   @property
+   def get_amount(self) -> int:
+      return self.__amount
+   @property
+   def get_image(self) -> str:
+      return self.__image
    def check_availlability(self,quantity:int):
       pass
 
@@ -85,11 +98,12 @@ class Admin(User):
 
       
 class Customer(User):
-   def __init__(self, name, user_id, email, phone_number, username, password, birth_date, gender,address:str,e_bux:float,cart:Cart):
+   def __init__(self, name, user_id, email, phone_number, username, password, birth_date, gender,address:str,e_bux:float=0,cart:Cart=Cart()):
       super().__init__(name, user_id, email, phone_number, username, password,birth_date,gender)
       self.__address = address
       self.__e_bux = e_bux
       self.__cart = cart
+      self.__order_history = []
       
    def __str__(self):
       return f"Role:customer Username:{self.get_username}"
@@ -128,13 +142,18 @@ class Seller(Customer):
    def __str__(self):
       return f"Role:seller Username:{self.get_username}"
 
-   def add_item(self,name : str, price : float, amount : int, category : str):
-      pass
+   def add_item(self, name : str, price : float , amount : int , category_id : str , img =''):
+      try :
+         System.save_item(self, self.get_user_id  ,name , price , amount , category_id , img)
+      except :
+         return 'Error'
+      
+      
 
    def add_stock(self ,name : str , amount):
       pass
 
-   def add_bid_item(self, name:str , start_price , amount : int , category : str):
+   def add_bid_item(self, name:str , start_price , amount : int , category : str) :
       pass
 
    def create_discount_code(self,ID, discount_percent):

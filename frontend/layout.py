@@ -1,9 +1,9 @@
 from fasthtml.common import *
 from component.nav import nav
 
-def layout(content):
+def layout(content,session):
    return Body(
-      nav(),
+      nav(session),
       content(),
       style=""""""
    )

@@ -1,9 +1,8 @@
 from fasthtml.common import *
 
-app, rt = fast_app()
 
-def payment():
-     Body(
+def buy():
+    return Body(
         
         Header(
             H1(
