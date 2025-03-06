@@ -1,6 +1,8 @@
 from .category import Category
 from typing import Literal
 from .system import *
+from datetime import datetime
+from .biddingHistory import BiddingHistory
 
 class Item:
    def __init__(self,id:str,name :str , price:float,amount:int, owner:object,image:str,category:list[Category]):
@@ -36,7 +38,6 @@ class Item:
       return self.__image
    def check_availlability(self,quantity:int):
       pass
-
 
 class ItemInCart:
    def __init__(self,item:Item,amount_in_cart:int,isSelected:bool):
@@ -161,3 +162,48 @@ class Seller(Customer):
    
    def confirm_bid():
       pass
+   
+class BitItem(Item):
+   def __init__(self, id : str, name : str, price : float, amount : int, owner : Seller, category : list[Category], image : str, end_time : datetime, start_time : datetime):
+      super().__init__(id, name, price, amount, owner, image, category)
+      self.__top_bidder = None
+      self.__bids_history = []
+      self.__status = "Not Started"
+      self.__end_time = end_time
+      self.__start_time = start_time
+      
+   def start(self):
+      self.__start_time = datetime.now()
+      self.__status = "Started"
+      
+   def end(self):
+      self.__end_time = datetime.now()
+      self.__status = "Ended"
+      
+   @property
+   def top_bidder(self):
+      return self.__top_bidder
+   
+   @property
+   def bids_history(self):
+      return self.__bids_history
+   
+   def set_top_bidder(self, user : User):
+      self.__top_bidder = user
+      
+   def set__price(self, price : float):
+      self.__price = price
+   
+   def add_history(self, bid_history : BiddingHistory):
+      self.__bids_history.append(bid_history)
+
+   @property
+   def is_started(self):
+      return self.__status == "Started"
+   
+   @property
+   def is_ended(self):
+      return self.__status == "Ended"
+   
+   def is_price_valid(self, price : float):
+      return price > self.__price

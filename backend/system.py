@@ -6,6 +6,7 @@ import uuid
 class System:
    def __init__(self):
       self.__list_items:list[Item] = []
+      self.__list_bid_items:list[BidItem] = []
       self.__list_users:list[User] = []
       self.__list_codes:list[Code] = []
       self.__list_categories:list[Category] = []
@@ -40,8 +41,19 @@ class System:
       else:
          return [item for item in self.__list_items if query.lower() in item.get_name.lower()]
       
+   def get_bid_items(self,query:str = ''):
+      if(query == ''):
+         return self.__list_bid_items
+      else:
+         return [item for item in self.__list_bid_items if query.lower() in item.get_name.lower()]   
+      
    def get_item_by_id(self,id:str):
       for item in self.__list_items: 
+         if item.get_id == id: return item
+      return None
+   
+   def get_bid_item_by_id(self,id:str):
+      for item in self.__list_bid_items: 
          if item.get_id == id: return item
       return None
       
@@ -59,6 +71,7 @@ class System:
             if category.get_id.lower() == category_id.lower():
                filtered_items.append(item)
       return filtered_items
+   
    def get_user_by_id(self,id:str):
       for user in self.__list_users:
          if user.get_user_id == id:
@@ -130,6 +143,33 @@ class System:
 
    def save_discount_code(self,ID, discount_percent):
       pass
+   
+   def get_top_bidder(self, item_id:str):
+      for item in self.__list_bid_items:
+         if item.get_id == item_id:
+            return item.get_top_bidder
+         
+   def start_bid(self, item_id:str):
+      for item in self.__list_bid_items:
+         if item.get_id == item_id:
+            item.start_bid()
+            return 'Bid started'
+         
+   def end_bid(self, item_id:str):
+      for item in self.__list_bid_items:
+         if item.get_id == item_id:
+            item.end_bid()
+            return 'Bid ended'
+         
+   def is_bid_started(self, item_id:str):
+      for item in self.__list_bid_items:
+         if item.get_id == item_id:
+            return item.is_started
+         
+   def is_bid_ended(self, item_id:str):
+      for item in self.__list_bid_items:
+         if item.get_id == item_id:
+            return item.is_ended
 
 
    def show_success_message():
@@ -150,6 +190,7 @@ class System:
 
 def createInstance():
    from .mock.items import items
+   from .mock.bid_items import bid_items
    from .mock.category import categories
    from .mock.users import users
    main_system = System()
@@ -174,6 +215,11 @@ def createInstance():
    [print(item) for item in items_instance]
    print('result of search by category',main_system.get_items_by_category(main_system.get_categories()[0].get_id))
    print('result of search item by id',main_system.get_item_by_id(items_instance[0].get_id))
+   #create bid item
+   for bid_item in bid_items:
+      main_system.create_item('sell001', bid_item['id'], bid_item['name'], bid_item['start_price'], bid_item['amount'], ['1', '2'], bid_item['image'])
+   bid_items_instance = main_system.get_bid_items()
+   [print(bid_item) for bid_item in bid_items_instance]
    return main_system
 
 main_system = createInstance()

@@ -1,6 +1,7 @@
 from datetime import datetime
-from .user_class import User
-class BidHistory:
+from .item import User
+
+class BiddingHistory:
     def __init__(self, user : User, bidAmount : float, bidTime : datetime):
         self.user = user
         self.bidAmount = bidAmount
