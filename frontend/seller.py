@@ -6,7 +6,6 @@ from mock.users import users
 
 
 app, rt = fast_app()
-
 def product_management():
     return Main(
         Div(
@@ -18,10 +17,10 @@ def product_management():
             Card(
                 H3("Profile", style="color: #0074bd;"),
                 Div(
-                    Img(
-                        src='https://i.pinimg.com/564x/f5/9f/5e/f59f5ece0a7984f20413a4e32a4f25a2.jpg',
-                        style='width: 50px; height: 50px; object-fit: cover; border-radius: 50%;' 
-                    ),
+                    # Img(
+                    #     src='https://i.pinimg.com/564x/f5/9f/5e/f59f5ece0a7984f20413a4e32a4f25a2.jpg',
+                    #     style='width: 50px; height: 50px; object-fit: cover; border-radius: 50%;' 
+                    # ),
                     Div(
                         H5(users[11]['store_name'], style='font-size: 16px; margin: 0; color: #333;'), 
                         P(
@@ -63,7 +62,7 @@ def product_management():
                     ),
                     Div(
                         Button("Stock", onclick="document.getElementById('popup').style.display='flex'" , className = "button"),
-                        Button("edit", onclick = "document.getElementById('edit-popup').style.display='flex'", className = "button" , style="background-color : green ; margin-left : -120px"),
+                        Button("edit", onclick = "document.getElementById('edit-popup').style.display='flex'", className = "button" , style="background-color : green ; margin-left : -35%"),
                         Button("Ship", className = "button" , style="background-color : orange"),
                         style="display: flex; justify-content: space-between; margin-top: 15px;"
                     ),
