@@ -34,7 +34,7 @@ class System:
       for cat in self.__list_categories:
          if cat.get_id == id:
             return cat
-      return 'Not found'
+      return {'success':False,'error':'Not found'}
    
    def get_items(self,query:str = ''):
       if(query == ''):
@@ -51,7 +51,7 @@ class System:
    def get_item_by_id(self,id:str):
       for item in self.__list_items: 
          if item.get_id == id: return item
-      return None
+      raise Exception('item not found')
    
    def get_bid_item_by_id(self,id:str):
       for bid_item in self.__list_bid_items:
@@ -78,7 +78,7 @@ class System:
       for user in self.__list_users:
          if user.get_user_id == id:
             return user
-      return None
+      raise Exception('user not found')
    
    #function to create instace
    def create_category(self, id:str,name:str, description:str):
@@ -149,7 +149,7 @@ class System:
         self.create_item(user_id, item_id, name, price, amount, [category_id], img)
         return 'Item saved successfully'
     except Exception as e:
-        return 'Error'
+        return {'error':False,'error':str(e)}
 
    def save_stock(self ,name : str , amount):
       pass
@@ -205,33 +205,27 @@ class System:
    
    #cart and item in cart
    def add_to_cart(self,item_id:str,user_id:str,quantity:int):
-      user = self.get_user_by_id(user_id)
-      item = self.get_item_by_id(item_id)
-      if user == None: return {'success':False,'error':'User not found'}
-      if item == None: return {'success':False,'error':'Item not found'}
       try:
+         user = self.get_user_by_id(user_id)
+         item = self.get_item_by_id(item_id)
          user.add_to_cart(item,quantity)
          return {"success":True}
       except Exception as e:
          return {'success':False,'error':str(e)}
       
    def remove_from_cart(self,item_id:str,user_id:str):
-      user = self.get_user_by_id(user_id)
-      item = self.get_item_by_id(item_id)
-      if not user: return {'success':False,'error':'User not found'}
-      if not item: return {'success':False,'error':'Item not found'}
       try:
+         user = self.get_user_by_id(user_id)
+         item = self.get_item_by_id(item_id)
          user.remove_from_cart(item)
          return {'success':True}
       except Exception as e:
          return {'success':False,'error':str(e)}
       
    def set_select_item(self,item_id:str,user_id:str,select:bool):
-      user = self.get_user_by_id(user_id)
-      item = self.get_item_by_id(item_id)
-      if not user: return {'success':False,'error':'User not found'}
-      if not item: return {'success':False,'error':'Item not found'}
       try:
+         user = self.get_user_by_id(user_id)
+         item = self.get_item_by_id(item_id)
          user.set_select_item(item,select)
          return {'success':True}
       except Exception as e:
@@ -243,10 +237,17 @@ class System:
       return user.get_cart
    
    def add_review(self,item:object,rating:int,review:str,user_id:str):
-      user = self.get_user_by_id(user_id)
-      if not user: return {'success':False,'error':'User not found'}
-      if not isinstance(user,Customer): return {'success':False,'error':'User is not a customer'}
-      item.add_review(rating,review,user)
+      try:
+         user = self.get_user_by_id(user_id)
+         if not isinstance(user,Customer): return {'success':False,'error':'User is not a customer'}
+         item.add_review(rating,review,user)
+      except Exception as e:
+         return {'success':False,'error':f'{str(e)}'}
+   
+   #buy item in cart
+   # def buy_item_in_cart(self,user_id:str):
+   #    user = self.get_user_by_id(user_id)
+   #    if user == None:
    
 def createInstance():
    from .mock.items import items
@@ -297,6 +298,9 @@ def createInstance():
       main_system.create_bid_item('sell002',bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'],bid_item['owner'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_bid_items()
    [print(bid_item) for bid_item in bid_items_instance]
+   #test buy item in cart
+   print("---###### buy item in cart of user cust001 #####---")
+   
    return main_system
 
 main_system = createInstance()
