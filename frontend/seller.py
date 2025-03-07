@@ -1,9 +1,10 @@
 from fasthtml.common import *
 from stylesheet import *
 from add_product import add_product_page
-from mock.items import items
 from mock.users import users
 from backend.system import *
+from backend.system import main_system
+
 
 
 app, rt = fast_app()
@@ -12,11 +13,8 @@ app, rt = fast_app()
 
 def product_management(request: Request):
     user_id = request.query_params.get("user_id", "์NO DATA!!!!")
-    # user_name = System.get_user_by_id(users,user_id)
-    for user in users :
-        if user['user_id'] == user_id :
-            seller = user
-
+    seller  = main_system.get_user_by_id(user_id)
+    load_items = main_system.get_items()         
     return Main(
         
         Div(
@@ -33,7 +31,7 @@ def product_management(request: Request):
                     #     style='width: 50px; height: 50px; object-fit: cover; border-radius: 50%;' 
                     # ),
                     Div(
-                        H5(seller['store_name'], style='font-size: 16px; margin: 0; color: #333;'), 
+                        H5(seller.get_store_name, style='font-size: 16px; margin: 0; color: #333;'), 
                         P(
                             "อิมาเดโม เอากะ ซุนเดรุ อิมาเดโมเอาวะ ซุนเดรุ ดนนาอิโนริโม โคโตบะโม",
                             style='margin: 0; font-size: 14px; color: gray;'
@@ -42,8 +40,8 @@ def product_management(request: Request):
                     ),
                     style='display: flex; align-items: center;'  
                 ),
-                Button("Add Product", onclick=f"window.location.href='/seller/add?user_id={seller['user_id']}';", className = "button" , style="margin : 10px"),
-                Button("Add Bid Product", onclick=f"window.location.href='/seller/add_bid?user_id={seller['user_id']}';", className = "button"),
+                Button("Add Product", onclick=f"window.location.href='/seller/add?user_id={seller.get_user_id}';", className = "button" , style="margin : 10px"),
+                Button("Add Bid Product", onclick=f"window.location.href='/seller/add_bid?user_id={seller.get_user_id}';", className = "button"),
                 style = """
                     width: 100%;    
                     border-radius: 8px; 
@@ -59,10 +57,10 @@ def product_management(request: Request):
         Grid(
             *[
                 Card(
-                    Span(H3(item["name"], style="color: #0074bd;"), P(item["amount"] , style="color:black ; font-weight: bold;") , style="display: flex; justify-content: space-between; margin-top: 15px;"),
+                    Span(H3(item.get_name, style="color: #0074bd;"), P(item.get_amount, style="color:black ; font-weight: bold;") , style="display: flex; justify-content: space-between; margin-top: 15px;"),
                     Div(
                         Img(
-                            src=item["image"],
+                            src=item.get_image,
                             style='width: 120px; height: 120px; object-fit: cover; border-radius: 8px; margin-right: 15px; border: 1px solid #ddd;' 
                         ),
                         P(
@@ -85,7 +83,7 @@ def product_management(request: Request):
                         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
                         margin-bottom: 20px;
                     """
-                ) for item in items if item['owner'] == seller['user_id']
+                ) for item in load_items if item.get_owner.get_user_id == user_id 
             ],
             style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px; background: #f7f7f7;"
         ),
