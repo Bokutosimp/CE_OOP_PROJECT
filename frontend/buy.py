@@ -1,5 +1,7 @@
 from fasthtml.common import *
-
+import os,sys
+sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
+from backend.system import main_system
 
 def buy():
     return Body(

@@ -1,4 +1,4 @@
-from .itemInCart import ItemInCart
+from .item import *
 from .discount_code import Code
 from .item import User
 class order:
@@ -17,13 +17,13 @@ class order:
     def apply_code(self,input_code):
         discount = 0
         for i in Code:
-            if input_code == i.name:
-                discount = i.Discount
+            if input_code == i.item.itemincart.name:
+                discount = i.item.itemincart.Discount
             else :
                 return f"This code doesn't exist"
 
         return self.__item_price - discount
                 
     def buy(self):
-        return User.Seatung(self.__item_price)
+        return User.item.itemincart.Seatung(self.__item_price)
     
