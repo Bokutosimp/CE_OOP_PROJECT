@@ -26,6 +26,7 @@ def add_product_page(request : Request):
             Label("Image:", Input(id="image", name="image", type="file", accept="image/*")),
             Button("Submit", type="submit"),
             enctype="multipart/form-data",
+            style="display: flex; flex-direction: column; gap: 15px; width: 50%; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1); color: #222;",
             action=f"/seller/add/submit?user_id={user_id}",
             method="post"
         )

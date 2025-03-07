@@ -115,13 +115,23 @@ class Customer(User):
       return f"Role:customer Username:{self.get_username}"
    @property
    def get_address(self) -> str:
-      return self.__address
+      return self.__address 
    @property
    def get_e_bux(self) -> float:
       return self.__e_bux
    @property
    def get_cart(self) -> Cart:
       return self.__cart
+   
+   
+   def add_order_history(self, order : dict):
+      self.__order_history.append(order)
+      return {'success':True}
+   
+   @property
+   def get_order_history(self) -> list:
+      return self.__order_history
+
    
    def SeaTung(self,amount):
       if amount > self.__e_bux :

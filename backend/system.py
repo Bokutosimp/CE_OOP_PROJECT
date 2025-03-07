@@ -138,37 +138,6 @@ class System:
          if item.get_id == itemId  :
            return item 
       return "Item not found"
-   
-
-   # def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img=''):
-   #    base_dir = os.path.dirname(os.path.abspath(__file__))  
-   #    items_file = os.path.join(base_dir, 'mock', 'items.json')  
-
-   #    category_list = []
-   #    category = self.get_category_by_id(category_id)
-
-   #    item_id = str(uuid.uuid4())
-   #    new_item = {
-   #       "id": item_id,
-   #       "name": name,
-   #       "price": price,
-   #       "amount": amount,
-   #       "owner": user_id,
-   #       "image": img,
-   #       "category": category_list
-   #    }
-      
-   #    if os.path.exists(items_file):
-   #       with open(items_file, 'r') as file:
-   #             items = json.load(file)
-      
-   #    items.append(new_item)
-   #    print(items)
-
-   #    with open(items_file, 'w') as file:
-   #        json.dump(items, file, indent=4)
-
-   #    return 'Item saved successfully'
 
    def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img : str):
       item_id = str(uuid.uuid4())
@@ -225,8 +194,11 @@ class System:
    def retrieve_bid_data() :
       pass
 
-   def retrieve_order_data() :
-      pass
+   def retrieve_order_data(self, user_id : str) :
+      user = self.get_user_by_id(user_id)
+      print(user.get_order_history)
+      return user.get_order_history
+      
 
 
 def createInstance():
@@ -238,7 +210,6 @@ def createInstance():
    #create category
    [main_system.create_category(category['id'],category['name'],category['description']) for category in categories]
    categories_instane = main_system.get_categories()
-   [print(category) for category in categories_instane]
    #create user
    for user in users:
       if user['role'] == 'admin':
@@ -247,8 +218,16 @@ def createInstance():
          main_system.create_customer(user['name'],user['user_id'],user['email'],user['phone_number'],user['username'],user['password'],user['birth_date'],user['gender'],user['address'],user['e_bux'])
          if user['role'] == 'seller':
             main_system.create_seller(main_system.get_user_by_id(user['user_id']),user['store_name'],user['store_address'])
+
+   for user in users :
+       if user['role'] == 'customer' or user['role'] == 'seller' :
+         customer = main_system.get_user_by_id(user['user_id'])
+         for order in user['order_history']:
+              customer.add_order_history(order)
+              print(user['user_id'])
+              print(customer.get_order_history)
+         
    users_instance = main_system.get_users()
-   [print(user) for user in users_instance]
    #create item
    for item in items:
       # if item['owner'] == 'sell001' :
@@ -261,14 +240,12 @@ def createInstance():
          
 
    items_instance = main_system.get_items()
-   [print(item) for item in items_instance]
    print('result of search by category',main_system.get_items_by_category(main_system.get_categories()[0].get_id))
    print('result of search item by id',main_system.get_item_by_id(items_instance[0].get_id))
    #create bid item
    for bid_item in bid_items:
       main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'],bid_item['owner'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_bid_items()
-   [print(bid_item) for bid_item in bid_items_instance]
    return main_system
 
 main_system = createInstance()

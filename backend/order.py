@@ -8,9 +8,26 @@ class order:
         self.__item_price = item_price
         self.__list_items = list_item
         
+    @property
     def item_price(self):
         return self.__item_price
     
+    @property
+    def get_total_amount(self):
+        return self.__total_amount
+    
+    @property
+    def get_shipping_fee(self):
+        return self.__shipping_fee
+    
+    @property
+    def get_list_items(self):
+        return self.__list_items
+    
+    @property
+    def item_price(self):
+        return self.__item_price
+
     def check_amount(self):
         pass
         

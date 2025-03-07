@@ -11,5 +11,13 @@ class order_history :
 
     def set_status(self , status : ShippingStatus) :
         self._shipping_status = status
-
+ 
+    @property
+    def get_order(self):
+        return self.__order 
+    
+    @property
+    def get_shipping_status(self):
+        return self._shipping_status
+    
     

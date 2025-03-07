@@ -114,8 +114,8 @@ def post(category_name:str,category_description:str):
     return post_create_category(category_name,category_description)
 
 @rt('/history')
-def get(session):
-    return layout(order_history_page(),session)
+def get(session, request: Request):
+    return layout(order_history_page(request),session)
 
 @rt('/purchase')
 def get(session):
