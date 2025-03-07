@@ -2,6 +2,7 @@ from .category import Category
 from typing import Literal
 import os,sys
 from .system import *
+from datetime import datetime
 
 class Item:
    def __init__(self,id:str,name :str , price:float,amount:int, owner:object,image:str,category:list[Category]):
@@ -10,7 +11,8 @@ class Item:
       self.__price = price
       self.__amount = amount
       self.__image = image
-      if not isinstance(owner,Seller): return "Owner must be a seller"
+      # if not isinstance(owner, Seller):
+      #       raise ValueError("Owner must be a seller")
       self.__owner = owner
       self.__category = category
    
@@ -41,7 +43,6 @@ class Item:
    
    def check_availlability(self,quantity:int):
       pass
-
 
 class ItemInCart:
    def __init__(self,item:Item,amount_in_cart:int,isSelected:bool):
@@ -146,11 +147,23 @@ class Seller(Customer):
 
    def __str__(self):
       return f"Role:seller Username:{self.get_username}"
+
+   def add_item(self, name : str, price : float , amount : int , category_id : str , img =''):
+      try :
+         System.save_item(self, self.get_user_id  ,name , price , amount , category_id , img)
+      except :
+         return 'Error'
+      
+      
+
+   def add_stock(self ,name : str , amount):
+      pass
+
+   def add_bid_item(self, name:str , start_price , amount : int , category : str) :
+      pass
+
+   def create_discount_code(self,ID, discount_percent):
+      pass
    
-   @property
-   def get_store_name(self) -> str:
-      return self.__store_name
-   
-   @property
-   def get_store_address(self) -> str:
-      return self.__store_address 
+   def confirm_bid():
+      pass
