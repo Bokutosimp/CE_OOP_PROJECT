@@ -124,13 +124,13 @@ class System:
    def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner:str,start_time:str,end_time:str,status:str,top_bidder:str):
       if not self.__validate_name(name,self.__list_bid_items): raise Exception('Item already exist')
       category_list:list[Category] = []
-      for id in category_id:
+      for cat_id in category_id:
          for category in self.__list_categories:
-            if category.get_id == id:
+            if category.get_id == cat_id:
                category_list.append(category)
-      if len(category_list) == 0: raise Exception('Category not found')
+      if len(category_list) == 0: return {'success':False,'error':'Category not found'}
       self.__list_bid_items.append(BidItem(id,name,price,amount,img,category_list,owner,start_time,end_time,status,top_bidder))
-      return 'Bid item created'
+      return {'success':True}
    
    def view_item(self,itemId:str):
       for item in self.__list_items :
