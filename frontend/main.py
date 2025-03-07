@@ -101,12 +101,13 @@ def get(session, request: Request):
     return layout(product_management(request), session)
 
 @rt('/seller/add')
-def get(session):
-    return layout(add_product_page(),session)
+def get(session, request : Request):
+    return layout(add_product_page(request),session)
 
-@rt('/seller/add/submit')
-def get(session):
-    return layout(submit_product_page(),session)
+@rt('/seller/add/submit', methods=["post"])
+async def get(session, product: Product , request : Request):
+    content = await submit_product_page(product , request)  
+    return layout(content, session)
 
 @rt('/seller/add_bid')
 def get(session):
