@@ -94,22 +94,18 @@ class System:
       return 'Code created'
       
    def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img=''):
-      if not self.__validate_name(name,self.__list_items): raise Exception('Item already exist')
+      if not self.__validate_name(name,self.__list_items): return {'success':False,'error':'User not found'}
       current_user = self.get_user_by_id(current_user_id)
-      if current_user == None: raise Exception('User not found')
-      if not isinstance(current_user,Seller): raise Exception('User is not a seller')
+      if current_user == None: return {'success':False,'error':'User not found'}
+      if not isinstance(current_user,Seller): return {'success':False,'error':'User is not a seller'}
       category_list:list[Category] = []
-      for id in category_id:
+      for cat_id in category_id:
          for category in self.__list_categories:
-            if category.get_id == id:
+            if category.get_id == cat_id:
                category_list.append(category)
-      if len(category_list) == 0: raise Exception('Category not found')
+      if len(category_list) == 0: return {'success':False,'error':'Category not found'}
       self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list))
-      return 'Item created'
-   
-   def view_item(self,itemId:str):
-      #return item
-      pass
+      return {'success':True}
    
    
    def save_item(self,name : str, price : float, amount : int, category : str):
@@ -139,8 +135,35 @@ class System:
 
    def retrieve_order_data() :
       pass
+   
+   #cart and item in cart
+   def add_to_cart(self,item_id:str,user_id:str,quantity:int):
+      user = self.get_user_by_id(user_id)
+      item = self.get_item_by_id(item_id)
+      if not user: return {'success':False,'error':'User not found'}
+      if not item: return {'success':False,'error':'Item not found'}
+      try:
+         user.add_to_cart(item,quantity)
+         return {"success":True}
+      except Exception as e:
+         return {'success':False,'error':str(e)}
+      
+   def remove_from_cart(self,item_id:str,user_id:str):
+      user = self.get_user_by_id(user_id)
+      item = self.get_item_by_id(item_id)
+      if not user: return {'success':False,'error':'User not found'}
+      if not item: return {'success':False,'error':'Item not found'}
+      try:
+         user.remove_from_cart(item)
+         return {'success':True}
+      except Exception as e:
+         return {'success':False,'error':str(e)}
 
-
+   def get_cart(self,user_id:str):
+      user = self.get_user_by_id(user_id)
+      if not user: return {'success':False,'error':'User not found'}
+      return user.get_cart
+   
 def createInstance():
    from .mock.items import items
    from .mock.category import categories
@@ -149,7 +172,7 @@ def createInstance():
    #create category
    [main_system.create_category(category['id'],category['name'],category['description']) for category in categories]
    categories_instane = main_system.get_categories()
-   [print(category) for category in categories_instane]
+   # [print(category) for category in categories_instane]
    #create user
    for user in users:
       if user['role'] == 'admin':
@@ -161,12 +184,28 @@ def createInstance():
    users_instance = main_system.get_users()
    [print(user) for user in users_instance]
    #create item
+   print("---############### create item ############---")
    for item in items:
+      print(f"id item is {item['id']} ")
       main_system.create_item('sell001',item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])
    items_instance = main_system.get_items()
-   [print(item) for item in items_instance]
-   print('result of search by category',main_system.get_items_by_category(main_system.get_categories()[0].get_id))
+   [print(f'item is {item}') for item in items_instance]
+   # print('result of search by category',main_system.get_items_by_category(main_system.get_categories()[0].get_id))
    print('result of search item by id',main_system.get_item_by_id(items_instance[0].get_id))
+   #create item in cart
+   print("---############ item in cart #############---")
+   # add item
+   print(main_system.add_to_cart('2','cust001',2))
+   print(main_system.add_to_cart('2','cust001',100))
+   print(main_system.add_to_cart('3','cust001',2))
+   print([cart.get_item.get_name for cart in main_system.get_cart('cust001').get_list_item_in_cart])
+   #remove item
+   print(main_system.remove_from_cart('3','cust001'))
+   print([cart.get_item.get_name for cart in main_system.get_cart('cust001').get_list_item_in_cart])
+   # -1 item
+   print(main_system.add_to_cart('2','cust001',-1))
+   print([cart.get_item.get_name for cart in main_system.get_cart('cust001').get_list_item_in_cart])
+   print([cart.get_amount_in_cart for cart in main_system.get_cart('cust001').get_list_item_in_cart])
    return main_system
 
 main_system = createInstance()
