@@ -117,5 +117,5 @@ def get(session):
 
 @rt('/purchase')
 def get(session):
-    return layout(buy(),session)
+    return layout(buy(session),session)
 serve(port=1111)

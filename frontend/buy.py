@@ -2,16 +2,21 @@ from fasthtml.common import *
 import os,sys
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
+from mock.users import *
 
-def buy():
+def buy(session):
+    print(f"check this out {session}")
+    user_id = session['auth'][0]
+    user = main_system.get_user_by_id(session)
+    print(f"check this out too {user_id}")
+    if not user:
+        return Body(H4("User not found", style="color: red;"))
+    
+    total_amount = sum(item['price'] * item['quantity'] for item in user.cart)
+    shipping_amount = 10
+    grand_total = total_amount + shipping_amount
+
     return Body(
-        
-        Header(
-            H1(
-                "Teerawee Checkouts",
-                style="text-align: left; color: #000000; padding: 10px; font-size: 36px;"
-            )
-        ),
         Card(
             H4(Label("Buy with E-bux only for now!", style="color: #000000; text-align: left;"), style="background-color: #B5E2FF; padding: 20px; border-radius: 5px; height: 20%;"),
             style="background-color: #EEEEEE; margin: 0;",
@@ -32,12 +37,11 @@ def buy():
             Card(
                 Div(
                     H2("Order Summary", style="color: #000000;"),
-                    Label("Total: 1000 E", style="color: #000000;"),
-                    Label("Shipping: 2 E", style="color: #000000;"),
-                    Label(B("Grand Total: 1002 E"), style="color: #000000;"),
+                    Label(f"Total: {total_amount} E", style="color: #000000;"),
+                    Label(f"Shipping: {shipping_amount} E", style="color: #000000;"),
+                    Label(B(f"Grand Total: {grand_total} E"), style="color: #000000;"),
                     style="text-align: left;",
                 ),
-                # Add underline here
                 Div(style="border-bottom: 2px solid #000000; width: 100%; margin-top: 10px;"),
                 Div(
                     Button("confirm purchases", type="button", onclick="openDialog()", style="background-color: #6fc276; color: white; padding: 10px 15px; border: none; border-radius: 20px; cursor: pointer; width: auto;"),
