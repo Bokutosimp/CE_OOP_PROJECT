@@ -57,7 +57,8 @@ class ItemInCart:
    def set_amount_int_cart(self,quantity:int): self.__amount_in_cart = quantity
    @property
    def get_isSelected(self) -> bool: return self.__isSelected
-   
+   @get_isSelected.setter
+   def set_isSelected(self,select:bool): self.__isSelected = select
    
 
 class Cart:
@@ -75,6 +76,9 @@ class Cart:
    
    def remove_from_cart(self,index:int):
       self.__list_item_in_cart.pop(index)
+      
+   def set_select_item(self,index:int,select:bool):
+      self.__list_item_in_cart[index].set_isSelected = select
    
 class User:
    def __init__(self,name:str,user_id:str,email:str,phone_number:str,username:str,password:str,birth_date:object,gender:Literal['M','F']):
@@ -146,7 +150,7 @@ class Customer(User):
       if quantity < 0: raise Exception('quantity can not be less than or equal to zero')
       if not item.check_availlability(quantity): raise Exception('Item out of stock')
       for item_in_cart in self.__cart.get_list_item_in_cart:
-         if item_in_cart.get_item.get_id == item.get_id:
+         if item_in_cart.get_item == item:
             item_in_cart.set_amount_int_cart = quantity
             return 
       itemInCart = ItemInCart(item,quantity,False)
@@ -154,9 +158,16 @@ class Customer(User):
    
    def remove_from_cart(self,item:Item):
       for index, item_in_cart in enumerate(self.__cart.get_list_item_in_cart):
-         if item_in_cart.get_item.get_id == item.get_id:
+         if item_in_cart.get_item == item:
             self.__cart.remove_from_cart(index)
             return
+      raise Exception('item not found in cart')
+   
+   def set_select_item(self,item:Item,select:bool):
+      for index,item_in_cart in enumerate(self.__cart.get_list_item_in_cart):
+         if item_in_cart.get_item == item:
+            self.__cart.set_select_item(index,select)
+            return 
       raise Exception('item not found in cart')
    
    def SeaTung(self,amount):
