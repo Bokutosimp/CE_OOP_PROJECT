@@ -1,4 +1,4 @@
-# from .discount_code import Code
+from .discount_code import Code
 from .category import Category
 from datetime import datetime
 from .item import *

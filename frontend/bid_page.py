@@ -13,7 +13,7 @@ def bid_page(id):
             Div(P(f"Current bid price: ${bid_item.get_price}", style="color:black; font-size:30px; font-weight:bold;"), style="width:100%;"),
             Div(
                Span('Your Bid:', style="color:black; font-size:15px;"),
-               Input(id="bid_input",type='number',
+               Input(id="bid_input",type='number',min=bid_item.get_price+0.1, step = 0.1,
                      style="width:100px; margin:0; text-align:center; border-radius:50px;", placeholder='Enter your bid'),
                style="display:flex; flex-direction:row; gap:10px; width:100%; align-items:center;"
             ),
