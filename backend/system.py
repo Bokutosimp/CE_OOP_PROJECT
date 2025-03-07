@@ -1,5 +1,6 @@
-from .discount_code import Code
+# from .discount_code import Code
 from .category import Category
+from datetime import datetime
 from .item import *
 import uuid
 
@@ -20,7 +21,7 @@ class System:
    #function for validation duplicate name in list of instances
    def __validate_name(self,name:str,instance:list[object]) -> bool:
       for item in instance:
-         if item.get_name  == name:
+         if item.get_name == name:
             return False
       return True
       
@@ -120,6 +121,17 @@ class System:
       self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list))
       return 'Item created'
    
+   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner:str,start_time:str,end_time:str,status:str,top_bidder:str):
+      if not self.__validate_name(name,self.__list_bid_items): raise Exception('Item already exist')
+      category_list:list[Category] = []
+      for id in category_id:
+         for category in self.__list_categories:
+            if category.get_id == id:
+               category_list.append(category)
+      if len(category_list) == 0: raise Exception('Category not found')
+      self.__list_bid_items.append(BidItem(id,name,price,amount,img,category_list,owner,start_time,end_time,status,top_bidder))
+      return 'Bid item created'
+   
    def view_item(self,itemId:str):
       for item in self.__list_items :
          if item.get_id == itemId  :
@@ -217,7 +229,7 @@ def createInstance():
    print('result of search item by id',main_system.get_item_by_id(items_instance[0].get_id))
    #create bid item
    for bid_item in bid_items:
-      main_system.create_item('sell001', bid_item['id'], bid_item['name'], bid_item['start_price'], bid_item['amount'], ['1', '2'], bid_item['image'])
+      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'],bid_item['owner'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_bid_items()
    [print(bid_item) for bid_item in bid_items_instance]
    return main_system

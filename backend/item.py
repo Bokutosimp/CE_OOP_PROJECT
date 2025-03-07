@@ -2,7 +2,6 @@ from .category import Category
 from typing import Literal
 from .system import *
 from datetime import datetime
-from .biddingHistory import BiddingHistory
 
 class Item:
    def __init__(self,id:str,name :str , price:float,amount:int, owner:object,image:str,category:list[Category]):
@@ -11,7 +10,8 @@ class Item:
       self.__price = price
       self.__amount = amount
       self.__image = image
-      if not isinstance(owner,Seller): return "Owner must be a seller"
+      # if not isinstance(owner, Seller):
+      #       raise ValueError("Owner must be a seller")
       self.__owner = owner
       self.__category = category
    
@@ -162,16 +162,37 @@ class Seller(Customer):
    
    def confirm_bid():
       pass
-   
-class BitItem(Item):
-   def __init__(self, id : str, name : str, price : float, amount : int, owner : Seller, category : list[Category], image : str, end_time : datetime, start_time : datetime):
+
+class BidHistory:
+    def __init__(self,item:Item):
+        self.__item = item
+        self.__status = None
+        
+    def set_status(self,status:str):
+        self.__status = status
+
+class BiddingHistory:
+    def __init__(self, user : User, bidAmount : float, bidTime : datetime):
+        self.__user = user
+        self.__bidAmount = bidAmount
+        self.__bidTime = bidTime
+
+class BidItem(Item):
+   def __init__(self, id: str, name: str, price: float, amount: int, owner: Seller, image: str, category: list[Category], start_time: datetime, end_time: datetime, top_bidder=None, status="Not Started"):
+      # Call Item's constructor
       super().__init__(id, name, price, amount, owner, image, category)
-      self.__top_bidder = None
-      self.__bids_history = []
-      self.__status = "Not Started"
-      self.__end_time = end_time
-      self.__start_time = start_time
       
+      # Explicitly re-assign attributes
+      self.__owner = owner  # Ensure owner is correctly assigned
+      self.__top_bidder = top_bidder
+      self.__bids_history = []
+      self.__status = status
+      self.__start_time = start_time
+      self.__end_time = end_time
+
+   def __str__(self):
+      return super().__str__() + f"\nStart Time: {self.__start_time}\nEnd Time: {self.__end_time}\nStatus: {self.__status}\nTop Bidder: {self.__top_bidder}\nBids History: {self.__bids_history}"
+              
    def start(self):
       self.__start_time = datetime.now()
       self.__status = "Started"
@@ -180,6 +201,10 @@ class BitItem(Item):
       self.__end_time = datetime.now()
       self.__status = "Ended"
       
+   @property
+   def id(self):
+      return self.__id
+   
    @property
    def top_bidder(self):
       return self.__top_bidder
