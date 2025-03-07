@@ -1,4 +1,4 @@
-from .discount_code import Code
+# from .discount_code import Code
 from .category import Category
 from datetime import datetime
 from .item import *
@@ -34,7 +34,7 @@ class System:
       for cat in self.__list_categories:
          if cat.get_id == id:
             return cat
-      return {'success':False,'error':'Not found'}
+      return 'Not found'
    
    def get_items(self,query:str = ''):
       if(query == ''):
@@ -51,12 +51,11 @@ class System:
    def get_item_by_id(self,id:str):
       for item in self.__list_items: 
          if item.get_id == id: return item
-      raise Exception('item not found')
+      return None
    
    def get_bid_item_by_id(self,id:str):
-      for bid_item in self.__list_bid_items:
-         if bid_item.get_id == id:
-            return bid_item
+      for item in self.__list_bid_items: 
+         if item.get_id == id: return item
       return None
       
    def get_users(self,query:str = ''):
@@ -78,7 +77,7 @@ class System:
       for user in self.__list_users:
          if user.get_user_id == id:
             return user
-      raise Exception('user not found')
+      return None
    
    #function to create instace
    def create_category(self, id:str,name:str, description:str):
@@ -122,19 +121,16 @@ class System:
       self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list))
       return {'success':True}
    
-   def create_bid_item(self,current_user_id:str ,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner:str,start_time:str,end_time:str,status:str,top_bidder:str):
-      if not self.__validate_name(name,self.__list_bid_items): return {'success':False,'error':'User not found'}
-      current_user = self.get_user_by_id(current_user_id)
-      if current_user == None: return {'success':False,'error':'User not found'}
-      if not isinstance(current_user,Seller): return {'success':False,'error':'User is not a seller'}
+   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner:str,start_time:str,end_time:str,status:str,top_bidder:str):
+      if not self.__validate_name(name,self.__list_bid_items): raise Exception('Item already exist')
       category_list:list[Category] = []
-      for cat_id in category_id:
+      for id in category_id:
          for category in self.__list_categories:
-            if category.get_id == cat_id:
+            if category.get_id == id:
                category_list.append(category)
-      if len(category_list) == 0: return {'success':False,'error':'Category not found'}
+      if len(category_list) == 0: raise Exception('Category not found')
       self.__list_bid_items.append(BidItem(id,name,price,amount,img,category_list,owner,start_time,end_time,status,top_bidder))
-      return {'success':True}
+      return 'Bid item created'
    
    def view_item(self,itemId:str):
       for item in self.__list_items :
@@ -146,16 +142,22 @@ class System:
    def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img=''):
     try:
         item_id = str(uuid.uuid4())
+        img = 'https://cdn.pixabay.com/photo/2016/07/07/16/46/dice-1502706_640.jpg'
         self.create_item(user_id, item_id, name, price, amount, [category_id], img)
         return 'Item saved successfully'
     except Exception as e:
-        return {'error':False,'error':str(e)}
+        return 'Error'
 
    def save_stock(self ,name : str , amount):
       pass
 
-   def save_bid_item(self, name:str , start_price , amount : int , category : str):
-      pass
+   def save_bid_item(self, user_id, name: str, price: float, amount: int, category_id: str, img : str , start_time : str , end_time : str ):
+      item_id = str(uuid.uuid4())
+      top_bidder = None
+      status = None
+      img = 'https://cdn.pixabay.com/photo/2016/07/07/16/46/dice-1502706_640.jpg'
+      main_system.create_bid_item(item_id, name , price , amount ,category_id , img , user_id , start_time , end_time , status , top_bidder)
+      return {'success': True}
 
    def save_discount_code(self,ID, discount_percent):
       pass
@@ -205,27 +207,33 @@ class System:
    
    #cart and item in cart
    def add_to_cart(self,item_id:str,user_id:str,quantity:int):
+      user = self.get_user_by_id(user_id)
+      item = self.get_item_by_id(item_id)
+      if user == None: return {'success':False,'error':'User not found'}
+      if item == None: return {'success':False,'error':'Item not found'}
       try:
-         user = self.get_user_by_id(user_id)
-         item = self.get_item_by_id(item_id)
          user.add_to_cart(item,quantity)
          return {"success":True}
       except Exception as e:
          return {'success':False,'error':str(e)}
       
    def remove_from_cart(self,item_id:str,user_id:str):
+      user = self.get_user_by_id(user_id)
+      item = self.get_item_by_id(item_id)
+      if not user: return {'success':False,'error':'User not found'}
+      if not item: return {'success':False,'error':'Item not found'}
       try:
-         user = self.get_user_by_id(user_id)
-         item = self.get_item_by_id(item_id)
          user.remove_from_cart(item)
          return {'success':True}
       except Exception as e:
          return {'success':False,'error':str(e)}
       
    def set_select_item(self,item_id:str,user_id:str,select:bool):
+      user = self.get_user_by_id(user_id)
+      item = self.get_item_by_id(item_id)
+      if not user: return {'success':False,'error':'User not found'}
+      if not item: return {'success':False,'error':'Item not found'}
       try:
-         user = self.get_user_by_id(user_id)
-         item = self.get_item_by_id(item_id)
          user.set_select_item(item,select)
          return {'success':True}
       except Exception as e:
@@ -235,19 +243,6 @@ class System:
       user = self.get_user_by_id(user_id)
       if not user: return {'success':False,'error':'User not found'}
       return user.get_cart
-   
-   def add_review(self,item:object,rating:int,review:str,user_id:str):
-      try:
-         user = self.get_user_by_id(user_id)
-         if not isinstance(user,Customer): return {'success':False,'error':'User is not a customer'}
-         item.add_review(rating,review,user)
-      except Exception as e:
-         return {'success':False,'error':f'{str(e)}'}
-   
-   #buy item in cart
-   # def buy_item_in_cart(self,user_id:str):
-   #    user = self.get_user_by_id(user_id)
-   #    if user == None:
    
 def createInstance():
    from .mock.items import items
@@ -295,12 +290,9 @@ def createInstance():
    #create bid item
    print("---############ bid item #############---")
    for bid_item in bid_items:
-      main_system.create_bid_item('sell002',bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'],bid_item['owner'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
+      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'],bid_item['owner'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_bid_items()
    [print(bid_item) for bid_item in bid_items_instance]
-   #test buy item in cart
-   print("---###### buy item in cart of user cust001 #####---")
-   
    return main_system
 
 main_system = createInstance()

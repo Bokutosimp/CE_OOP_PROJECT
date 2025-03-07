@@ -20,7 +20,6 @@ from login import *
 from register import *
 from decorators.auth import auth
 from decorators.redirect_path import redirect_path
-from Shipping_status import check_status
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
@@ -100,30 +99,27 @@ def get(id:str,session):
 def get(id:str,session):
     return (layout(review_page(id),session))
 
-# @rt('/review/submit_review/{id}')
-# def post(id:str,review:str,rating:int,session):
-#     return submit_review(id,review,rating,session)
-
 @rt('/seller')
 @auth(['Seller', 'Admin'])
 def get(session, request: Request):
     return layout(product_management(request), session)
 
 @rt('/seller/add')
-def get(session):
-    return layout(add_product_page(),session)
+def get(session, request : Request):
+    return layout(add_product_page(request),session)
 
-@rt('/seller/add/submit')
-def get(session):
-    return layout(submit_product_page(),session)
+@rt('/seller/add/submit', methods=["post"])
+async def get(session, product: Product , request : Request):
+    content = await submit_product_page(product , request)  
+    return layout(content, session)
 
 @rt('/seller/add_bid')
-def get(session):
-    return layout(add_bid_product_page(),session)
+def get(session , request : Request):
+    return layout(add_bid_product_page(request),session)
 
-@rt('/seller/add_bid/submit')
-def get(session):
-    return layout(submit_bid_product_page(),session)
+@rt('/seller/add_bid/submit',  methods=["post"])
+def get(session , product : Bid_Product , request : Request):
+    return layout(submit_bid_product_page(product , request ),session)
 
 @rt('/admin/create_category')
 def get():
@@ -139,11 +135,5 @@ def get(session):
 
 @rt('/purchase')
 def get(session):
-    return layout(buy(session),session)
-
-@rt('/ship/{id}')
-def get(id:str,session): # str is so important
-    print(f"wasd {id}")
-    return (layout(check_status(id),session))
-
+    return layout(buy(),session)
 serve(port=1111)
