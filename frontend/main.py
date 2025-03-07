@@ -20,6 +20,7 @@ from login import *
 from register import *
 from decorators.auth import auth
 from decorators.redirect_path import redirect_path
+from Shipping_status import check_status
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
@@ -99,9 +100,9 @@ def get(id:str,session):
 def get(id:str,session):
     return (layout(review_page(id),session))
 
-@rt('/review/submit_review/{id}')
-def post(id:str,review:str,rating:int,session):
-    return submit_review(id,review,rating,session)
+# @rt('/review/submit_review/{id}')
+# def post(id:str,review:str,rating:int,session):
+#     return submit_review(id,review,rating,session)
 
 @rt('/seller')
 @auth(['Seller', 'Admin'])
@@ -138,5 +139,11 @@ def get(session):
 
 @rt('/purchase')
 def get(session):
-    return layout(buy(),session)
+    return layout(buy(session),session)
+
+@rt('/ship/{id}')
+def get(id:str,session): # str is so important
+    print(f"wasd {id}")
+    return (layout(check_status(id),session))
+
 serve(port=1111)

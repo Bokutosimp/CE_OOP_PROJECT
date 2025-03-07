@@ -175,7 +175,7 @@ class Customer(User):
    
    def SeaTung(self,amount):
       if amount > self.__e_bux :
-         return "Nah bro, you're broke af"
+         return "Your E-bux that you have isn't enough"
       else :
          self.__e_bux -= amount
          return "Buying successfully"

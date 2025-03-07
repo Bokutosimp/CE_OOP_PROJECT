@@ -12,4 +12,6 @@ class order_history :
     def set_status(self , status : ShippingStatus) :
         self._shipping_status = status
 
+    def check_status(self):
+        return self._shipping_status.get_info()
     
