@@ -50,7 +50,6 @@ class System:
       
    def get_item_by_id(self,id:str):
       for item in self.__list_items: 
-         print(f"ZZ : {item}")
          if item.get_id == id: return item
       return None
    
