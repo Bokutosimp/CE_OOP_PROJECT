@@ -10,6 +10,7 @@ def add_product_page():
         Form(
             Label("Product Name:", Input(type="text", id="name", placeholder="Enter your product name", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
             Label("Price:", Input(type="number", id="price", placeholder="Enter your price", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+            Label("Category", Input(type="text", id="category", placeholder="Enter category", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
             Label("Description:", Textarea(id="description", rows=5, placeholder="Product description...", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
             Label("Image:", Input(type="file", id="image", accept="image/*", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")), 
            
@@ -22,8 +23,7 @@ def add_product_page():
         style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
     )
 
-@rt('/seller/add/submit')
-def post():
+def submit_product_page():
     print("🔥 /submit received a request!")  
     return Main(
         H1("✅ Product Added Successfully!", 
