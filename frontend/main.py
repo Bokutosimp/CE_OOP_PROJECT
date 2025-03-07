@@ -75,6 +75,10 @@ def post(amount:str,id:str,session):
 def delete(item_id:str,session):
     return remove_from_cart(item_id,session)
 
+@rt('/cart/{item_id}')
+def patch(item_id:str,select:bool,session):
+    return set_selected(item_id,select,session)
+    # return Div(item_id)
 @rt('/category/{category}')
 def get(category:str,session):
     return (layout(search_by_category_page(category),session))

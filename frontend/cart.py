@@ -25,6 +25,12 @@ def cart(session):
             Div(f"US ${item.get_item.get_price}",style="justify-self:end;"),
             style="padding:10px; display:grid; gap:30px; grid-template-columns:1fr 3fr 1fr 2fr;"),
             Div(
+               Div(Input(type='checkbox',id='select',name='id',
+                        onchange=f"fetch('/cart/{item.get_item.get_id}',{{method:'PATCH',headers:{{'Content-Type': 'application/x-www-form-urlencoded'}},body: 'select='+this.checked}})",
+                         checked=f'{"true" if item.get_isSelected else ""}',
+                         style=' margin:0;justify-self:center; align-self:center;'),
+                   style='justify-self:center; align-self:center; display:flex;',),
+               Span("|"),
                A("But it now",style="text-decoration:underline; cursor:pointer;",href=''),
                Span("|"),
                Span("Remove",style="text-decoration:underline; color:black;cursor:pointer;",
@@ -59,8 +65,12 @@ def add_to_cart(id:str,amount:str,session):
    return Script(f'window.location.href = "/cart";alert("cart has been updated");')
 
 def remove_from_cart(item_id:str,session):
-   print(item_id)
    result = main_system.remove_from_cart(item_id,session['auth'][0])
    if not result['success']: return Script(f'alert("{result['error']}"); window.location.href = "/cart"')
    return Script(f'alert("item has been removed"); window.location.href = "/cart"')
-   
+
+def set_selected(item_id:str,select:bool,session):
+   result = main_system.set_select_item(item_id,session['auth'][0],select)
+   print(result)
+   if not result['success']: return Script(f'alert("{result['error']}"); window.location.href = "/cart"')
+   return Script(f'window.location.href = "/cart";alert("cart has been updated");')
