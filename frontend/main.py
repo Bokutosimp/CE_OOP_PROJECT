@@ -2,7 +2,7 @@ from fasthtml.common import *
 
 #import page
 from layout import layout
-from cart import cart
+from cart import *
 from main_page import main_page
 from stylesheet import stylesheet
 from seller import product_management
@@ -19,6 +19,7 @@ from buy import buy
 from login import *
 from register import *
 from decorators.auth import auth
+from decorators.redirect_path import redirect_path
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
@@ -43,25 +44,36 @@ def get(session):
     return (layout(main_page(),session))
 
 @rt('/login')
-def get():
+@redirect_path
+def get(session):
     return login_form()
 
 @rt('/login')
+@redirect_path
 def post(session,username:str,password:str):
     return login_method(session,username,password)
 
 @rt('/register')
-def get():
+@redirect_path
+def get(session):
     return register_form()
 
 @rt('/register')
+@redirect_path
 def post(name:str,email:str,phone_number:str,username:str,password:str,birth_date:str,gender:str,address:str,session):
-    print(gender)
     return register_post(name,email,phone_number,username,password,birth_date,gender,address,session)
 
 @rt('/cart')
 def get(session):
-    return layout(cart(),session)
+    return layout(cart(session),session)
+
+@rt('/cart/{id}')
+def post(amount:str,id:str,session):
+    return add_to_cart(id,amount,session)
+
+@rt('/cart/{item_id}')
+def delete(item_id:str,session):
+    return remove_from_cart(item_id,session)
 
 @rt('/category/{category}')
 def get(category:str,session):

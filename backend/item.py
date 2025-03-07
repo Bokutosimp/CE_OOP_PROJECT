@@ -41,18 +41,44 @@ class Item:
    def get_owner(self) -> str:
       return self.__owner
    
-   def check_availlability(self,quantity:int):
-      pass
+   def check_availlability(self,quantity:int) -> bool:
+      return quantity <= self.__amount
 
 class ItemInCart:
    def __init__(self,item:Item,amount_in_cart:int,isSelected:bool):
       self.__item = item
       self.__amount_in_cart = amount_in_cart
       self.__isSelected = isSelected
+      
+   def __str__(self):
+      return f"item:{self.__item}, amount:{self.__amount_in_cart}, isSelected:{self.__isSelected}"
+   
+   @property
+   def get_item(self) -> Item: return self.__item
+   @property
+   def get_amount_in_cart(self) -> int: return self.__amount_in_cart
+   @get_amount_in_cart.setter
+   def set_amount_int_cart(self,quantity:int): self.__amount_in_cart = quantity
+   @property
+   def get_isSelected(self) -> bool: return self.__isSelected
+   
+   
 
 class Cart:
    def __init__(self):
       self.__list_item_in_cart:list[ItemInCart] = []
+
+   def __str__(self):
+      return f'{[cart for cart in self.__list_item_in_cart]}'  
+   
+   @property
+   def get_list_item_in_cart(self): return self.__list_item_in_cart
+    
+   def add_cart(self,itemInCart:ItemInCart):
+      self.__list_item_in_cart.append(itemInCart)
+   
+   def remove_from_cart(self,index:int):
+      self.__list_item_in_cart.pop(index)
    
 class User:
    def __init__(self,name:str,user_id:str,email:str,phone_number:str,username:str,password:str,birth_date:object,gender:Literal['M','F']):
@@ -111,17 +137,31 @@ class Customer(User):
       self.__cart = cart
       self.__order_history = []
       
-   def __str__(self):
-      return f"Role:customer Username:{self.get_username}"
+   def __str__(self): return f"Role:customer Username:{self.get_username}"
    @property
-   def get_address(self) -> str:
-      return self.__address
+   def get_address(self) -> str: return self.__address
    @property
-   def get_e_bux(self) -> float:
-      return self.__e_bux
+   def get_e_bux(self) -> float: return self.__e_bux
    @property
-   def get_cart(self) -> Cart:
-      return self.__cart
+   def get_cart(self) -> Cart: return self.__cart
+   
+   
+   def add_to_cart(self,item:Item,quantity:int):
+      if quantity < 0: raise Exception('quantity can not be less than or equal to zero')
+      if not item.check_availlability(quantity): raise Exception('Item out of stock')
+      for item_in_cart in self.__cart.get_list_item_in_cart:
+         if item_in_cart.get_item.get_id == item.get_id:
+            item_in_cart.set_amount_int_cart = quantity
+            return 
+      itemInCart = ItemInCart(item,quantity,False)
+      self.__cart.add_cart(itemInCart)
+   
+   def remove_from_cart(self,item:Item):
+      for index, item_in_cart in enumerate(self.__cart.get_list_item_in_cart):
+         if item_in_cart.get_item.get_id == item.get_id:
+            self.__cart.remove_from_cart(index)
+            return
+      raise Exception('item not found in cart')
    
    def SeaTung(self,amount):
       if amount > self.__e_bux :
@@ -129,15 +169,6 @@ class Customer(User):
       else :
          self.__e_bux -= amount
          return "Buying successfully"
-   
-   def view_cart(self):
-      pass
-   
-   def add_to_cart(self,item:Item):
-      #call check_availlability
-      #true --> add to cart
-      #false --> item out of stock
-      pass
       
 class Seller(Customer):
    def __init__(self,customer:Customer,store_name:str,store_address:str):
