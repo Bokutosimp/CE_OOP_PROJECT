@@ -1,7 +1,6 @@
 from .category import Category
 from typing import Literal
 import os,sys
-import os,sys
 from .system import *
 from datetime import datetime
 
@@ -38,10 +37,6 @@ class Item:
    @property
    def get_image(self) -> str:
       return self.__image
-   @property
-   def get_owner(self) -> str:
-      return self.__owner
-   
    def check_availlability(self,quantity:int) -> bool:
       return quantity <= self.__amount
 
