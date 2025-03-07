@@ -16,7 +16,7 @@ def product_management(request: Request):
     seller  = main_system.get_user_by_id(user_id)
     load_items = main_system.get_items()      
     load_bid_items = main_system.get_bid_items()      
-    print(load_items[0].get_owner)
+    print(load_bid_items[0].get_owner)
     return Main(
         
         Div(
@@ -118,7 +118,7 @@ def product_management(request: Request):
                         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
                         margin-bottom: 20px;
                     """
-                ) for item in load_bid_items
+                ) for item in load_bid_items if item.get_owner == user_id 
             ],
             style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px; background: #f7f7f7;"
         ),

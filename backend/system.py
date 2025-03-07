@@ -156,7 +156,7 @@ class System:
       top_bidder = None
       status = None
       img = 'https://cdn.pixabay.com/photo/2016/07/07/16/46/dice-1502706_640.jpg'
-      main_system.create_bid_item(item_id, name , price , amount ,category_id , img , user_id , start_time , end_time , status , top_bidder)
+      main_system.create_bid_item(item_id, name , price , amount ,category_id , user_id , img , start_time , end_time , status , top_bidder)
       return {'success': True}
 
    def save_discount_code(self,ID, discount_percent):
@@ -245,7 +245,7 @@ class System:
       return user.get_cart
    
 def createInstance():
-   from .mock.items import items
+   from .mock.items import items , items_2
    from .mock.bid_items import bid_items
    from .mock.category import categories
    from .mock.users import users
@@ -268,7 +268,11 @@ def createInstance():
    print("---############### create item ############---")
    for item in items:
       print(f"id item is {item['id']} ")
-      main_system.create_item('sell001',item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])
+      main_system.create_item('sell001', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])
+   for item in items_2:
+      print(f"id item is {item['id']} ")
+      main_system.create_item('sell002', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])     
+      
    items_instance = main_system.get_items()
    [print(f'item is {item}') for item in items_instance]
    # print('result of search by category',main_system.get_items_by_category(main_system.get_categories()[0].get_id))
@@ -290,7 +294,7 @@ def createInstance():
    #create bid item
    print("---############ bid item #############---")
    for bid_item in bid_items:
-      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'],bid_item['owner'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
+      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['owner'],bid_item['image'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_bid_items()
    [print(bid_item) for bid_item in bid_items_instance]
    return main_system
