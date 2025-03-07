@@ -19,3 +19,6 @@ class Discount(Code):
       super().__init__(ID,name)
       self.__percentage = percentage
       self.__owner = owner
+      
+      def get_discount(self):
+         return self.__percentage

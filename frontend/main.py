@@ -20,6 +20,7 @@ from login import *
 from register import *
 from decorators.auth import auth
 from decorators.redirect_path import redirect_path
+from Shipping_status import check_status
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
@@ -131,4 +132,10 @@ def get(session):
 @rt('/purchase')
 def get(session):
     return layout(buy(session),session)
+
+@rt('/ship/{id}')
+def get(id,session):
+    print(f"wasd {id}")
+    return (layout(check_status(id),session))
+
 serve(port=1111)
