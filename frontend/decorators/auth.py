@@ -5,7 +5,7 @@ def auth(roles):
         @wraps(f)
         def wrapper(session,*args,**kwargs):
             try:
-                user_role =session['auth'][1]
+                user_role = session['auth'][1]
             except KeyError:
                 return Response('not authorized',status_code=401)
             for role in roles:

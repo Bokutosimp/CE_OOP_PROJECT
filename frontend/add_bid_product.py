@@ -7,12 +7,13 @@ def add_bid_product_page():
         Grid(
             H1("Add Bid Item Management", style="text-align: center; margin-bottom: 20px; color: #222;"),  
         ),
-        Form(
+        Form( 
             Label("Bid Product Name:", Input(type="text", id="name", placeholder="Enter your product name", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
             Label("Start Price:", Input(type="number", id="price", placeholder="Enter your price", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+            Label("Category", Input(type="text", id="category", placeholder="Enter category", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
             Label("Description:", Textarea(id="description", rows=5, placeholder="Product description...", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
             Label("Image:", Input(type="file", id="image", accept="image/*", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")), 
-           
+
             Button("Submit", type="submit", 
                    style="background: #0074bd; color: white; border-radius: 5px; padding: 10px; border: none; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s;"),
             enctype="multipart/form-data",
@@ -22,8 +23,7 @@ def add_bid_product_page():
         style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
     )
 
-@rt('/seller/add_bid/submit')
-def post_bid():
+def submit_bid_product_page():
     print("🔥 /submit received a request!")  
     return Main(
         H1("✅ Bid Product Added Successfully!", 
