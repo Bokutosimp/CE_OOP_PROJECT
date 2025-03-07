@@ -1,4 +1,4 @@
-# from .discount_code import Code
+from .discount_code import Code
 from .category import Category
 from datetime import datetime
 from .item import *
@@ -54,8 +54,9 @@ class System:
       return None
    
    def get_bid_item_by_id(self,id:str):
-      for item in self.__list_bid_items: 
-         if item.get_id == id: return item
+      for bid_item in self.__list_bid_items:
+         if bid_item.get_id == id:
+            return bid_item
       return None
       
    def get_users(self,query:str = ''):
@@ -121,16 +122,19 @@ class System:
       self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list))
       return {'success':True}
    
-   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner:str,start_time:str,end_time:str,status:str,top_bidder:str):
-      if not self.__validate_name(name,self.__list_bid_items): raise Exception('Item already exist')
+   def create_bid_item(self,current_user_id:str ,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner:str,start_time:str,end_time:str,status:str,top_bidder:str):
+      if not self.__validate_name(name,self.__list_bid_items): return {'success':False,'error':'User not found'}
+      current_user = self.get_user_by_id(current_user_id)
+      if current_user == None: return {'success':False,'error':'User not found'}
+      if not isinstance(current_user,Seller): return {'success':False,'error':'User is not a seller'}
       category_list:list[Category] = []
-      for id in category_id:
+      for cat_id in category_id:
          for category in self.__list_categories:
-            if category.get_id == id:
+            if category.get_id == cat_id:
                category_list.append(category)
-      if len(category_list) == 0: raise Exception('Category not found')
+      if len(category_list) == 0: return {'success':False,'error':'Category not found'}
       self.__list_bid_items.append(BidItem(id,name,price,amount,img,category_list,owner,start_time,end_time,status,top_bidder))
-      return 'Bid item created'
+      return {'success':True}
    
    def view_item(self,itemId:str):
       for item in self.__list_items :
@@ -272,7 +276,7 @@ def createInstance():
    print([cart.get_amount_in_cart for cart in main_system.get_cart('cust001').get_list_item_in_cart])
    #create bid item
    for bid_item in bid_items:
-      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'],bid_item['owner'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
+      main_system.create_bid_item('sell002',bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'],bid_item['owner'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_bid_items()
    [print(bid_item) for bid_item in bid_items_instance]
    return main_system

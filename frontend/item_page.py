@@ -5,6 +5,7 @@ from backend.system import main_system
 def item_page(id):
    try:
       item = main_system.get_item_by_id(id)
+      print(f"Retrieved item: {item}")
       return Div(
             Div(Img(src=item.get_image),style="width:50%; height:auto; border-radius:15px; overflow:hidden;"),
             Form(
