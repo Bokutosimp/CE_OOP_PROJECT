@@ -208,8 +208,8 @@ class System:
    def add_to_cart(self,item_id:str,user_id:str,quantity:int):
       user = self.get_user_by_id(user_id)
       item = self.get_item_by_id(item_id)
-      if not user: return {'success':False,'error':'User not found'}
-      if not item: return {'success':False,'error':'Item not found'}
+      if user == None: return {'success':False,'error':'User not found'}
+      if item == None: return {'success':False,'error':'Item not found'}
       try:
          user.add_to_cart(item,quantity)
          return {"success":True}
@@ -226,11 +226,28 @@ class System:
          return {'success':True}
       except Exception as e:
          return {'success':False,'error':str(e)}
+      
+   def set_select_item(self,item_id:str,user_id:str,select:bool):
+      user = self.get_user_by_id(user_id)
+      item = self.get_item_by_id(item_id)
+      if not user: return {'success':False,'error':'User not found'}
+      if not item: return {'success':False,'error':'Item not found'}
+      try:
+         user.set_select_item(item,select)
+         return {'success':True}
+      except Exception as e:
+         return {'success':False,'error':str(e)}
 
    def get_cart(self,user_id:str):
       user = self.get_user_by_id(user_id)
       if not user: return {'success':False,'error':'User not found'}
       return user.get_cart
+   
+   def add_review(self,item:object,rating:int,review:str,user_id:str):
+      user = self.get_user_by_id(user_id)
+      if not user: return {'success':False,'error':'User not found'}
+      if not isinstance(user,Customer): return {'success':False,'error':'User is not a customer'}
+      item.add_review(rating,review,user)
    
 def createInstance():
    from .mock.items import items
@@ -267,15 +284,16 @@ def createInstance():
    print(main_system.add_to_cart('2','cust001',2))
    print(main_system.add_to_cart('2','cust001',100))
    print(main_system.add_to_cart('3','cust001',2))
-   print([cart.get_item.get_name for cart in main_system.get_cart('cust001').get_list_item_in_cart])
+   print(main_system.add_to_cart('4','cust001',2))
+   print("item added",[cart.get_item.get_name for cart in main_system.get_cart('cust001').get_list_item_in_cart])
    #remove item
    print(main_system.remove_from_cart('3','cust001'))
-   print([cart.get_item.get_name for cart in main_system.get_cart('cust001').get_list_item_in_cart])
-   # -1 item
-   print(main_system.add_to_cart('2','cust001',-1))
-   print([cart.get_item.get_name for cart in main_system.get_cart('cust001').get_list_item_in_cart])
-   print([cart.get_amount_in_cart for cart in main_system.get_cart('cust001').get_list_item_in_cart])
+   print("remove item(3)",[cart.get_item.get_name for cart in main_system.get_cart('cust001').get_list_item_in_cart])
+   # set item selected
+   print(main_system.set_select_item('2','cust001',True))
+   print("set item(2) select to true",[f'{cart.get_item.get_id} is {cart.get_isSelected}' for cart in main_system.get_cart('cust001').get_list_item_in_cart])
    #create bid item
+   print("---############ bid item #############---")
    for bid_item in bid_items:
       main_system.create_bid_item('sell002',bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'],bid_item['owner'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_bid_items()
