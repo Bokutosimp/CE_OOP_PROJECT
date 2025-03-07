@@ -245,9 +245,10 @@ class System:
          return {'success':False,'error':f'{str(e)}'}
    
    #buy item in cart
-   # def buy_item_in_cart(self,user_id:str):
-   #    user = self.get_user_by_id(user_id)
-   #    if user == None:
+   def buy_item_in_cart(self,user_id:str):
+      user = self.get_user_by_id(user_id)
+      order = user.buy_item_in_cart()
+      user.add_history(order)
    
 def createInstance():
    from .mock.items import items
@@ -300,6 +301,7 @@ def createInstance():
    [print(bid_item) for bid_item in bid_items_instance]
    #test buy item in cart
    print("---###### buy item in cart of user cust001 #####---")
+   main_system.buy_item_in_cart('cust001')
    
    return main_system
 
