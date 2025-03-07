@@ -1,4 +1,3 @@
-from .discount_code import Code
 
 class Order:
     def __init__(self,shipping_fee:float,total_price:float,list_item:list[object]):
@@ -7,6 +6,9 @@ class Order:
         self.__total_price = total_price
         self.__list_items = list_item
         self.__isApply = None
+    
+    def __str__(self):
+        return f'total price is {self.__total_price}'
         
     # def check_amount(self):
     #     return Item.checkavaillability(self.__list_items)
@@ -22,13 +24,13 @@ class Order:
     #         return self.__total_amount
 
         
-    def apply_code(self,input_code):
-        verify = Code.verify_code(input_code)
-        if verify == True:
-            self.__total_amount -= self.__total_amount * Code.get_discount
-            self.__isApply = True
-        else:
-            return "Invalid code"
+    # def apply_code(self,input_code):
+    #     verify = Code.verify_code(input_code)
+    #     if verify == True:
+    #         self.__total_amount -= self.__total_amount * Code.get_discount
+    #         self.__isApply = True
+    #     else:
+    #         return "Invalid code"
                 
     # def buy(self):
     #     return Customer.SeaTung(self.__total_amount)
@@ -47,6 +49,8 @@ class OrderHistory :
         self.__order = order
         self._shipping_status =  None 
 
+    @property
+    def get_order(self): return self.__order
     def set_status(self , status : ShippingStatus) :
         self._shipping_status = status
 

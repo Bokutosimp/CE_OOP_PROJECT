@@ -1,7 +1,6 @@
-from .discount_code import Code
 from .category import Category
 from datetime import datetime
-from .item import *
+from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart
 import uuid
 
 class System:
@@ -302,6 +301,7 @@ def createInstance():
    #test buy item in cart
    print("---###### buy item in cart of user cust001 #####---")
    main_system.buy_item_in_cart('cust001')
+   print(main_system.get_user_by_id('cust001').get_order_history[0].get_order)
    
    return main_system
 
