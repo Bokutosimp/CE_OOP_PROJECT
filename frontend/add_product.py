@@ -42,10 +42,17 @@ async def submit_product_page(product: Product , request : Request):
     print(f"🏷️ Category: {product.category}")    
     if (product.name != None and product.price != None and product.category != None and product.description != None):
         main_system.save_item(user_id,product.name,product.price , product.amount , product.category , img = '' )
-    else : return Script("alert('Invalid")
+    else : 
+        return Script("alert('Invalid")
 
     return Main(
         H1("✅ Product Added Successfully!", style="text-align: center; color: #222;"),
+        Script(
+            """ 
+            setTimeout(function(){
+                window.location.href = '/';  }, 2000);
+            """
+        ),
         style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
     )
 

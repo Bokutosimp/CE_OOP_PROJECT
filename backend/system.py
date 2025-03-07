@@ -143,13 +143,19 @@ class System:
       item_id = str(uuid.uuid4())
       img = 'https://cdn.pixabay.com/photo/2016/07/07/16/46/dice-1502706_640.jpg'
       main_system.create_item(user_id , item_id , name , price , amount , category_id , img )
-      print(self.__list_items)
+      return {'success': True}
 
    def save_stock(self ,name : str , amount):
       pass
 
-   def save_bid_item(self, name:str , start_price , amount : int , category : str):
-      pass
+   def save_bid_item(self, user_id, name: str, price: float, amount: int, category_id: str, img : str , start_time : str , end_time : str ):
+      item_id = str(uuid.uuid4())
+      top_bidder = None
+      status = None
+      img = 'https://cdn.pixabay.com/photo/2016/07/07/16/46/dice-1502706_640.jpg'
+      main_system.create_bid_item(item_id, name , price , amount ,category_id , img , user_id , start_time , end_time , status , top_bidder)
+      return {'success': True}
+
 
    def save_discount_code(self,ID, discount_percent):
       pass
@@ -244,7 +250,7 @@ def createInstance():
    print('result of search item by id',main_system.get_item_by_id(items_instance[0].get_id))
    #create bid item
    for bid_item in bid_items:
-      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'],bid_item['owner'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
+      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['owner'],bid_item['image'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_bid_items()
    return main_system
 

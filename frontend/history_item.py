@@ -22,6 +22,7 @@ def order_history_page(request: Request):
                                 A(order['order_id'], style="font-size: 18px; font-weight: bold; color: #333;", 
                                   onclick="document.getElementById('popup').style.display='flex'; document.getElementById('order_id').innerText = '{}';".format(order['order_id'])),
                                 P(f"Total Price: $ {order['total_price']}", style="font-size: 16px; color: #666;"),
+                                 P(f"Total Price: $ {order['items']}", style="font-size: 16px; color: #666;"),
                                 P(f"Status: {order['status']}", style="font-size: 16px; color: #666;"),
                                 P(f"Order Date: {order['order_date']}", style="font-size: 16px; color: #666;"),
                                 style="display: flex; flex-direction: column; gap: 5px; padding: 10px;"

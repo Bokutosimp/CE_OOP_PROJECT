@@ -14,7 +14,9 @@ app, rt = fast_app()
 def product_management(request: Request):
     user_id = request.query_params.get("user_id", "์NO DATA!!!!")
     seller  = main_system.get_user_by_id(user_id)
-    load_items = main_system.get_items()         
+    load_items = main_system.get_items()      
+    load_bid_items = main_system.get_bid_items()      
+    print(load_bid_items[0].get_image)  
     return Main(
         
         Div(
@@ -84,6 +86,39 @@ def product_management(request: Request):
                         margin-bottom: 20px;
                     """
                 ) for item in load_items if item.get_owner.get_user_id == user_id 
+            ],
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px; background: #f7f7f7;"
+        ),
+        Grid(
+            *[
+                Card(
+                    Span(H3(item.get_name, style="color: #0074bd;"), P(item.get_amount, style="color:black ; font-weight: bold;") , style="display: flex; justify-content: space-between; margin-top: 15px;"),
+                    Div(
+                        Img(
+                            src='https://i.pinimg.com/564x/f5/9f/5e/f59f5ece0a7984f20413a4e32a4f25a2.jpg',
+                            style='width: 120px; height: 120px; object-fit: cover; border-radius: 8px; margin-right: 15px; border: 1px solid #ddd;' 
+                        ),
+                        P(
+                            "คำอธิบายสินค้าตัวอย่างที่นี่...",
+                            style='font-size: 14px; color: #555; max-width: 200px;'
+                        ),
+                        style='display: flex; align-items: center; padding: 10px;'
+                    ),
+                    Div(
+                        Button("Stock", onclick="document.getElementById('popup').style.display='flex'" , className = "button"),
+                        Button("edit", onclick = "document.getElementById('edit-popup').style.display='flex'", className = "button" , style="background-color : green ; margin-left : -35%"),
+                        Button("Ship", className = "button" , style="background-color : orange"),
+                        style="display: flex; justify-content: space-between; margin-top: 15px;"
+                    ),
+                    style = """
+                        width: 100%;    
+                        border-radius: 8px; 
+                        padding: 20px; 
+                        background: #f9fec2;
+                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                        margin-bottom: 20px;
+                    """
+                ) for item in load_bid_items
             ],
             style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px; background: #f7f7f7;"
         ),

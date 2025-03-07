@@ -98,12 +98,12 @@ async def get(session, product: Product , request : Request):
     return layout(content, session)
 
 @rt('/seller/add_bid')
-def get(session):
-    return layout(add_bid_product_page(),session)
+def get(session , request : Request):
+    return layout(add_bid_product_page(request),session)
 
-@rt('/seller/add_bid/submit')
-def get(session):
-    return layout(submit_bid_product_page(),session)
+@rt('/seller/add_bid/submit',  methods=["post"])
+def get(session , product : Bid_Product , request : Request):
+    return layout(submit_bid_product_page(product , request ),session)
 
 @rt('/admin/create_category')
 def get():
