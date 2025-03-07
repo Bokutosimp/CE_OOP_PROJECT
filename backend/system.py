@@ -1,11 +1,13 @@
-from .discount_code import Code
+# from .discount_code import Code
 from .category import Category
+from datetime import datetime
 from .item import *
 import uuid
 
 class System:
    def __init__(self):
       self.__list_items:list[Item] = []
+      self.__list_bid_items:list[BidItem] = []
       self.__list_users:list[User] = []
       self.__list_codes:list[Code] = []
       self.__list_categories:list[Category] = []
@@ -19,7 +21,7 @@ class System:
    #function for validation duplicate name in list of instances
    def __validate_name(self,name:str,instance:list[object]) -> bool:
       for item in instance:
-         if item.get_name  == name:
+         if item.get_name == name:
             return False
       return True
       
@@ -40,8 +42,19 @@ class System:
       else:
          return [item for item in self.__list_items if query.lower() in item.get_name.lower()]
       
+   def get_bid_items(self,query:str = ''):
+      if(query == ''):
+         return self.__list_bid_items
+      else:
+         return [item for item in self.__list_bid_items if query.lower() in item.get_name.lower()]   
+      
    def get_item_by_id(self,id:str):
       for item in self.__list_items: 
+         if item.get_id == id: return item
+      return None
+   
+   def get_bid_item_by_id(self,id:str):
+      for item in self.__list_bid_items: 
          if item.get_id == id: return item
       return None
       
@@ -59,6 +72,7 @@ class System:
             if category.get_id.lower() == category_id.lower():
                filtered_items.append(item)
       return filtered_items
+   
    def get_user_by_id(self,id:str):
       for user in self.__list_users:
          if user.get_user_id == id:
@@ -107,9 +121,31 @@ class System:
       self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list))
       return {'success':True}
    
+   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner:str,start_time:str,end_time:str,status:str,top_bidder:str):
+      if not self.__validate_name(name,self.__list_bid_items): raise Exception('Item already exist')
+      category_list:list[Category] = []
+      for id in category_id:
+         for category in self.__list_categories:
+            if category.get_id == id:
+               category_list.append(category)
+      if len(category_list) == 0: raise Exception('Category not found')
+      self.__list_bid_items.append(BidItem(id,name,price,amount,img,category_list,owner,start_time,end_time,status,top_bidder))
+      return 'Bid item created'
    
-   def save_item(self,name : str, price : float, amount : int, category : str):
-      pass
+   def view_item(self,itemId:str):
+      for item in self.__list_items :
+         if item.get_id == itemId  :
+           return item 
+      return "Item not found"
+   
+   
+   def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img=''):
+    try:
+        item_id = str(uuid.uuid4())
+        self.create_item(user_id, item_id, name, price, amount, [category_id], img)
+        return 'Item saved successfully'
+    except Exception as e:
+        return 'Error'
 
    def save_stock(self ,name : str , amount):
       pass
@@ -119,6 +155,33 @@ class System:
 
    def save_discount_code(self,ID, discount_percent):
       pass
+   
+   def get_top_bidder(self, item_id:str):
+      for item in self.__list_bid_items:
+         if item.get_id == item_id:
+            return item.get_top_bidder
+         
+   def start_bid(self, item_id:str):
+      for item in self.__list_bid_items:
+         if item.get_id == item_id:
+            item.start_bid()
+            return 'Bid started'
+         
+   def end_bid(self, item_id:str):
+      for item in self.__list_bid_items:
+         if item.get_id == item_id:
+            item.end_bid()
+            return 'Bid ended'
+         
+   def is_bid_started(self, item_id:str):
+      for item in self.__list_bid_items:
+         if item.get_id == item_id:
+            return item.is_started
+         
+   def is_bid_ended(self, item_id:str):
+      for item in self.__list_bid_items:
+         if item.get_id == item_id:
+            return item.is_ended
 
 
    def show_success_message():
@@ -166,6 +229,7 @@ class System:
    
 def createInstance():
    from .mock.items import items
+   from .mock.bid_items import bid_items
    from .mock.category import categories
    from .mock.users import users
    main_system = System()
@@ -206,6 +270,11 @@ def createInstance():
    print(main_system.add_to_cart('2','cust001',-1))
    print([cart.get_item.get_name for cart in main_system.get_cart('cust001').get_list_item_in_cart])
    print([cart.get_amount_in_cart for cart in main_system.get_cart('cust001').get_list_item_in_cart])
+   #create bid item
+   for bid_item in bid_items:
+      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'],bid_item['owner'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
+   bid_items_instance = main_system.get_bid_items()
+   [print(bid_item) for bid_item in bid_items_instance]
    return main_system
 
 main_system = createInstance()

@@ -96,8 +96,9 @@ def get(id:str,session):
     return (layout(review_page(id),session))
 
 @rt('/seller')
-def get(session):
-    return(layout(product_management(),session))
+@auth(['Seller', 'Admin'])
+def get(session, request: Request):
+    return layout(product_management(request), session)
 
 @rt('/seller/add')
 def get(session):
@@ -105,7 +106,7 @@ def get(session):
 
 @rt('/seller/add/submit')
 def get(session):
-    return layout(post(),session)
+    return layout(submit_product_page(),session)
 
 @rt('/seller/add_bid')
 def get(session):
@@ -113,7 +114,7 @@ def get(session):
 
 @rt('/seller/add_bid/submit')
 def get(session):
-    return layout(post_bid(),session)
+    return layout(submit_bid_product_page(),session)
 
 @rt('/admin/create_category')
 def get():
