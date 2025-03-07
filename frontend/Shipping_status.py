@@ -9,14 +9,14 @@ from backend.system import main_system
 def check_status(id):
     try:
         item = main_system.get_item_by_id(id)
-        print(f"C mon : {id}")
+        print(f"C mon : {item}")
         return Div(
             H1("Shipping Status"),
             Div(
-                Img(src=item.image, style="width: 100px; height: 100px; border-radius: 50%;"),
+                Img(src=item.get_image, style="width: 100px; height: 100px; border-radius: 50%;"),
                 H2("Order ID: " + str(id), style="color : #000000;"),
-                H3("Item: " + item.name, style="color : #000000;"),
-                H3("Status: Shipped", style="color : #000000;"),
+                H3("Item: " + item.get_name, style="color : #000000;"),
+                H3("Status: Done", style="color : #000000;"),
                 style="background-color: #EEEEEE; padding: 10px; border-radius: 5px; margin: 10px;"
             ),
             style="text-align: center; margin: 0 auto; padding: 10px;"

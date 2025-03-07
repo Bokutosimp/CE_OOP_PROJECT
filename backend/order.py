@@ -8,6 +8,7 @@ class order:
         self.__shipping_fee = shipping_fee
         self.__item_price = item_price
         self.__list_items = list_item
+        self.__isApply = None
         
     def check_amount(self):
         return Item.checkavaillability(self.__list_items)
@@ -27,6 +28,7 @@ class order:
         verify = Code.verify_code(input_code)
         if verify == True:
             self.__total_amount -= self.__total_amount * Code.get_discount
+            self.__isApply = True
         else:
             return "Invalid code"
                 

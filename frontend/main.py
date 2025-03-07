@@ -100,9 +100,9 @@ def get(id:str,session):
 def get(id:str,session):
     return (layout(review_page(id),session))
 
-@rt('/review/submit_review/{id}')
-def post(id:str,review:str,rating:int,session):
-    return submit_review(id,review,rating,session)
+# @rt('/review/submit_review/{id}')
+# def post(id:str,review:str,rating:int,session):
+#     return submit_review(id,review,rating,session)
 
 @rt('/seller')
 @auth(['Seller', 'Admin'])
@@ -142,7 +142,7 @@ def get(session):
     return layout(buy(session),session)
 
 @rt('/ship/{id}')
-def get(id,session):
+def get(id:str,session): # str is so important
     print(f"wasd {id}")
     return (layout(check_status(id),session))
 
