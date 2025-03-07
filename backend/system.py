@@ -242,12 +242,6 @@ class System:
       if not user: return {'success':False,'error':'User not found'}
       return user.get_cart
    
-   def add_review(self,item:object,rating:int,review:str,user_id:str):
-      user = self.get_user_by_id(user_id)
-      if not user: return {'success':False,'error':'User not found'}
-      if not isinstance(user,Customer): return {'success':False,'error':'User is not a customer'}
-      item.add_review(rating,review,user)
-   
 def createInstance():
    from .mock.items import items
    from .mock.bid_items import bid_items
