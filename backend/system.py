@@ -1,6 +1,7 @@
 from .discount_code import Code
 from .category import Category
 from .item import *
+from .mock import items
 import uuid
 
 class System:
@@ -114,14 +115,44 @@ class System:
            return item 
       return "Item not found"
    
-   
-   def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img=''):
-    try:
-        item_id = str(uuid.uuid4())
-        self.create_item(user_id, item_id, name, price, amount, [category_id], img)
-        return 'Item saved successfully'
-    except Exception as e:
-        return 'Error'
+
+   # def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img=''):
+   #    base_dir = os.path.dirname(os.path.abspath(__file__))  
+   #    items_file = os.path.join(base_dir, 'mock', 'items.json')  
+
+   #    category_list = []
+   #    category = self.get_category_by_id(category_id)
+
+   #    item_id = str(uuid.uuid4())
+   #    new_item = {
+   #       "id": item_id,
+   #       "name": name,
+   #       "price": price,
+   #       "amount": amount,
+   #       "owner": user_id,
+   #       "image": img,
+   #       "category": category_list
+   #    }
+      
+   #    if os.path.exists(items_file):
+   #       with open(items_file, 'r') as file:
+   #             items = json.load(file)
+      
+   #    items.append(new_item)
+   #    print(items)
+
+   #    with open(items_file, 'w') as file:
+   #        json.dump(items, file, indent=4)
+
+   #    return 'Item saved successfully'
+
+   def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img : str):
+      item_id = str(uuid.uuid4())
+      img = 'https://cdn.pixabay.com/photo/2016/07/07/16/46/dice-1502706_640.jpg'
+      main_system.create_item(user_id , item_id , name , price , amount , category_id , img )
+      print(self.__list_items)
+
+
 
    def save_stock(self ,name : str , amount):
       pass
@@ -170,7 +201,15 @@ def createInstance():
    [print(user) for user in users_instance]
    #create item
    for item in items:
-      main_system.create_item('sell001',item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])
+      # if item['owner'] == 'sell001' :
+      #     main_system.create_item('sell001',item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])
+      # if item['owner'] == 'sell002' :
+      #     main_system.create_item('sell002',item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])
+      for user in users :
+         if user['user_id'] == item['owner'] :
+            main_system.create_item(f'{user['user_id']}',item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image']) #ทำให้มันสร้างได้ไม่อั้น
+         
+
    items_instance = main_system.get_items()
    [print(item) for item in items_instance]
    print('result of search by category',main_system.get_items_by_category(main_system.get_categories()[0].get_id))
