@@ -176,8 +176,6 @@ class System:
       main_system.create_item(user_id , item_id , name , price , amount , category_id , img )
       print(self.__list_items)
 
-
-
    def save_stock(self ,name : str , amount):
       pass
 

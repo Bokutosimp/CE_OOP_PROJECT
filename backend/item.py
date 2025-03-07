@@ -145,25 +145,85 @@ class Seller(Customer):
       self.__store_name = store_name
       self.__store_address = store_address
 
+   @property
+   def get_store_name(self) -> str:
+      return self.__store_name
+   
+   @property
+   def get_store_address(self) -> str:
+      return self.__store_address 
+
    def __str__(self):
       return f"Role:seller Username:{self.get_username}"
-
-   def add_item(self, name : str, price : float , amount : int , category_id : str , img =''):
-      try :
-         System.save_item(self, self.get_user_id  ,name , price , amount , category_id , img)
-      except :
-         return 'Error'
-      
-      
-
-   def add_stock(self ,name : str , amount):
-      pass
-
-   def add_bid_item(self, name:str , start_price , amount : int , category : str) :
-      pass
-
-   def create_discount_code(self,ID, discount_percent):
-      pass
    
-   def confirm_bid():
-      pass
+   
+
+class BidHistory:
+    def __init__(self,item:Item):
+        self.__item = item
+        self.__status = None
+        
+    def set_status(self,status:str):
+        self.__status = status
+
+class BiddingHistory:
+    def __init__(self, user : User, bidAmount : float, bidTime : datetime):
+        self.__user = user
+        self.__bidAmount = bidAmount
+        self.__bidTime = bidTime
+
+class BidItem(Item):
+   def __init__(self, id: str, name: str, price: float, amount: int, owner: Seller, image: str, category: list[Category], start_time: datetime, end_time: datetime, top_bidder=None, status="Not Started"):
+      # Call Item's constructor
+      super().__init__(id, name, price, amount, owner, image, category)
+      
+      # Explicitly re-assign attributes
+      self.__owner = owner  # Ensure owner is correctly assigned
+      self.__top_bidder = top_bidder
+      self.__bids_history = []
+      self.__status = status
+      self.__start_time = start_time
+      self.__end_time = end_time
+
+   def __str__(self):
+         return super().__str__() + f"\nStart Time: {self.__start_time}\nEnd Time: {self.__end_time}\nStatus: {self.__status}\nTop Bidder: {self.__top_bidder}\nBids History: {self.__bids_history}"
+               
+   def start(self):
+         self.__start_time = datetime.now()
+         self.__status = "Started"
+         
+   def end(self):
+         self.__end_time = datetime.now()
+         self.__status = "Ended"
+         
+   @property
+   def id(self):
+         return self.__id
+      
+   @property
+   def top_bidder(self):
+         return self.__top_bidder
+      
+   @property
+   def bids_history(self):
+      return self.__bids_history
+   
+   def set_top_bidder(self, user : User):
+      self.__top_bidder = user
+      
+   def set__price(self, price : float):
+      self.__price = price
+   
+   def add_history(self, bid_history : BiddingHistory):
+      self.__bids_history.append(bid_history)
+
+   @property
+   def is_started(self):
+      return self.__status == "Started"
+   
+   @property
+   def is_ended(self):
+      return self.__status == "Ended"
+   
+   def is_price_valid(self, price : float):
+      return price > self.__price
