@@ -42,8 +42,8 @@ def product_management(request: Request):
                     ),
                     style='display: flex; align-items: center;'  
                 ),
-                Button("Add Product", onclick="window.location.href='/seller/add';", className = "button" , style="margin : 10px"),
-                Button("Add Bid Product", onclick="window.location.href='/seller/add_bid';", className = "button"),
+                Button("Add Product", onclick=f"window.location.href='/seller/add?user_id={seller['user_id']}';", className = "button" , style="margin : 10px"),
+                Button("Add Bid Product", onclick=f"window.location.href='/seller/add_bid?user_id={seller['user_id']}';", className = "button"),
                 style = """
                     width: 100%;    
                     border-radius: 8px; 
@@ -103,9 +103,9 @@ def product_management(request: Request):
          Div(
             Div(
                 Label(H3('Edit product')),
-                 Label(Input(type="string", id="name", placeholder="new product name", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
-                  Label(Input(type="string", id="detial", placeholder="new detail", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
-                   Label(Input(type="number", id="price", placeholder="new price", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+                Label(Input(type="string", id="name", placeholder="new product name", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+                Label(Input(type="string", id="detial", placeholder="new detail", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+                Label(Input(type="number", id="price", placeholder="new price", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
                 Button("Submit", onclick="document.getElementById('edit-popup').style.display='none'; document.getElementById('amount').value = '';",
                        style="background: #0074bd; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer; margin-top: 10px;"),
                 style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); width: 300px; text-align: center;"

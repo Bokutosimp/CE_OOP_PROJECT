@@ -94,7 +94,7 @@ def get(session):
 
 @rt('/seller/add/submit')
 def get(session):
-    return layout(post(),session)
+    return layout(submit_product_page(),session)
 
 @rt('/seller/add_bid')
 def get(session):
@@ -102,7 +102,7 @@ def get(session):
 
 @rt('/seller/add_bid/submit')
 def get(session):
-    return layout(post_bid(),session)
+    return layout(submit_bid_product_page(),session)
 
 @rt('/admin/create_category')
 def get():

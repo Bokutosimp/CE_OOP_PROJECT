@@ -59,6 +59,7 @@ class System:
             if category.get_id.lower() == category_id.lower():
                filtered_items.append(item)
       return filtered_items
+   
    def get_user_by_id(self,id:str):
       for user in self.__list_users:
          if user.get_user_id == id:
