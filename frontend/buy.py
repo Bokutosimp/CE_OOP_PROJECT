@@ -5,14 +5,12 @@ from backend.system import main_system
 from mock.users import *
 
 def buy(session):
-    print(f"check this out {session}")
     user_id = session['auth'][0]
-    user = main_system.get_user_by_id(session)
-    print(f"check this out too {user_id}")
-    if not user:
+    user = main_system.get_user_by_id(user_id)
+    if not user :
         return Body(H4("User not found", style="color: red;"))
     
-    total_amount = sum(item['price'] * item['quantity'] for item in user.cart)
+    total_amount = sum((item.get_item.get_price * item.get_amount_in_cart for item in user.get_cart.get_list_item_in_cart))
     shipping_amount = 10
     grand_total = total_amount + shipping_amount
 
