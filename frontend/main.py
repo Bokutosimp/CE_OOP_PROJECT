@@ -5,7 +5,7 @@ from layout import layout
 from cart import *
 from main_page import main_page
 from stylesheet import stylesheet
-from seller import product_management
+from seller import *
 from add_product import *
 from add_bid_product import *
 from item_page import item_page
@@ -120,6 +120,16 @@ def get(session , request : Request):
 @rt('/seller/add_bid/submit',  methods=["post"])
 def get(session , product : Bid_Product , request : Request):
     return layout(submit_bid_product_page(product , request ),session)
+
+@rt("/update_stock", methods=["post"])
+async def post(session , add_stock : Stock_product ,request: Request):
+    result = await update_stock(add_stock,request)
+    return layout(result , session)
+
+@rt("/edit_product", methods=["post"])
+async def post(session , edit : Edit_product,request: Request):
+    result = await edit_product(edit , request)
+    return layout(result,session)
 
 @rt('/admin/create_category')
 def get():

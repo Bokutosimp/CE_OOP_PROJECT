@@ -16,7 +16,7 @@ class Product:
 def add_product_page(request : Request):
     user_id = request.query_params.get('user_id',"no user_id")
     return Container(
-        Grid(H1("Add Item Management", style="text-align: center; margin-bottom: 20px; color: #222;")),
+        Grid(H1("Add Item Management", style="text-align: center; margin-bottom: 20px; color: #0074bd;")),
         Form(
             Label("Product Name:", Input(id="name", name="name", type="text", placeholder="Enter your product name")),
             Label("Price:", Input(id="price", name="price", type="number", placeholder="Enter your price")),
