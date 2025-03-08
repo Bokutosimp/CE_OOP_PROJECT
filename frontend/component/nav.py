@@ -20,7 +20,7 @@ def nav(session):
     try:
         if 'auth' in session and session['auth']:
             login_nav = Div(
-                Div(A('logout', href='logout'), 
+                Div(A('logout', href='/logout'), 
                     A('product management', href=f'/seller') if session['auth'][1] == 'Seller' else None,
                     A('History', href=f'/history') ,
                     style="display:flex; gap:10px;"),
