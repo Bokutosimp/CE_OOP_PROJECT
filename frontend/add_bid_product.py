@@ -14,8 +14,7 @@ class Bid_Product:
     description: str
     image: str 
 
-def add_bid_product_page(request : Request): 
-    user_id = request.query_params.get('user_id','no user_id')
+def add_bid_product_page(session): 
     return Container(
         Grid(
             H1("Add Bid Item Management", style="text-align: center; margin-bottom: 20px; color: #0074bd;"),  
@@ -33,15 +32,15 @@ def add_bid_product_page(request : Request):
             Button("Submit", type="submit"),
             enctype="multipart/form-data",
             style="display: flex; flex-direction: column; gap: 15px; width: 50%; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1); color: #222;",
-            action=f"/seller/add_bid/submit?user_id={user_id}",
+            action=f"/seller/add_bid/submit",
             method="post"
         ),
         style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
     )
 
 @rt("/seller/add_bid/submit", methods=["post"])
-def submit_bid_product_page(product: Bid_Product , request : Request):
-    user_id = request.query_params.get('user_id','no user_id')
+def submit_bid_product_page(product: Bid_Product , session):
+    user_id = session['auth'][0]
     print(user_id)
     print(f"📦 Product Name: {product.name}")
     print(f"💰 Price: {product.price}")
@@ -57,7 +56,7 @@ def submit_bid_product_page(product: Bid_Product , request : Request):
            Script(
             """ 
             setTimeout(function(){
-                window.location.href = '/';  }, 2000);
+                window.location.href = '/seller';  }, 2000);
             """
         ),
         style="background-color: #f7f7f7; min-height: 100vh; padding: 20px; display: flex; justify-content: center; align-items: center; color: #222;"

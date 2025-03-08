@@ -102,34 +102,34 @@ def get(id:str,session):
 
 @rt('/seller')
 @auth(['Seller', 'Admin'])
-def get(session, request: Request):
-    return layout(product_management(request), session)
+def get(session):
+    return layout(product_management(session), session)
 
 @rt('/seller/add')
-def get(session, request : Request):
-    return layout(add_product_page(request),session)
+def get(session):
+    return layout(add_product_page(session),session)
 
 @rt('/seller/add/submit', methods=["post"])
-async def get(session, product: Product , request : Request):
-    content = await submit_product_page(product , request)  
+async def get(session, product: Product):
+    content = await submit_product_page(product , session)  
     return layout(content, session)
 
 @rt('/seller/add_bid')
-def get(session , request : Request):
-    return layout(add_bid_product_page(request),session)
+def get(session):
+    return layout(add_bid_product_page(session),session)
 
 @rt('/seller/add_bid/submit',  methods=["post"])
-def get(session , product : Bid_Product , request : Request):
-    return layout(submit_bid_product_page(product , request ),session)
+def get(session , product : Bid_Product):
+    return layout(submit_bid_product_page(product , session ),session)
 
 @rt("/update_stock", methods=["post"])
-async def post(session , add_stock : Stock_product ,request: Request):
-    result = await update_stock(add_stock,request)
+async def post(session , add_stock : Stock_product):
+    result = await update_stock(add_stock, session)
     return layout(result , session)
 
 @rt("/edit_product", methods=["post"])
-async def post(session , edit : Edit_product,request: Request):
-    result = await edit_product(edit , request)
+async def post(session , edit : Edit_product, ):
+    result = await edit_product(edit , session)
     return layout(result,session)
 
 @rt('/admin/create_category')
