@@ -1,7 +1,6 @@
-from .discount_code import Code
 from .category import Category
 from datetime import datetime
-from .item import *
+from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart
 import uuid
 
 class System:
@@ -245,9 +244,10 @@ class System:
          return {'success':False,'error':f'{str(e)}'}
    
    #buy item in cart
-   # def buy_item_in_cart(self,user_id:str):
-   #    user = self.get_user_by_id(user_id)
-   #    if user == None:
+   def buy_item_in_cart(self,user_id:str):
+      user = self.get_user_by_id(user_id)
+      order = user.buy_item_in_cart()
+      user.add_history(order)
    
 def createInstance():
    from .mock.items import items
@@ -300,6 +300,8 @@ def createInstance():
    [print(bid_item) for bid_item in bid_items_instance]
    #test buy item in cart
    print("---###### buy item in cart of user cust001 #####---")
+   main_system.buy_item_in_cart('cust001')
+   print(main_system.get_user_by_id('cust001').get_order_history[0].get_order)
    
    return main_system
 

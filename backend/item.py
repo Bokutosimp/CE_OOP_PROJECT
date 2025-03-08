@@ -1,8 +1,7 @@
 from .category import Category
 from typing import Literal
-import os,sys
-from .system import *
 from datetime import datetime
+from .order import Order,OrderHistory
 
 class Item:
    def __init__(self,id:str,name :str , price:float,amount:int, owner:object,image:str,category:list[Category]):
@@ -147,7 +146,11 @@ class Customer(User):
    def get_e_bux(self) -> float: return self.__e_bux
    @property
    def get_cart(self) -> Cart: return self.__cart
+   @property
+   def get_order_history(self) -> list: return self.__order_history
    
+   def add_history(self,order_history):
+      self.__order_history.append(order_history)
    
    def add_to_cart(self,item:Item,quantity:int):
       if quantity < 0: raise Exception('quantity can not be less than or equal to zero')
@@ -172,6 +175,19 @@ class Customer(User):
             self.__cart.set_select_item(index,select)
             return 
       raise Exception('item not found in cart')
+   
+   def buy_item_in_cart(self):
+      buy_list = []
+      total_price = 0
+      for item in self.__cart.get_list_item_in_cart:
+         if item.get_isSelected == True: 
+            buy_list.append(item)
+            total_price += item.get_item.get_price*item.get_amount_in_cart
+      orderClass = Order(10,total_price,buy_list)
+      order_history = OrderHistory(orderClass)
+      return order_history
+
+      
    
    def SeaTung(self,amount):
       if amount > self.__e_bux :
@@ -273,3 +289,26 @@ class Review:
       self.__score = score
       self.__comment = comment
       self.__reviewer = reviewer
+      
+class Code :
+   def __init__(self,ID:str,name:str):
+      self.__ID = ID
+      self.__name = name
+      
+   def verify_code(self,input):
+      if input == self.__name:
+         return True
+
+class FreeDelivery(Code):
+   def __init__(self,ID:str,name:str,minimum:float):
+      super().__init__(ID,name)
+      self.__minimum = minimum
+
+class Discount(Code):
+   def __init__(self,ID:str,name:str,percentage:float,owner:Seller):
+      super().__init__(ID,name)
+      self.__percentage = percentage
+      self.__owner = owner
+      
+      def get_discount(self):
+         return self.__percentage
