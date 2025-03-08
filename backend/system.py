@@ -332,7 +332,9 @@ def createInstance():
    print("---############ item in cart #############---")
    # add item
    print(main_system.add_to_cart('2','cust001',2))
-   print(main_system.add_to_cart('2','cust001',100))
+   try:
+      print(main_system.add_to_cart('2','cust001',100))
+   except Exception as e: print(str(e))
    print(main_system.add_to_cart('3','cust001',2))
    print(main_system.add_to_cart('4','cust001',2))
    print("item added",[cart.get_item.get_name for cart in main_system.get_cart('cust001').get_list_item_in_cart])
