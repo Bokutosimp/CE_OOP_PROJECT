@@ -15,7 +15,7 @@ class System:
       for user in self.__list_users:
          if user.get_username == username and user.get_password == password:
             return [user.get_user_id,type(user).__name__]
-      return None
+      raise Exception('user not found')
    
    #function for validation duplicate name in list of instances
    def __validate_name(self,name:str,instance:list[object]) -> bool:
@@ -33,7 +33,7 @@ class System:
       for cat in self.__list_categories:
          if cat.get_id == id:
             return cat
-      return 'Not found'
+      raise Exception('Not found')
    
    def get_items(self,query:str = ''):
       if(query == ''):
@@ -50,12 +50,12 @@ class System:
    def get_item_by_id(self,id:str):
       for item in self.__list_items: 
          if item.get_id == id: return item
-      return None
+      raise Exception('item not found')
    
    def get_bid_item_by_id(self,id:str):
       for item in self.__list_bid_items:
          if str(item.get_id) == str(id): return item
-      return None
+      raise Exception('bid item not found')
       
    def get_users(self,query:str = ''):
       if(query == ''):
@@ -76,7 +76,7 @@ class System:
       for user in self.__list_users:
          if user.get_user_id == id:
             return user
-      return None
+      raise Exception('user not found')
    
    #function to create instace
    def create_category(self, id:str,name:str, description:str):
@@ -107,38 +107,42 @@ class System:
       return 'Code created'
       
    def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img=''):
-      if not self.__validate_name(name,self.__list_items): return {'success':False,'error':'User not found'}
-      current_user = self.get_user_by_id(current_user_id)
-      if current_user == None: return {'success':False,'error':'User not found'}
-      if not isinstance(current_user,Seller): return {'success':False,'error':'User is not a seller'}
-      category_list:list[Category] = []
-      for cat_id in category_id:
-         for category in self.__list_categories:
-            if category.get_id == cat_id:
-               category_list.append(category)
-      if len(category_list) == 0: return {'success':False,'error':'Category not found'}
-      self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list))
-      return {'success':True}
+      try:
+         if not self.__validate_name(name,self.__list_items): raise Exception('user not found')
+         current_user = self.get_user_by_id(current_user_id)
+         if not isinstance(current_user,Seller): raise Exception('User is not a seller')
+         category_list:list[Category] = []
+         for cat_id in category_id:
+            for category in self.__list_categories:
+               if category.get_id == cat_id:
+                  category_list.append(category)
+         if len(category_list) == 0: raise Exception('Category not found')
+         self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list))
+         return {'success':True}
+      except Exception as e:
+         raise Exception((str(e)))
    
    def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner_id:str,start_time:str,end_time:str,status:str,top_bidder:str):
-      if not self.__validate_name(name,self.__list_bid_items): raise Exception('Item already exist')
-      current_user = self.get_user_by_id(owner_id)
-      if current_user == None: return {'success':False,'error':'User not found'}
-      if not isinstance(current_user,Seller): return {'success':False,'error':'User is not a seller'}
-      category_list:list[Category] = []
-      for cat_id in category_id:
-         for category in self.__list_categories:
-            if category.get_id == cat_id:
-               category_list.append(category)
-      if len(category_list) == 0: raise Exception('Category not found')
-      self.__list_bid_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
-      return 'Bid item created'
+      try:
+         if not self.__validate_name(name,self.__list_bid_items): raise Exception('Item already exist')
+         current_user = self.get_user_by_id(owner_id)
+         if not isinstance(current_user,Seller): raise Exception('User is not a seller')
+         category_list:list[Category] = []
+         for cat_id in category_id:
+            for category in self.__list_categories:
+               if category.get_id == cat_id:
+                  category_list.append(category)
+         if len(category_list) == 0: raise Exception('Category not found')
+         self.__list_bid_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
+         return 'Bid item created'
+      except Exception as e:
+         raise Exception((str(e)))
    
-   def view_item(self,itemId:str):
-      for item in self.__list_items :
-         if item.get_id == itemId  :
-           return item 
-      return "Item not found"
+   # def view_item(self,itemId:str):
+   #    for item in self.__list_items :
+   #       if item.get_id == itemId  :
+   #         return item 
+   #    raise Exception('item not ')
    
    def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str):
       try:
@@ -146,7 +150,7 @@ class System:
          self.create_item(user_id, item_id, name, price, amount, [category_id], img)
          return 'Item saved successfully'
       except Exception as e:
-         return {'error': True, 'message': str(e)}
+         raise Exception(str(e))
 
    def add_stock(self, user_id, id, amount):
       try:
@@ -160,7 +164,9 @@ class System:
          item_current.add_amount(amount)
          return 'Success'
       except Exception as e:
-         return {'error': True, 'message': str(e)}
+         raise Exception(str(e))
+      except ValueError as e:
+         raise ValueError(str(e))
 
    def edit_item(self, id, name: str, description: str, price: int):
       try:
@@ -174,7 +180,9 @@ class System:
          item_current.edit_item(name, description, price)
          return "Item updated successfully"
       except Exception as e:
-         return {'error': True, 'message': str(e)}
+         raise Exception(str(e))
+      except ValueError as e:
+         raise ValueError(str(e))
 
    def save_bid_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str, start_time: str, end_time: str):
       try:
@@ -182,7 +190,9 @@ class System:
          main_system.create_bid_item(item_id, name, price, amount, category_id, img, user_id, start_time, end_time, status=None, top_bidder=None)
          return "Save Bid item success"
       except Exception as e:
-         return {'error': True, 'message': str(e)}
+         raise Exception(str(e))
+      except ValueError as e:
+         raise ValueError(str(e))
       
    def edit_bid_item(self):
       pass
@@ -235,56 +245,55 @@ class System:
    
    #cart and item in cart
    def add_to_cart(self,item_id:str,user_id:str,quantity:int):
-      user = self.get_user_by_id(user_id)
-      item = self.get_item_by_id(item_id)
-      if user == None: return {'success':False,'error':'User not found'}
-      if item == None: return {'success':False,'error':'Item not found'}
       try:
+         user = self.get_user_by_id(user_id)
+         item = self.get_item_by_id(item_id)
          user.add_to_cart(item,quantity)
          return {"success":True}
       except Exception as e:
-         return {'success':False,'error':str(e)}
+         raise Exception(str(e))
       
    def remove_from_cart(self,item_id:str,user_id:str):
-      user = self.get_user_by_id(user_id)
-      item = self.get_item_by_id(item_id)
-      if not user: return {'success':False,'error':'User not found'}
-      if not item: return {'success':False,'error':'Item not found'}
       try:
+         user = self.get_user_by_id(user_id)
+         item = self.get_item_by_id(item_id)
          user.remove_from_cart(item)
          return {'success':True}
       except Exception as e:
-         return {'success':False,'error':str(e)}
+         raise Exception(str(e))
       
    def set_select_item(self,item_id:str,user_id:str,select:bool):
-      user = self.get_user_by_id(user_id)
-      item = self.get_item_by_id(item_id)
-      if not user: return {'success':False,'error':'User not found'}
-      if not item: return {'success':False,'error':'Item not found'}
       try:
+         user = self.get_user_by_id(user_id)
+         item = self.get_item_by_id(item_id)
          user.set_select_item(item,select)
          return {'success':True}
       except Exception as e:
-         return {'success':False,'error':str(e)}
+         raise Exception(str(e))
 
    def get_cart(self,user_id:str):
-      user = self.get_user_by_id(user_id)
-      if not user: return {'success':False,'error':'User not found'}
-      return user.get_cart
+      try:
+         user = self.get_user_by_id(user_id)
+         return user.get_cart
+      except Exception as e:
+         raise Exception(str(e))
    
    def add_review(self,item:object,rating:int,review:str,user_id:str):
       try:
          user = self.get_user_by_id(user_id)
-         if not isinstance(user,Customer): return {'success':False,'error':'User is not a customer'}
+         if not isinstance(user,Customer): raise Exception('User is not a customer')
          item.add_review(rating,review,user)
       except Exception as e:
-         return {'success':False,'error':f'{str(e)}'}
+         raise Exception(str(e))
    
    #buy item in cart
    def buy_item_in_cart(self,user_id:str):
-      user = self.get_user_by_id(user_id)
-      order = user.buy_item_in_cart()
-      user.add_history(order)
+      try:
+         user = self.get_user_by_id(user_id)
+         order = user.buy_item_in_cart()
+         user.add_history(order)
+      except Exception as e:
+         raise Exception(str(e))
    
 def createInstance():
    from .mock.items import items , items_2
@@ -323,7 +332,9 @@ def createInstance():
    print("---############ item in cart #############---")
    # add item
    print(main_system.add_to_cart('2','cust001',2))
-   print(main_system.add_to_cart('2','cust001',100))
+   try:
+      print(main_system.add_to_cart('2','cust001',100))
+   except Exception as e: print(str(e))
    print(main_system.add_to_cart('3','cust001',2))
    print(main_system.add_to_cart('4','cust001',2))
    print("item added",[cart.get_item.get_name for cart in main_system.get_cart('cust001').get_list_item_in_cart])
