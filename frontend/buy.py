@@ -61,7 +61,7 @@ def buy(session):
                         Button("Close", type="button", onclick="closeDialog()", style="background-color: #C30F16; color: white; padding: 10px 15px; border: none; border-radius: 20px; cursor: pointer; width: auto;"),
                         style="display: flex; gap: 10px; margin-top: 10px;",  # Ensure buttons are on the same line
                     ),
-                    method="post",
+                    method="post", hx_post='',
                     action="/submit"
                 ),
                 style="background-color: #FFFFFF; padding: 20px; border-radius: 10px; width: 600px; text-align: center;",

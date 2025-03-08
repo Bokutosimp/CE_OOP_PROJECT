@@ -1,6 +1,6 @@
 from .category import Category
 from datetime import datetime
-from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review
+from .item import Item,BidItem,User,Discount,Code,Customer,Seller,Admin,Cart,Review
 import uuid
 
 class System:
@@ -197,8 +197,17 @@ class System:
    def edit_bid_item(self):
       pass
 
-   def save_discount_code(self,ID, discount_percent):
-      pass
+   def save_discount_code(self,name,ID, discount_percent,description):
+      try:
+            if not isinstance(discount_percent, (int, float)) or discount_percent <= 0 or discount_percent > 100:
+                raise ValueError("Discount percent must be a number between 1 and 100")
+            new_discount_code = Discount(ID, name, discount_percent, description)
+            self.__list_codes.append(new_discount_code)
+            return "Discount code saved successfully"
+      except Exception as e:
+         raise Exception(str(e))
+      except ValueError as e:
+         raise ValueError(str(e))
 
    def get_top_bidder(self, item_id:str):
       for item in self.__list_bid_items:
