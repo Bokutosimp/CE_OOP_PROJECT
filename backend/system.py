@@ -313,8 +313,7 @@ def createInstance():
          main_system.create_customer(user['name'],user['user_id'],user['email'],user['phone_number'],user['username'],user['password'],user['birth_date'],user['gender'],user['address'],user['e_bux'])
          if user['role'] == 'seller':
             main_system.create_seller(main_system.get_user_by_id(user['user_id']),user['store_name'],user['store_address'])
-   users_instance = main_system.get_users()
-   [print(user) for user in users_instance]
+   [print(user) for user in main_system.get_users()]
    #create item
    print("---############### create item ############---")
    for item in items:
@@ -343,7 +342,7 @@ def createInstance():
    print("remove item(3)",[cart.get_item.get_name for cart in main_system.get_cart('cust001').get_list_item_in_cart])
    # set item selected
    print(main_system.set_select_item('2','cust001',True))
-   print("set item(2) select to true",[f'{cart.get_item.get_id} is {cart.get_isSelected}' for cart in main_system.get_cart('cust001').get_list_item_in_cart])
+   print("set item(2) select to true",[f'{cart.get_item.get_id} is {cart.get_is_selected}' for cart in main_system.get_cart('cust001').get_list_item_in_cart])
    #create bid item
    print("---############ bid item #############---")
    for bid_item in bid_items:

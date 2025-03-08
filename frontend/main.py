@@ -70,15 +70,18 @@ def get(session):
     return layout(cart(session),session)
 
 @rt('/cart/{id}')
-def post(amount:str,id:str,session):
+@auth(['Seller', 'Customer'])
+def post(session,amount:str,id:str):
     return add_to_cart(id,amount,session)
 
 @rt('/cart/{item_id}')
-def delete(item_id:str,session):
+@auth(['Seller', 'Customer'])
+def delete(session,item_id:str):
     return remove_from_cart(item_id,session)
 
 @rt('/cart/{item_id}')
-def patch(item_id:str,select:bool,session):
+@auth(['Seller', 'Customer'])
+def patch(session,item_id:str,select:bool):
     return set_selected(item_id,select,session)
 
 @rt('/category/{category}')
@@ -90,7 +93,7 @@ def get(keyword:str,session):
     return layout(search_page(keyword),session)
 
 @rt('/item/{id}')
-def get(id:str,session):
+def get(session,id:str):
     return (layout(item_page(id),session))
     
 @rt('/bid/{id}')
@@ -164,4 +167,4 @@ def get(session):
 def get(id:str,session):
     return check_status(id)
 
-serve(port=1111)
+serve(port=2222)
