@@ -63,10 +63,10 @@ class Item:
       self.__review.append(review)
 
 class ItemInCart:
-   def __init__(self,item:Item,amount_in_cart:int,isSelected:bool):
+   def __init__(self,item:Item,amount_in_cart:int,is_selected:bool):
       self.__item = item
       self.__amount_in_cart = amount_in_cart
-      self.__isSelected = isSelected
+      self.__is_selected = is_selected
       
    def __str__(self):
       return f"item:{self.__item}, amount:{self.__amount_in_cart}, isSelected:{self.__isSelected}"
@@ -78,9 +78,9 @@ class ItemInCart:
    @get_amount_in_cart.setter
    def set_amount_int_cart(self,quantity:int): self.__amount_in_cart = quantity
    @property
-   def get_isSelected(self) -> bool: return self.__isSelected
-   @get_isSelected.setter
-   def set_isSelected(self,select:bool): self.__isSelected = select
+   def get_is_selected(self) -> bool: return self.__is_selected
+   @get_is_selected.setter
+   def set_is_selected(self,select:bool): self.__is_selected = select
    
 
 class Cart:
@@ -100,7 +100,7 @@ class Cart:
       self.__list_item_in_cart.pop(index)
       
    def set_select_item(self,index:int,select:bool):
-      self.__list_item_in_cart[index].set_isSelected = select
+      self.__list_item_in_cart[index].set_is_selected = select
    
 class User:
    def __init__(self,name:str,user_id:str,email:str,phone_number:str,username:str,password:str,birth_date:object,gender:Literal['M','F']):
@@ -200,7 +200,7 @@ class Customer(User):
       buy_list = []
       total_price = 0
       for item in self.__cart.get_list_item_in_cart:
-         if item.get_isSelected == True: 
+         if item.get_is_selected == True: 
             buy_list.append(item)
             total_price += item.get_item.get_price*item.get_amount_in_cart
       orderClass = Order(10,total_price,buy_list)
