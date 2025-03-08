@@ -129,7 +129,7 @@ class System:
             if category.get_id == id:
                category_list.append(category)
       if len(category_list) == 0: raise Exception('Category not found')
-      self.__list_bid_items.append(BidItem(id,name,price,amount,category_list,img,owner,start_time,end_time,status,top_bidder)) 
+      self.__list_bid_items.append(BidItem(id,name,price,amount,img,category_list,owner,start_time,end_time,status,top_bidder))
       return 'Bid item created'
    
    def view_item(self,itemId:str):
@@ -142,11 +142,10 @@ class System:
    def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img : str):
     try:
         item_id = str(uuid.uuid4())
-        print(img)
         self.create_item(user_id, item_id, name, price, amount, [category_id], img)
-        return 'Item saved successfully'
+        return {'success': False}
     except Exception as e:
-        return 'Error'
+        return {'error' : 'Not found'}
 
    def save_stock(self ,name : str , amount):
       pass
