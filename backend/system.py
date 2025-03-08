@@ -1,4 +1,6 @@
 from .category import Category
+from datetime import datetime
+from .item import Item,BidItem,User,Discount,Code,Customer,Seller,Admin,Cart,Review
 from datetime import datetime,timedelta
 from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review
 import uuid
@@ -247,8 +249,17 @@ class System:
 
       
 
-   def save_discount_code(self,ID, discount_percent):
-      pass
+   def save_discount_code(self,name,ID, discount_percent,description):
+      try:
+            if not isinstance(discount_percent, (int, float)) or discount_percent <= 0 or discount_percent > 100:
+                raise ValueError("Discount percent must be a number between 1 and 100")
+            new_discount_code = Discount(ID, name, discount_percent, description)
+            self.__list_codes.append(new_discount_code)
+            return "Discount code saved successfully"
+      except Exception as e:
+         raise Exception(str(e))
+      except ValueError as e:
+         raise ValueError(str(e))
 
    def get_top_bidder(self, item_id:str):
       for item in self.__list_items:
@@ -430,8 +441,13 @@ def createInstance():
    
    #test buy item in cart
    print("---###### buy item in cart of user cust001 #####---")
-   main_system.buy_item_in_cart('cust001')
-   print(main_system.get_user_by_id('cust001').get_order_history[0].get_order)
+   user = main_system.get_user_by_id('cust001')
+   print(f"User money before purchase: {user.get_e_bux}")
+   check_stock = main_system.buy_cart_check_stock('cust001')
+   print("return price :", check_stock, "E")
+   confirm_purchase = main_system.buy_item_with_code('cust001', 'SUMMER_SALE')
+   print("Discounted price:", confirm_purchase)
+   print(f"User money after purchase: {user.get_e_bux}")
    
    return main_system
 

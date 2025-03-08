@@ -365,3 +365,7 @@ class Discount(Code):
       
       def get_discount(self):
          return self.__percentage
+      
+      @property
+      def get_discount(self):
+         return self.__percentage

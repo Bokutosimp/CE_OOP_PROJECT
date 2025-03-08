@@ -15,15 +15,7 @@ class Order:
         
     def item_price(self):
         return self.__item_price
-    
-    # def sum_item_in_cart(self):
-    #     for i in Cart.get_list_item_in_cart:
-    #         self.__list_items.append(i)
-    #         self.__item_price += i.get_item.get_price * i.get_amount_in_cart
-    #         self.__total_amount += self.__item_price
-    #         return self.__total_amount
 
-        
     # def apply_code(self,input_code):
     #     verify = Code.verify_code(input_code)
     #     if verify == True:
