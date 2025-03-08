@@ -4,7 +4,8 @@ from backend.system import main_system
 
 def bid_page(id):
    try:
-      bid_item = main_system.get_bid_item_by_id(int(id))
+      bid_item = main_system.get_bid_item_by_id(id)
+      print(bid_item)
       return Div(
          Div(Img(src=bid_item.get_image), style="width:50%; height:auto; border-radius:15px; overflow:hidden;"),
          Form(
