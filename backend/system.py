@@ -1,6 +1,6 @@
 from .category import Category
 from datetime import datetime
-from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart
+from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review
 import uuid
 
 class System:
@@ -278,11 +278,13 @@ class System:
       except Exception as e:
          raise Exception(str(e))
    
-   def add_review(self,item:object,rating:int,review:str,user_id:str):
+   def add_review(self,item_id:str,rating:int,review:str,user_id:str):
       try:
          user = self.get_user_by_id(user_id)
          if not isinstance(user,Customer): raise Exception('User is not a customer')
-         item.add_review(rating,review,user)
+         item = self.get_item_by_id(item_id)
+         item.add_review(Review(rating,review,user))
+         item.show_review()
       except Exception as e:
          raise Exception(str(e))
    

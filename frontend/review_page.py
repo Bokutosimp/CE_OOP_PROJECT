@@ -34,8 +34,7 @@ def review_page(id, session):
         return Div("Item not found")
     
 def submit_review_page(review: str, rating : int, item_id : str, session):
-    print(f"📦 Review: {review}"
-          f"📦 Rating: {rating}"
-          f"📦 Item ID: {item_id}")
-    print(session['auth'])
+    user_id, user_role = session['auth']
+    print(f"Review: {review}, Rating: {rating}, Item ID: {item_id}, User ID: {user_id}")
+    main_system.add_review(item_id, rating, review, user_id)
     return Redirect(f"/")
