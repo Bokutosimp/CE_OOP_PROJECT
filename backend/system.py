@@ -150,36 +150,34 @@ class System:
         return 'Error'
     
    def add_stock(self, user_id , id  , amount ):
-      try :
-         if amount <= 0 : return 'amount should be positive'
+         if amount <= 0 : return Exception('amount shoud be positive')
          item_current = main_system.get_item_by_id(id)
          if item_current != None :
             item_current.add_amount(amount)
             return 'Success'
          else : 
             return "Item not found"
-      except Exception as e:
-        return 'Error'
+         
+   def edit_item(self, id , name : str , description : str , price : int):
+         if price <= 0 : return Exception('price should be positive')
+         item_current = main_system.get_item_by_id(id)
+         if item_current != None :
+            item_current.edit_item(name , description , price)
+         else :
+            Exception('Item not found')
+
        
-
-   def save_stock(self ,name : str , amount):
-      pass
-
    def save_bid_item(self, user_id, name: str, price: float, amount: int, category_id: str, img : str , start_time : str , end_time : str ):
-      try :
          item_id = str(uuid.uuid4())
          top_bidder = None
          status = None
          main_system.create_bid_item(item_id, name , price , amount ,category_id , img , user_id , start_time , end_time , status , top_bidder)
          return "Save Bid item success"
-      except Exception as e:
-        return 'Error'
+
 
    def save_discount_code(self,ID, discount_percent):
       pass
 
-   
-   
    def get_top_bidder(self, item_id:str):
       for item in self.__list_bid_items:
          if item.get_id == item_id:

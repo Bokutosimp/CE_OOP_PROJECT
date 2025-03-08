@@ -13,6 +13,7 @@ class Edit_product:
     new_name: str
     new_detail: str
     new_price: float
+    edit_item_id : str
 
 def product_management(request: Request):
     user_id = request.query_params.get("user_id", "NO DATA")
@@ -22,9 +23,13 @@ def product_management(request: Request):
 
     def create_product_card(item, is_bid=False):
         return Card(
+            Div(
             H3(item.get_name, style="color: #0074bd;"),
             Img(src=item.get_image, style="width: 100px; height: 100px; object-fit: cover;"),
             P(f"Stock: {item.get_amount}", style="color: black; font-weight: bold;"),
+            P(f"Price: {item.get_price} ฿", style="color: green; font-weight: bold;"), 
+               style="display: flex; flex-direction: column; align-items: center; text-align: center;"
+            ),
             Div(
                 Button(
                     "Stock", 
@@ -33,7 +38,7 @@ def product_management(request: Request):
                 ),
                 Button(
                     "Edit", 
-                    onclick=f"document.getElementById('edit-item-id').value = '{item.get_id}'; document.getElementById('popup-edit').style.display='flex'", 
+                    onclick=f"document.getElementById('edit_item_id').value = '{item.get_id}'; document.getElementById('popup-edit').style.display='flex'", 
                     className="button", 
                     style="background-color: green;"
                 ),
@@ -78,7 +83,7 @@ def product_management(request: Request):
         Div(
             Form(
                 H3("Edit Product"),
-                Input(type="hidden", id="edit-item-id", name="stock_item_id"),  # ✅ ชื่อตรงกับ dataclass
+                Input(type="hidden", id="edit_item_id", name="edit_item_id"),  
                 Input(type="text", name="new_name", placeholder="New Product Name",
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
                 Input(type="text", name="new_detail", placeholder="New Detail",
@@ -102,11 +107,11 @@ async def update_stock(add_stock: Stock_product, request: Request):
     try:
         if main_system.add_stock(user_id, item_id, amount) == 'Success' :
             return Main(
-        H1("✅ Added Stock Successfully!", style="text-align: center; color: #222;"),
-        Script(f"setTimeout(function(){{ window.location.href = '/seller?user_id={user_id}'; }}, 2000);"),
-        style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
-    )
-    except Exception as e:
+                H1("✅ Added Stock Successfully!", style="text-align: center; color: #222;"),
+                Script(f"setTimeout(function(){{ window.location.href = '/seller?user_id={user_id}'; }}, 2000);"),
+                style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
+            )
+    except :
         print(f"Error: {e}")
         return Main(
         H1("❌ Added Stock Failed!", style="text-align: center; color: #222;"),
@@ -117,9 +122,13 @@ async def update_stock(add_stock: Stock_product, request: Request):
 @rt("/edit_product", methods=["post"])
 async def edit_product(edit: Edit_product, request: Request):
     user_id = request.query_params.get("user_id", "none")
-
+    new_name = edit.new_name
+    new_detial = edit.new_detail
+    new_price = edit.new_price 
+    item_id = edit.edit_item_id
+    print(item_id)
     try:
-        main_system.update_product(user_id, edit.stock_item_id, edit.new_name, edit.new_detail, edit.new_price)  # ✅ ใช้ค่าจาก dataclass
+        main_system.edit_item(item_id , new_name , new_detial , new_price)  
     except Exception as e:
         print(f"Error: {e}")
 

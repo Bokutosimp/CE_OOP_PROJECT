@@ -43,6 +43,10 @@ class Item:
    def add_amount(self , amount) :
       self.__amount += amount 
 
+   def edit_item(self, name , desciption , price) :
+      self.__name = name 
+      self.__price = price
+
    def check_availlability(self,quantity:int) -> bool:
       return quantity <= self.__amount
 
