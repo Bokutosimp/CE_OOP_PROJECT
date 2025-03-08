@@ -10,7 +10,7 @@ from add_product import *
 from add_bid_product import *
 from item_page import item_page
 from bid_page import bid_page
-from review_page import review_page
+from review_page import *
 from search_page import search_page
 from search_by_category_page import search_by_category_page
 from create_category import *
@@ -98,7 +98,11 @@ def get(id:str,session):
 
 @rt('/review/{id}')
 def get(id:str,session):
-    return (layout(review_page(id),session))
+    return (layout(review_page(id,session),session))
+
+@rt("/review/submit",methods=["post"])
+def post(review:str,rating:int,item_id:str,session):
+    return submit_review_page(review,rating,item_id,session)
 
 @rt('/seller')
 @auth(['Seller', 'Admin'])
