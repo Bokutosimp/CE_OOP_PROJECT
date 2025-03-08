@@ -53,8 +53,8 @@ class System:
       return None
    
    def get_bid_item_by_id(self,id:str):
-      for item in self.__list_bid_items: 
-         if item.get_id == id: return item
+      for item in self.__list_bid_items:
+         if str(item.get_id) == str(id): return item
       return None
       
    def get_users(self,query:str = ''):
@@ -126,9 +126,9 @@ class System:
       if current_user == None: return {'success':False,'error':'User not found'}
       if not isinstance(current_user,Seller): return {'success':False,'error':'User is not a seller'}
       category_list:list[Category] = []
-      for id in category_id:
+      for cat_id in category_id:
          for category in self.__list_categories:
-            if category.get_id == id:
+            if category.get_id == cat_id:
                category_list.append(category)
       if len(category_list) == 0: raise Exception('Category not found')
       self.__list_bid_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
