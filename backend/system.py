@@ -1,7 +1,6 @@
-# from .discount_code import Code
 from .category import Category
 from datetime import datetime
-from .item import *
+from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart
 import uuid
 
 class System:
@@ -243,6 +242,20 @@ class System:
       if not user: return {'success':False,'error':'User not found'}
       return user.get_cart
    
+   def add_review(self,item:object,rating:int,review:str,user_id:str):
+      try:
+         user = self.get_user_by_id(user_id)
+         if not isinstance(user,Customer): return {'success':False,'error':'User is not a customer'}
+         item.add_review(rating,review,user)
+      except Exception as e:
+         return {'success':False,'error':f'{str(e)}'}
+   
+   #buy item in cart
+   def buy_item_in_cart(self,user_id:str):
+      user = self.get_user_by_id(user_id)
+      order = user.buy_item_in_cart()
+      user.add_history(order)
+   
 def createInstance():
    from .mock.items import items , items_2
    from .mock.bid_items import bid_items
@@ -296,6 +309,11 @@ def createInstance():
       main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['owner'],bid_item['image'], bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_bid_items()
    [print(bid_item) for bid_item in bid_items_instance]
+   #test buy item in cart
+   print("---###### buy item in cart of user cust001 #####---")
+   main_system.buy_item_in_cart('cust001')
+   print(main_system.get_user_by_id('cust001').get_order_history[0].get_order)
+   
    return main_system
 
 main_system = createInstance()
