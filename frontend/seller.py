@@ -96,21 +96,35 @@ def product_management(request: Request):
             ),
             id="popup-edit",
             style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;"
+        ),
+         Div(
+            Form(
+                H3("Edit Bid Product"),
+                Input(type="hidden", id="edit_bid_item_id", name="edit_bid_item_id"), 
+                Input(type="text", name="new_name", placeholder="New Bid Product Name", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
+                Input(type="number", name="new_start_price", placeholder="New Start Price", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),  
+                Input(type="text", name="new_detail", placeholder="New Detail", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
+                Button("Submit", type="submit",
+                       style="background: #0074bd; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer; margin-top: 10px;"),
+                action=f"/edit_product?user_id={user_id}", method="post",
+            ),
+            id="popup-edit",
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;"
         )
     )
 
 @rt("/update_stock", methods=["post"])
 async def update_stock(add_stock: Stock_product, request: Request):
-    user_id = request.query_params.get("user_id", "none")
-    amount = add_stock.stock
-    item_id = add_stock.stock_item_id
-    try:
+    try :
+        user_id = request.query_params.get("user_id", "none")
+        amount = add_stock.stock
+        item_id = add_stock.stock_item_id
         if main_system.add_stock(user_id, item_id, amount) == 'Success' :
-            return Main(
-                H1("✅ Added Stock Successfully!", style="text-align: center; color: #222;"),
-                Script(f"setTimeout(function(){{ window.location.href = '/seller?user_id={user_id}'; }}, 2000);"),
-                style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
-            )
+                return Main(
+                    H1("✅ Added Stock Successfully!", style="text-align: center; color: #222;"),
+                    Script(f"setTimeout(function(){{ window.location.href = '/seller?user_id={user_id}'; }}, 2000);"),
+                    style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
+                )
     except :
         print(f"Error: {e}")
         return Main(

@@ -140,40 +140,52 @@ class System:
            return item 
       return "Item not found"
    
-   
-   def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img : str):
-    try:
-        item_id = str(uuid.uuid4())
-        self.create_item(user_id, item_id, name, price, amount, [category_id], img)
-        return 'Item saved successfully'
-    except Exception as e:
-        return 'Error'
-    
-   def add_stock(self, user_id , id  , amount ):
-         if amount <= 0 : return Exception('amount shoud be positive')
-         item_current = main_system.get_item_by_id(id)
-         if item_current != None :
-            item_current.add_amount(amount)
-            return 'Success'
-         else : 
-            return "Item not found"
-         
-   def edit_item(self, id , name : str , description : str , price : int):
-         if price <= 0 : return Exception('price should be positive')
-         item_current = main_system.get_item_by_id(id)
-         if item_current != None :
-            item_current.edit_item(name , description , price)
-         else :
-            Exception('Item not found')
-
-       
-   def save_bid_item(self, user_id, name: str, price: float, amount: int, category_id: str, img : str , start_time : str , end_time : str ):
+   def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str):
+      try:
          item_id = str(uuid.uuid4())
-         top_bidder = None
-         status = None
-         main_system.create_bid_item(item_id, name , price , amount ,category_id , img , user_id , start_time , end_time , status , top_bidder)
-         return "Save Bid item success"
+         self.create_item(user_id, item_id, name, price, amount, [category_id], img)
+         return 'Item saved successfully'
+      except Exception as e:
+         return {'error': True, 'message': str(e)}
 
+   def add_stock(self, user_id, id, amount):
+      try:
+         if amount <= 0:
+               raise ValueError('Amount should be positive')
+
+         item_current = main_system.get_item_by_id(id)
+         if not item_current:
+               return "Item not found"
+
+         item_current.add_amount(amount)
+         return 'Success'
+      except Exception as e:
+         return {'error': True, 'message': str(e)}
+
+   def edit_item(self, id, name: str, description: str, price: int):
+      try:
+         if price <= 0:
+               raise ValueError('Price should be positive')
+
+         item_current = main_system.get_item_by_id(id)
+         if not item_current:
+               return "Item not found"
+
+         item_current.edit_item(name, description, price)
+         return "Item updated successfully"
+      except Exception as e:
+         return {'error': True, 'message': str(e)}
+
+   def save_bid_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str, start_time: str, end_time: str):
+      try:
+         item_id = str(uuid.uuid4())
+         main_system.create_bid_item(item_id, name, price, amount, category_id, img, user_id, start_time, end_time, status=None, top_bidder=None)
+         return "Save Bid item success"
+      except Exception as e:
+         return {'error': True, 'message': str(e)}
+      
+   def edit_bid_item(self):
+      pass
 
    def save_discount_code(self,ID, discount_percent):
       pass
