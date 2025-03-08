@@ -12,3 +12,6 @@ class Category:
    @property
    def get_name(self):
       return self.__name
+   @property 
+   def get_description(self):
+      return self.__description
