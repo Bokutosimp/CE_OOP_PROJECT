@@ -10,7 +10,7 @@ class Product:
     amount: int
     category: str
     description: str
-    # image: UploadFile 
+    image: str 
 
 @rt("/seller/add")
 def add_product_page(request : Request):
@@ -23,7 +23,7 @@ def add_product_page(request : Request):
             Label("Amount:", Input(id="amount", name="amount", type="number", placeholder="Enter your amount")),
             Label("Category:", Input(id="category", name="category", type="text", placeholder="Enter category")),
             Label("Description:", Textarea(id="description", name="description", rows=5, placeholder="Product description...")),
-            Label("Image:", Input(id="image", name="image", type="file", accept="image/*")),
+            Label("Image:", Input(id="image", name="image", type="text" , placeholder="Enter your image url" )),
             Button("Submit", type="submit"),
             enctype="multipart/form-data",
             style="display: flex; flex-direction: column; gap: 15px; width: 50%; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1); color: #222;",
@@ -40,8 +40,11 @@ async def submit_product_page(product: Product , request : Request):
     print(f"📦 Product Name: {product.name}")
     print(f"💰 Price: {product.price}")
     print(f"🏷️ Category: {product.category}")    
+    print(f"🏷️ Category: {product.category}")    
+    print(f"🏷️ Category: {product.image}")    
+
     if (product.name != None and product.price != None and product.category != None and product.description != None):
-        main_system.save_item(user_id,product.name,product.price , product.amount , product.category , img = '' )
+        main_system.save_item(user_id,product.name,product.price , product.amount , product.category , product.image )
     else : 
         return Script("alert('Invalid")
 

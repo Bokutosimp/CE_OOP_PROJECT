@@ -12,7 +12,7 @@ class Bid_Product:
     start_time : str
     end_time : str
     description: str
-    # image: UploadFile 
+    image: str 
 
 def add_bid_product_page(request : Request): 
     user_id = request.query_params.get('user_id','no user_id')
@@ -28,7 +28,7 @@ def add_bid_product_page(request : Request):
             Label("Start Time", Input(type="date", id="start_time", placeholder="Enter end time", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
             Label("End Time", Input(type="date", id="end_time", placeholder="Enter category", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
             Label("Description:", Textarea(id="description", rows=5, placeholder="Product description...", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
-            Label("Image:", Input(type="file", id="image", accept="image/*", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")), 
+            Label("Image:", Input(type="text", id="image", placeholder="Enter your image url" , style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")), 
 
             Button("Submit", type="submit"),
             enctype="multipart/form-data",
@@ -43,14 +43,14 @@ def add_bid_product_page(request : Request):
 def submit_bid_product_page(product: Bid_Product , request : Request):
     user_id = request.query_params.get('user_id','no user_id')
     print(user_id)
-    # image_data = product.image.read() 
     print(f"📦 Product Name: {product.name}")
     print(f"💰 Price: {product.price}")
     print(f"🏷️ Category: {product.category}")    
+    print(f"🏷️ Category: {product.image}")    
     print(f"🏷️ start time: {product.start_time}")    
     print(f"🏷️ end time: {product.end_time}")    
     print("🔥 /submit received a request!")  
-    main_system.save_bid_item( user_id, product.name , product.price , product.amount , product.category , '' , product.start_time  , product.end_time )
+    main_system.save_bid_item( user_id, product.name , product.price , product.amount , product.category , product.image , product.start_time  , product.end_time )
     return Main(
         H1("✅ Bid Product Added Successfully!", 
            style="text-align: center; color: #222; background: #0074bd; padding: 20px; border-radius: 10px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);"),

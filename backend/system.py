@@ -129,7 +129,7 @@ class System:
             if category.get_id == id:
                category_list.append(category)
       if len(category_list) == 0: raise Exception('Category not found')
-      self.__list_bid_items.append(BidItem(id,name,price,amount,img,category_list,owner,start_time,end_time,status,top_bidder))
+      self.__list_bid_items.append(BidItem(id,name,price,amount,category_list,img,owner,start_time,end_time,status,top_bidder)) 
       return 'Bid item created'
    
    def view_item(self,itemId:str):
@@ -139,10 +139,10 @@ class System:
       return "Item not found"
    
    
-   def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img=''):
+   def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img : str):
     try:
         item_id = str(uuid.uuid4())
-        img = 'https://cdn.pixabay.com/photo/2016/07/07/16/46/dice-1502706_640.jpg'
+        print(img)
         self.create_item(user_id, item_id, name, price, amount, [category_id], img)
         return 'Item saved successfully'
     except Exception as e:
@@ -155,7 +155,6 @@ class System:
       item_id = str(uuid.uuid4())
       top_bidder = None
       status = None
-      img = 'https://cdn.pixabay.com/photo/2016/07/07/16/46/dice-1502706_640.jpg'
       main_system.create_bid_item(item_id, name , price , amount ,category_id , user_id , img , start_time , end_time , status , top_bidder)
       return {'success': True}
 

@@ -16,7 +16,11 @@ def product_management(request: Request):
     seller  = main_system.get_user_by_id(user_id)
     load_items = main_system.get_items()      
     load_bid_items = main_system.get_bid_items()      
-    print(load_bid_items[0].get_owner)
+    print(load_bid_items[-1].get_owner)
+    print(load_bid_items[-1].get_image)
+    print(load_bid_items[-1])
+
+
     return Main(
         
         Div(
@@ -43,7 +47,8 @@ def product_management(request: Request):
                     style='display: flex; align-items: center;'  
                 ),
                 Button("Add Product", onclick=f"window.location.href='/seller/add?user_id={seller.get_user_id}';", className = "button" , style="margin : 10px"),
-                Button("Add Bid Product", onclick=f"window.location.href='/seller/add_bid?user_id={seller.get_user_id}';", className = "button"),
+                Button("Add Bid Product", onclick=f"window.location.href='/seller/add_bid?user_id={seller.get_user_id}';", style="margin-right : 10px", className = "button"),
+                Button("click to create code", onclick=f"window.location.href='/';", className = "button"),
                 style = """
                     width: 100%;    
                     border-radius: 8px; 
