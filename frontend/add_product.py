@@ -13,8 +13,8 @@ class Product:
     image: str 
 
 @rt("/seller/add")
-def add_product_page(request : Request):
-    user_id = request.query_params.get('user_id',"no user_id")
+def add_product_page(session):
+    user_id = session['auth'][0]
     return Container(
         Grid(H1("Add Item Management", style="text-align: center; margin-bottom: 20px; color: #0074bd;")),
         Form(
@@ -27,14 +27,14 @@ def add_product_page(request : Request):
             Button("Submit", type="submit"),
             enctype="multipart/form-data",
             style="display: flex; flex-direction: column; gap: 15px; width: 50%; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1); color: #222;",
-            action=f"/seller/add/submit?user_id={user_id}",
+            action=f"/seller/add/submit",
             method="post"
         )
     )
 
 @rt("/seller/add/submit", methods=["post"])
-async def submit_product_page(product: Product , request : Request):
-    user_id = request.query_params.get('user_id','no user_id')
+async def submit_product_page(product: Product , session):
+    user_id = session['auth'][0]
     print(user_id)
     # image_data = product.image.read() 
     print(f"📦 Product Name: {product.name}")
@@ -53,7 +53,7 @@ async def submit_product_page(product: Product , request : Request):
         Script(
             """ 
             setTimeout(function(){
-                window.location.href = '/';  }, 2000);
+                window.location.href = '/seller ';  }, 2000);
             """
         ),
         style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"

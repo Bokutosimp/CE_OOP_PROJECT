@@ -15,8 +15,9 @@ class Edit_product:
     new_price: float
     edit_item_id : str
 
-def product_management(request: Request):
-    user_id = request.query_params.get("user_id", "NO DATA")
+def product_management(session):
+    print(session['auth'][0])
+    user_id = session['auth'][0]
     seller = main_system.get_user_by_id(user_id)
     products = main_system.get_items()
     bid_products = main_system.get_bid_items()
@@ -54,9 +55,9 @@ def product_management(request: Request):
             H3("Profile", style="color: #0074bd;"),
             H5(seller.get_store_name, style="font-size: 16px; color: #333;"),
             Div(
-                Button("Add Product", onclick=f"window.location.href='/seller/add?user_id={user_id}';", className="button"),
-                Button("Add Bid Product", onclick=f"window.location.href='/seller/add_bid?user_id={user_id}';", className="button"),
-                Button("Create Discount Code", onclick=f"window.location.href='/discount_code?user_id={user_id}';", className="button"),
+                Button("Add Product", onclick=f"window.location.href='/seller/add';", className="button"),
+                Button("Add Bid Product", onclick=f"window.location.href='/seller/add_bid';", className="button"),
+                Button("Create Discount Code", onclick=f"window.location.href='/discount_code';", className="button"),
                 style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;"
             ),
             style="max-width: 700px; margin: auto; text-align: center; background-color: white !important; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"
@@ -92,7 +93,7 @@ def product_management(request: Request):
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
                 Button("Submit", type="submit",
                        style="background: #0074bd; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer; margin-top: 10px;"),
-                action=f"/edit_product?user_id={user_id}", method="post",
+                action=f"/edit_product", method="post",
             ),
             id="popup-edit",
             style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;"
@@ -106,7 +107,7 @@ def product_management(request: Request):
                 Input(type="text", name="new_detail", placeholder="New Detail", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
                 Button("Submit", type="submit",
                        style="background: #0074bd; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer; margin-top: 10px;"),
-                action=f"/edit_product?user_id={user_id}", method="post",
+                action=f"/edit_product", method="post",
             ),
             id="popup-edit",
             style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;"
@@ -114,28 +115,28 @@ def product_management(request: Request):
     )
 
 @rt("/update_stock", methods=["post"])
-async def update_stock(add_stock: Stock_product, request: Request):
+async def update_stock(add_stock: Stock_product, session):
     try :
-        user_id = request.query_params.get("user_id", "none")
+        user_id = session['auth'][0]
         amount = add_stock.stock
         item_id = add_stock.stock_item_id
         if main_system.add_stock(user_id, item_id, amount) == 'Success' :
                 return Main(
                     H1("✅ Added Stock Successfully!", style="text-align: center; color: #222;"),
-                    Script(f"setTimeout(function(){{ window.location.href = '/seller?user_id={user_id}'; }}, 2000);"),
+                    Script(f"setTimeout(function(){{ window.location.href = '/seller'; }}, 2000);"),
                     style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
                 )
     except :
         print(f"Error: {e}")
         return Main(
         H1("❌ Added Stock Failed!", style="text-align: center; color: #222;"),
-        Script(f"setTimeout(function(){{ window.location.href = '/seller?user_id={user_id}'; }}, 2000);"),
+        Script(f"setTimeout(function(){{ window.location.href = '/seller'; }}, 2000);"),
         style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
     )
 
 @rt("/edit_product", methods=["post"])
-async def edit_product(edit: Edit_product, request: Request):
-    user_id = request.query_params.get("user_id", "none")
+async def edit_product(edit: Edit_product, session):
+    user_id = session['auth'][0]
     new_name = edit.new_name
     new_detial = edit.new_detail
     new_price = edit.new_price 
@@ -148,6 +149,6 @@ async def edit_product(edit: Edit_product, request: Request):
 
     return Main(
         H1("✅ Edit Product Successfully!", style="text-align: center; color: #222;"),
-        Script(f"setTimeout(function(){{ window.location.href = '/seller?user_id={user_id}'; }}, 2000);"),
+        Script(f"setTimeout(function(){{ window.location.href = '/seller'; }}, 2000);"),
         style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
     )
