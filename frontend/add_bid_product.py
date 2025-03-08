@@ -18,7 +18,7 @@ def add_bid_product_page(request : Request):
     user_id = request.query_params.get('user_id','no user_id')
     return Container(
         Grid(
-            H1("Add Bid Item Management", style="text-align: center; margin-bottom: 20px; color: #222;"),  
+            H1("Add Bid Item Management", style="text-align: center; margin-bottom: 20px; color: #0074bd;"),  
         ),
         Form( 
             Label("Bid Product Name:", Input(type="text", id="name", placeholder="Enter your product name", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
