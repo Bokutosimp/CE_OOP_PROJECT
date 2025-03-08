@@ -39,6 +39,9 @@ class Item:
    @property
    def get_owner(self) -> object :
       return self.__owner
+   
+   def add_amount(self , amount) :
+      self.__amount += amount 
 
    def check_availlability(self,quantity:int) -> bool:
       return quantity <= self.__amount

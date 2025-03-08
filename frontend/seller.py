@@ -6,13 +6,13 @@ app, rt = fast_app()
 @dataclass
 class Stock_product:
     stock: int
+    stock_item_id: str
 
 @dataclass
 class Edit_product:
     new_name: str
     new_detail: str
     new_price: float
-
 
 def product_management(request: Request):
     user_id = request.query_params.get("user_id", "NO DATA")
@@ -26,8 +26,17 @@ def product_management(request: Request):
             Img(src=item.get_image, style="width: 100px; height: 100px; object-fit: cover;"),
             P(f"Stock: {item.get_amount}", style="color: black; font-weight: bold;"),
             Div(
-                Button("Stock", onclick="document.getElementById('popup-stock').style.display='flex'", className="button"),
-                Button("Edit", onclick="document.getElementById('popup-edit').style.display='flex'", className="button", style="background-color: green;"),
+                Button(
+                    "Stock", 
+                    onclick=f"document.getElementById('stock_item_id').value = '{item.get_id}'; document.getElementById('popup-stock').style.display='flex'", 
+                    className="button"
+                ),
+                Button(
+                    "Edit", 
+                    onclick=f"document.getElementById('edit-item-id').value = '{item.get_id}'; document.getElementById('popup-edit').style.display='flex'", 
+                    className="button", 
+                    style="background-color: green;"
+                ),
                 Button("Ship", className="button", style="background-color: orange;"),
                 style="display: flex; gap: 10px; justify-content: center;"
             ),
@@ -56,6 +65,7 @@ def product_management(request: Request):
         Div(
             Form(
                 H3("Stock Item"),
+                Input(type="hidden", id="stock_item_id", name="stock_item_id"),  
                 Input(type="number", name="stock", placeholder="Amount",
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
                 Button("Submit", type="submit",
@@ -68,6 +78,7 @@ def product_management(request: Request):
         Div(
             Form(
                 H3("Edit Product"),
+                Input(type="hidden", id="edit-item-id", name="stock_item_id"),  # ✅ ชื่อตรงกับ dataclass
                 Input(type="text", name="new_name", placeholder="New Product Name",
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
                 Input(type="text", name="new_detail", placeholder="New Detail",
@@ -83,45 +94,37 @@ def product_management(request: Request):
         )
     )
 
-
 @rt("/update_stock", methods=["post"])
-async def update_stock(  add_stock : Stock_product ,request: Request):
-    user_id = request.query_params.get('user_id','none')
+async def update_stock(add_stock: Stock_product, request: Request):
+    user_id = request.query_params.get("user_id", "none")
+    amount = add_stock.stock
+    item_id = add_stock.stock_item_id
     try:
-        amount_add = Stock_product.stock
-    except :
-        amount_add = 0
-    print(f"Updated Stock: {add_stock.stock}")  
-    return  Main(
+        if main_system.add_stock(user_id, item_id, amount) == 'Success' :
+            return Main(
         H1("✅ Added Stock Successfully!", style="text-align: center; color: #222;"),
-        Script(
-            f""" 
-            setTimeout(function(){{
-                window.location.href = '/seller?user_id={user_id}';  }}, 2000);
-            """
-        ),
+        Script(f"setTimeout(function(){{ window.location.href = '/seller?user_id={user_id}'; }}, 2000);"),
+        style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
+    )
+    except Exception as e:
+        print(f"Error: {e}")
+        return Main(
+        H1("❌ Added Stock Failed!", style="text-align: center; color: #222;"),
+        Script(f"setTimeout(function(){{ window.location.href = '/seller?user_id={user_id}'; }}, 2000);"),
         style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
     )
 
-
-
 @rt("/edit_product", methods=["post"])
-async def edit_product(edit : Edit_product,request: Request):
-    user_id = request.query_params.get('user_id','none')
-    try :
-        new_name = edit.new_name
-        new_detail = edit.new_detail
-        new_price = edit.new_price
-    except :
-        [new_name , new_detail , new_price] = 0
-    print(f"New Name: {new_name}, New Detail: {new_detail}, New Price: {new_price}")
+async def edit_product(edit: Edit_product, request: Request):
+    user_id = request.query_params.get("user_id", "none")
+
+    try:
+        main_system.update_product(user_id, edit.stock_item_id, edit.new_name, edit.new_detail, edit.new_price)  # ✅ ใช้ค่าจาก dataclass
+    except Exception as e:
+        print(f"Error: {e}")
+
     return Main(
-        H1("✅ Edit Prodcut Successfully!", style="text-align: center; color: #222;"),
-        Script(
-            f""" 
-            setTimeout(function(){{
-                window.location.href = '/seller?user_id={user_id}';  }}, 2000);
-            """
-        ),
+        H1("✅ Edit Product Successfully!", style="text-align: center; color: #222;"),
+        Script(f"setTimeout(function(){{ window.location.href = '/seller?user_id={user_id}'; }}, 2000);"),
         style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
     )
