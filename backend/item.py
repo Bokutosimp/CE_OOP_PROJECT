@@ -52,9 +52,11 @@ class Item:
    def add_amount(self , amount) :
       self.__amount += amount 
 
-   def edit_item(self, name , desciption , price) :
+   def edit_item(self, name , category ,desciption , price , img ) :
       self.__name = name 
       self.__price = price
+      self.__category = category
+      self.__image = img
 
    def check_availlability(self,quantity:int) -> bool:
       return quantity <= self.__amount
@@ -304,6 +306,12 @@ class BidItem(Item):
    def is_price_valid(self, price : float):
       return price > self.__price
    
+   # def edit_bid_item(self, name, price, amount, category, image, start_time, end_time):
+   #    self.__name = name 
+   #    self.__price = price
+   #    self.__amount = amount
+   #    self.__category = category
+         
 class Review:
    def __init__(self,score:int,comment:str,reviewer:Customer):
       self.__score = score

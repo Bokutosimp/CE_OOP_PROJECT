@@ -122,8 +122,8 @@ def get(session):
     return layout(add_product_page(session),session)
 
 @rt('/seller/add/submit', methods=["post"])
-async def get(session, product: Product):
-    content = await submit_product_page(product , session)  
+async def get(session ,request : Request , product: Product):
+    content = await submit_product_page(request , product , session)  
     return layout(content, session)
 
 @rt('/seller/add_bid')
