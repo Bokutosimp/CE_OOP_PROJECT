@@ -21,6 +21,7 @@ from register import *
 from decorators.auth import auth
 from decorators.redirect_path import redirect_path
 from Shipping_status import check_status
+from admin import admin_page
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
@@ -79,7 +80,7 @@ def delete(item_id:str,session):
 @rt('/cart/{item_id}')
 def patch(item_id:str,select:bool,session):
     return set_selected(item_id,select,session)
-    # return Div(item_id)
+
 @rt('/category/{category}')
 def get(category:str,session):
     return (layout(search_by_category_page(category),session))
@@ -126,12 +127,19 @@ def get(session):
     return layout(submit_bid_product_page(),session)
 
 @rt('/admin/create_category')
-def get():
+@auth(['Admin'])
+def get(session):
     return create_category()
 
 @rt('/admin/create_category')
-def post(category_name:str,category_description:str):
+@auth(['Admin'])
+def post(session,category_name:str,category_description:str):
     return post_create_category(category_name,category_description)
+
+@rt('/admin')
+@auth(['Admin'])
+def get(session):
+    return layout(admin_page(),session)
 
 @rt('/history')
 def get(session):
