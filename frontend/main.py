@@ -1,5 +1,6 @@
 from fasthtml.common import *
-
+import os
+import dotenv
 #import page
 from layout import layout
 from cart import *
@@ -25,6 +26,8 @@ from shipping_status import check_status
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
+
+dotenv.load_dotenv()
 
     
 css = stylesheet
@@ -166,5 +169,5 @@ def get(session):
 @rt('/ship/{id}')
 def get(id:str,session):
     return check_status(id)
-
-serve(port=2222)
+print(os.getenv("PORT"))
+serve(port=int(os.getenv("PORT")))
