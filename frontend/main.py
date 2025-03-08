@@ -69,6 +69,7 @@ def post(name:str,email:str,phone_number:str,username:str,password:str,birth_dat
     return register_post(name,email,phone_number,username,password,birth_date,gender,address,session)
 
 @rt('/cart')
+@auth(['Customer','Seller'])
 def get(session):
     return layout(cart(session),session)
 
