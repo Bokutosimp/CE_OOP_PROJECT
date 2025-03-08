@@ -1,5 +1,6 @@
 from fasthtml.common import *
-
+import os
+import dotenv
 #import page
 from layout import layout
 from cart import *
@@ -25,6 +26,8 @@ from shipping_status import check_status
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
+
+dotenv.load_dotenv()
 
     
 css = stylesheet
@@ -70,15 +73,18 @@ def get(session):
     return layout(cart(session),session)
 
 @rt('/cart/{id}')
-def post(amount:str,id:str,session):
+@auth(['Seller', 'Customer'])
+def post(session,amount:str,id:str):
     return add_to_cart(id,amount,session)
 
 @rt('/cart/{item_id}')
-def delete(item_id:str,session):
+@auth(['Seller', 'Customer'])
+def delete(session,item_id:str):
     return remove_from_cart(item_id,session)
 
 @rt('/cart/{item_id}')
-def patch(item_id:str,select:bool,session):
+@auth(['Seller', 'Customer'])
+def patch(session,item_id:str,select:bool):
     return set_selected(item_id,select,session)
 
 @rt('/category/{category}')
@@ -90,7 +96,7 @@ def get(keyword:str,session):
     return layout(search_page(keyword),session)
 
 @rt('/item/{id}')
-def get(id:str,session):
+def get(session,id:str):
     return (layout(item_page(id),session))
     
 @rt('/bid/{id}')
@@ -163,5 +169,5 @@ def get(session):
 @rt('/ship/{id}')
 def get(id:str,session):
     return check_status(id)
-
-serve(port=1111)
+print(os.getenv("PORT"))
+serve(port=int(os.getenv("PORT")))

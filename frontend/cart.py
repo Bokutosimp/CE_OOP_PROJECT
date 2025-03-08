@@ -3,7 +3,19 @@ sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
 
 def sum_price(items_in_cart):
-   return sum(round(item.get_item.get_price*item.get_amount_in_cart,3) for item in items_in_cart) 
+   return sum((round(item.get_item.get_price*item.get_amount_in_cart,3) if item.get_is_selected else 0 ) for item in items_in_cart) 
+
+def generate_cart_summary(items_in_cart):
+    delivery = 10
+    return (Div(Span(f"Items ({len(items_in_cart.get_list_item_in_cart)})"),Span(f'US ${sum_price(items_in_cart.get_list_item_in_cart)}'),style="width:100%; display:flex; flex-direction:row; justify-content:space-between; color:black;"),
+             Div(
+                Span('Shipping to ?'),
+                Span(f'US ${delivery}'),
+                style=f"{'display:none;' if delivery == 0 else 'display:flex;'}width:100%; display:flex; flex-direction:row; justify-content:space-between; border-bottom:1px solid black; color:black; padding-bottom:10px;"),
+             Div(Span("Subtotal"),Span(f"US ${sum_price(items_in_cart.get_list_item_in_cart) + delivery}"),style="width:100%; display:flex; flex-direction:row; justify-content:space-between; font-size:25px; color:black; "),
+             A(Button("Go to checkout"),href='/purchase'),
+             Span("Purchase protected by",A(" eBay Money Back Guarantee",href="#"),style="font-size:15px;"),)
+
 
 def cart(session):
    user_id = session['auth'][0]
@@ -26,8 +38,8 @@ def cart(session):
             style="padding:10px; display:grid; gap:30px; grid-template-columns:1fr 3fr 1fr 2fr;"),
             Div(
                Div(Input(type='checkbox',id='select',name='id',
-                        onchange=f"fetch('/cart/{item.get_item.get_id}',{{method:'PATCH',headers:{{'Content-Type': 'application/x-www-form-urlencoded'}},body: 'select='+this.checked}})",
-                         checked=f'{"true" if item.get_isSelected else ""}',
+                        onchange=f"fetch('/cart/{item.get_item.get_id}',{{method:'PATCH', headers:{{'Content-Type': 'application/x-www-form-urlencoded'}} ,body: 'select='+this.checked}}).then(response => response.text()).then(data => document.getElementById('cart-summary').innerHTML = data);",
+                         checked=f'{"true" if item.get_is_selected else ""}',
                          style=' margin:0;justify-self:center; align-self:center;'),
                    style='justify-self:center; align-self:center; display:flex;',),
                Span("|"),
@@ -40,16 +52,17 @@ def cart(session):
          ) for item in items_in_cart.get_list_item_in_cart],
          style="display:flex; flex-direction:column; gap:10px; border:1px solid gray; padding:10px; border-radius:15px;",),
          #Cart summary
-         Div(Div(Span(f"Items ({len(items_in_cart.get_list_item_in_cart)})"),Span(f'US ${sum_price(items_in_cart.get_list_item_in_cart)}'),style="width:100%; display:flex; flex-direction:row; justify-content:space-between; color:black;"),
-             Div(
+         Div(
+            Div(Span(f"Items ({len(items_in_cart.get_list_item_in_cart)})"),Span(f'US ${sum_price(items_in_cart.get_list_item_in_cart)}'),style="width:100%; display:flex; flex-direction:row; justify-content:space-between; color:black;"),
+            Div(
                 Span('Shipping to ?'),
                 Span(f'US ${delivery}'),
                 style=f"{'display:none;' if delivery == 0 else 'display:flex;'}width:100%; display:flex; flex-direction:row; justify-content:space-between; border-bottom:1px solid black; color:black; padding-bottom:10px;"),
              Div(Span("Subtotal"),Span(f"US ${sum_price(items_in_cart.get_list_item_in_cart) + delivery}"),style="width:100%; display:flex; flex-direction:row; justify-content:space-between; font-size:25px; color:black; "),
-             Button("Go to checkout"),
+             A(Button("Go to checkout"),href='/purchase'),
              Span("Purchase protected by",A(" eBay Money Back Guarantee",href="#"),style="font-size:15px;"),
-             style="background:rgb(232, 232, 232); border-radius:15px; padding:15px; display:flex; flex-direction:column; gap:15px; width:100%; max-height: 320px;"),
-         style="width:100%; display:grid; grid-template-columns:2fr 1fr; gap:20px;"
+             style="background:rgb(232, 232, 232); border-radius:15px; padding:15px; display:flex; flex-direction:column; gap:15px; width:100%; max-height: 320px;",id='cart-summary'),
+         style="width:100%; display:grid; grid-template-columns:2fr 1fr; gap:20px;",
          ),
       ),
       style="padding:20px; max-width:1024px; margin: 0 auto;"
@@ -69,8 +82,12 @@ def remove_from_cart(item_id:str,session):
    if not result['success']: return Script(f'alert("{result['error']}"); window.location.href = "/cart"')
    return Script(f'alert("item has been removed"); window.location.href = "/cart"')
 
-def set_selected(item_id:str,select:bool,session):
-   result = main_system.set_select_item(item_id,session['auth'][0],select)
-   print(result)
-   if not result['success']: return Script(f'alert("{result['error']}"); window.location.href = "/cart"')
-   return Script(f'window.location.href = "/cart";alert("cart has been updated");')
+def set_selected(item_id:str, select, session):
+   result = main_system.set_select_item(item_id, session['auth'][0], select)
+   if not result['success']:
+       return Script(f'alert("{result["error"]}"); window.location.href = "/cart"')
+
+   # Recalculate the cart summary
+   items_in_cart = main_system.get_cart(session['auth'][0])
+   summary_html = generate_cart_summary(items_in_cart)
+   return summary_html
