@@ -11,9 +11,25 @@ class Stock_product:
 @dataclass
 class Edit_product:
     new_name: str
+    new_category : str
     new_detail: str
     new_price: float
+    new_image: str
     edit_item_id : str
+
+@dataclass
+class EditBidProduct:
+    new_name: str
+    new_start_price: float
+    new_detail: str
+    new_amount: int
+    new_category: str
+    new_start_time: str
+    new_end_time: str
+    new_description: str
+    new_image: str
+    edit_bid_item_id: str
+
 
 def product_management(session):
     print(session['auth'][0])
@@ -21,25 +37,27 @@ def product_management(session):
     seller = main_system.get_user_by_id(user_id)
     products = main_system.get_items()
     bid_products = main_system.get_bid_items()
+    load_category = main_system.get_categories()
 
     def create_product_card(item, is_bid=False):
         return Card(
             Div(
-            H3(item.get_name, style="color: #0074bd;"),
-            Img(src=item.get_image, style="width: 100px; height: 100px; object-fit: cover;"),
-            P(f"Stock: {item.get_amount}", style="color: black; font-weight: bold;"),
-            P(f"Price: {item.get_price} ฿", style="color: green; font-weight: bold;"), 
-               style="display: flex; flex-direction: column; align-items: center; text-align: center;"
+                H3(item.get_name, style="color: #0074bd;"),
+                Img(src=item.get_image, style="width: 100px; height: 100px; object-fit: cover;"),
+                P(f"Stock: {item.get_amount}", style="color: black; font-weight: bold;"),
+                P(f"Price: {item.get_price} $", style="color: green; font-weight: bold;"), 
+                style="display: flex; flex-direction: column; align-items: center; text-align: center;"
+
             ),
             Div(
-                Button(
+                 Button(
                     "Stock", 
                     onclick=f"document.getElementById('stock_item_id').value = '{item.get_id}'; document.getElementById('popup-stock').style.display='flex'", 
                     className="button"
                 ),
                 Button(
                     "Edit", 
-                    onclick=f"document.getElementById('edit_item_id').value = '{item.get_id}'; document.getElementById('popup-edit').style.display='flex'", 
+                    onclick=f"document.getElementById('{ 'edit_bid_item_id' if is_bid else 'edit_item_id' }').value = '{item.get_id}'; document.getElementById('{ 'popup-edit-bid' if is_bid else 'popup-edit' }').style.display='flex'", 
                     className="button", 
                     style="background-color: green;"
                 ),
@@ -48,6 +66,7 @@ def product_management(session):
             ),
             style=f"width: 250px; padding: 15px; background: {'#e5ffca' if is_bid else 'white'}; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"
         )
+
 
     return Main(
         H1("Product Management", style="text-align: center;"),
@@ -87,9 +106,14 @@ def product_management(session):
                 Input(type="hidden", id="edit_item_id", name="edit_item_id"),  
                 Input(type="text", name="new_name", placeholder="New Product Name",
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
+                 Select(  *[Option(cat.get_name ,value = cat.get_id) for cat in load_category] ,
+                    style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;", name='new_category', id='category'
+                ),
                 Input(type="text", name="new_detail", placeholder="New Detail",
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
                 Input(type="number", name="new_price", placeholder="New Price",
+                      style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
+                Input(type="text", name="new_image", placeholder="New image",
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
                 Button("Submit", type="submit",
                        style="background: #0074bd; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer; margin-top: 10px;"),
@@ -111,7 +135,37 @@ def product_management(session):
             ),
             id="popup-edit",
             style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;"
-        )
+        ),
+        # Popup สำหรับแก้ไขสินค้าประมูล
+            Div(
+                Form(
+                    H3("Edit Bid Product"),
+                    Input(type="hidden", id="edit_bid_item_id", name="edit_bid_item_id"),
+                    Label("Bid Product Name:", Input(type="text", name="new_name", placeholder="Enter your product name",
+                        style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+                    Label("Start Price:", Input(type="number", name="new_start_price", placeholder="Enter your start price",
+                        style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+                    Label("Amount:", Input(name="new_amount", type="number", placeholder="Enter your amount",
+                        style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+                    Label("Category:", 
+                        Select(*[Option(cat.get_name, value=cat.get_id) for cat in load_category],
+                                style="width:100%; margin:0;", name='new_category')),
+                    Label("Start Time:", Input(type="date", name="new_start_time",
+                        style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+                    Label("End Time:", Input(type="date", name="new_end_time",
+                        style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+                    Label("Description:", Textarea(name="new_description", rows=5, placeholder="Product description...",
+                        style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+                    Label("Image URL:", Input(type="text", name="new_image", placeholder="Enter your image URL",
+                        style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+                    Button("Submit", type="submit",
+                        style="background: #0074bd; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer; margin-top: 10px;"),
+                    action="/edit_bid_product", method="post",
+                ),
+                id="popup-edit-bid",
+                style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;"
+            )
+
     )
 
 @rt("/update_stock", methods=["post"])
@@ -121,18 +175,10 @@ async def update_stock(add_stock: Stock_product, session):
         amount = add_stock.stock
         item_id = add_stock.stock_item_id
         if main_system.add_stock(user_id, item_id, amount) == 'Success' :
-                return Main(
-                    H1("✅ Added Stock Successfully!", style="text-align: center; color: #222;"),
-                    Script(f"setTimeout(function(){{ window.location.href = '/seller'; }}, 2000);"),
-                    style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
-                )
+                return Script(""" alert('Add stock successfully'); setTimeout(function(){ window.location.href = '/seller ';  });""")
     except :
         print(f"Error: {e}")
-        return Main(
-        H1("❌ Added Stock Failed!", style="text-align: center; color: #222;"),
-        Script(f"setTimeout(function(){{ window.location.href = '/seller'; }}, 2000);"),
-        style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
-    )
+        return  Script("""Invalid'; setTimeout(function(){ window.location.href = '/seller ';  });""")
 
 @rt("/edit_product", methods=["post"])
 async def edit_product(edit: Edit_product, session):
@@ -141,14 +187,20 @@ async def edit_product(edit: Edit_product, session):
     new_detial = edit.new_detail
     new_price = edit.new_price 
     item_id = edit.edit_item_id
+    new_image = edit.new_image
+    new_category = edit.new_category
     print(item_id)
     try:
-        main_system.edit_item(item_id , new_name , new_detial , new_price)  
+        main_system.edit_item(item_id ,new_name , new_category , new_detial ,new_price , new_image)  
     except Exception as e:
         print(f"Error: {e}")
 
-    return Main(
-        H1("✅ Edit Product Successfully!", style="text-align: center; color: #222;"),
-        Script(f"setTimeout(function(){{ window.location.href = '/seller'; }}, 2000);"),
-        style="background-color: #f7f7f7; min-height: 100vh; padding: 20px;"
-    )
+    return  Script(""" alert('edit Product successfully'); setTimeout(function(){ window.location.href = '/seller ';  });""")
+
+
+@rt("/edit_bid_product", methods=["post"])
+async def edit_bid_product(edit: EditBidProduct, session):
+    user_id = session['auth'][0]
+
+    return Script(""" alert('Edit Bid Product successfully'); 
+                          setTimeout(function(){ window.location.href = '/seller'; });""")

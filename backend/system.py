@@ -145,6 +145,8 @@ class System:
    #    raise Exception('item not ')
    
    def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str):
+      if (user_id == '' or name == '' or price == '' or amount == '' or category_id == ''):
+         return Exception((str(e)))
       try:
          item_id = str(uuid.uuid4())
          self.create_item(user_id, item_id, name, price, amount, [category_id], img)
@@ -168,16 +170,15 @@ class System:
       except ValueError as e:
          raise ValueError(str(e))
 
-   def edit_item(self, id, name: str, description: str, price: int):
+   def edit_item(self, id, name: str, category : str ,description: str, price: int , img : str):
       try:
          if price <= 0:
                raise ValueError('Price should be positive')
-
          item_current = main_system.get_item_by_id(id)
          if not item_current:
                return "Item not found"
 
-         item_current.edit_item(name, description, price)
+         item_current.edit_item(name , category , description ,price , img)
          return "Item updated successfully"
       except Exception as e:
          raise Exception(str(e))
@@ -194,8 +195,12 @@ class System:
       except ValueError as e:
          raise ValueError(str(e))
       
-   def edit_bid_item(self):
-      pass
+   # def edit_item(self,user_id, name, price, amount, category, image, start_time, end_time) :
+   #    try :
+      
+   #    except:
+   #       pass
+      
 
    def save_discount_code(self,ID, discount_percent):
       pass
