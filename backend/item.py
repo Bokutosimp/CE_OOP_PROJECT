@@ -14,7 +14,6 @@ class Item:
       #       raise ValueError("Owner must be a seller")
       self.__owner = owner
       self.__category = category
-      self.__reviews = []
    
    def __str__(self):
       return f"ID: {self.__id}\nName: {self.__name}\nPrice: {self.__price}\nAmount: {self.__amount}\nOwner: {self.__owner}\nCategory: {self.__category}"
@@ -37,10 +36,12 @@ class Item:
    @property
    def get_image(self) -> str:
       return self.__image
+   @property
+   def get_owner(self) -> object :
+      return self.__owner
+
    def check_availlability(self,quantity:int) -> bool:
       return quantity <= self.__amount
-   def add_review(self,review:object):
-      self.__reviews.append(review)
 
 class ItemInCart:
    def __init__(self,item:Item,amount_in_cart:int,isSelected:bool):
@@ -191,7 +192,7 @@ class Customer(User):
    
    def SeaTung(self,amount):
       if amount > self.__e_bux :
-         return "Your E-bux that you have isn't enough"
+         return "Nah bro, you're broke af"
       else :
          self.__e_bux -= amount
          return "Buying successfully"
