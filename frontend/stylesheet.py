@@ -1,6 +1,12 @@
 stylesheet ="""
+            :root{
+               --lavender-web: #eae4f1ff;
+               --lavender-web-2: #ced9f3ff;
+               --antique-white: #ffebd6ff;
+               --azure-web: #eaf4f4ff;
+            }
            body{
-              background-color:#F8F0FB;
+              background-color:var(--azure-web);
               min-height:100vh;}
             a{
                color:black; 

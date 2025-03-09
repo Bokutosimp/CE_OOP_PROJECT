@@ -88,10 +88,15 @@ class System:
       if not self.__validate_name(username,self.__list_users): raise Exception('Name already exist') 
       self.__list_users.append(Admin(name, user_id, email, phone_number, username, password, birth_date,gender))
       return 'Admin created'
-   
+      
    def create_customer(self,name:str, user_id:str, email:str, phone_number:int, username:str, password:str, birth_date,gender,address:str,e_bux:float=0):
-      if not self.__validate_name(email,self.__list_users): raise Exception('Email already exist')
-      if not self.__validate_name(username,self.__list_users): raise Exception('username already exist')
+      for item in self.__list_users:
+         if item.get_email == email:
+            raise Exception('email already exist')
+      for item in self.__list_users:
+         if item.get_username == username:
+            raise Exception('username already exist')
+      print('test creat user')
       cart = Cart()
       self.__list_users.append(Customer(name, user_id, email, phone_number, username, password, birth_date,gender,address,e_bux,cart))
       return 'Customer created'
