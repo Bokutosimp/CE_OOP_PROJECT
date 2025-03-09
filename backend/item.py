@@ -52,7 +52,7 @@ class Item:
    def add_amount(self , amount) :
       self.__amount += amount 
 
-   def edit_item(self, name , category ,desciption , price , img ) :
+   def edit_item(self, name:str , category:list[Category] ,desciption:str , price:float , img:str ) :
       self.__name = name 
       self.__price = price
       self.__category = category

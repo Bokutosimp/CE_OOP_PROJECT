@@ -199,15 +199,16 @@ class System:
       
    
 
-   def edit_item(self, id, name: str, category : str ,description: str, price: int , img : str):
+   def edit_item(self, id:str, name: str, category : list[str] ,description: str, price: int , img : str):
       try:
          if price <= 0:
                raise ValueError('Price should be positive')
          item_current = main_system.get_item_by_id(id)
-         if not item_current:
-               return "Item not found"
-
-         item_current.edit_item(name , category , description ,price , img)
+         cat_instaces  = []
+         for cat in self.__list_categories:
+            for cat_id in category:
+               if cat_id == cat.get_id: cat_instaces.append(cat)
+         item_current.edit_item(name , cat_instaces , description ,price , img)
          return "Item updated successfully"
       except Exception as e:
          raise Exception(str(e))
