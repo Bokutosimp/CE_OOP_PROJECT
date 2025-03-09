@@ -121,7 +121,7 @@ def product_management(session):
             """
         ),
 
-        Div(
+           Div(
             Form(
                 H3("Edit Product"),
                 Input(type="hidden", id="edit_item_id", name="edit_item_id"),  
@@ -224,7 +224,6 @@ def product_management(session):
                 id="popup-edit-bid",
                 style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;"
             )
-
     )
 
 @rt("/update_stock", methods=["post"])
