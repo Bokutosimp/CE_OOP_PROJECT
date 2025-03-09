@@ -159,8 +159,13 @@ class System:
       try:
          if amount <= 0:
                raise ValueError('Amount should be positive')
+         
 
          item_current = main_system.get_item_by_id(id)
+         
+         print(f"wow : {user_id}")
+         print(f"wow : {id}")
+         print(f"wow : {amount}")
          if not item_current:
                return "Item not found"
 
@@ -170,6 +175,29 @@ class System:
          raise Exception(str(e))
       except ValueError as e:
          raise ValueError(str(e))
+      
+   def add_bid_stock(self, user_id, id, amount):
+      try:
+         if amount <= 0:
+               raise ValueError('Amount should be positive')
+         
+         item_current = main_system.get_bid_item_by_id(id)
+         print(item_current)
+
+         print(f"bid : {user_id}")
+         print(f"bid : {id}")
+         print(f"bid : {amount}")
+         if not item_current:
+               return "Item not found"
+
+         item_current.add_amount(amount)
+         return 'Success'
+      except Exception as e:
+         raise Exception(str(e))
+      except ValueError as e:
+         raise ValueError(str(e))
+      
+   
 
    def edit_item(self, id, name: str, category : str ,description: str, price: int , img : str):
       try:
@@ -232,6 +260,18 @@ class System:
       for item in self.__list_bid_items:
          if item.get_id == item_id:
             return item.is_ended
+         
+   def is_bid_item(self , item_id : str):
+    for item in self.__list_bid_items:
+        print('---bid item check----')
+        print(f'item_id = {repr(item_id)}')
+        print(f'item_check = {repr(item.get_id)}')
+
+        if str(item.get_id).strip() == str(item_id).strip(): 
+            print('bid item')
+            return True 
+    return False
+
 
 
    def show_success_message():

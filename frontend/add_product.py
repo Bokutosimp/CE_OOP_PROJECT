@@ -51,8 +51,10 @@ def add_product_page(session):
                     form.append('description',document.getElementById("description").value | '')
                     form.append('image',document.getElementById("image").value | '')
                     fetch('/seller/add/submit', {{method: "POST", body: form}})
-                    .then(response => console.log(response.text()))
-                    .then(data => alert("Product added successfully!"))
+                    .then(data => {{
+                    alert("Product added successfully!");  
+                    window.location.href = '/seller';  
+                    }})
                     .catch(error => alert("Error: " + error));""",
         )
     )
@@ -65,12 +67,7 @@ def submit_product_page( product: Product, session):
         print(f"💰 Price: {product.price}")
         print(f"🏷️ Category: {product.category.split(',')}")    
         print(f"🖼️ Image: {product.image}")    
-
-        # บันทึกสินค้าที่เลือกหมวดหมู่
         result = main_system.save_item(user_id, product.name, product.price, product.amount, product.category.split(','), product.image)
-        
-        return Script(""" 
-                alert('Add Product Successfully');  
-                window.location.href='/seller';""")
+    
     except (Exception,ValueError, KeyError) as e:
         return Script(f""" alert('{str(e)}'); window.location.href='/seller/add';""")

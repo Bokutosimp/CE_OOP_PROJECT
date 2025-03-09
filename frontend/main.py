@@ -134,9 +134,14 @@ def get(session):
 def get(session , product : Bid_Product):
     return layout(submit_bid_product_page(product , session ),session)
 
+@rt("/update_bid_stock", methods=["post"])
+def post(session , add_bid_stock : Stock_bid_product):
+    result =  update_bid_stock(add_bid_stock, session)
+    return layout(result , session)
+
 @rt("/update_stock", methods=["post"])
-async def post(session , add_stock : Stock_product):
-    result = await update_stock(add_stock, session)
+def post(session , add_stock : Stock_product):
+    result =  update_stock(add_stock, session)
     return layout(result , session)
 
 @rt("/edit_product", methods=["post"])
