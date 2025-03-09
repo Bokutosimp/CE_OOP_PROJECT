@@ -22,6 +22,6 @@ def item_page(id):
                action=f'/cart/{item.get_id}'
                ),
             Style="display:flex; flex-direction:row; width:100%; padding:30px; gap:20px;",)
-   except:
-      return Div("Item not found")
+   except Exception as e:
+      return Div(str(e))
    
