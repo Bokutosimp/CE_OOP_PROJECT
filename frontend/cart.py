@@ -62,14 +62,14 @@ def cart(session):
                Div(Span("Subtotal"),Span(f"US ${sum_price(items_in_cart.get_list_item_in_cart) + delivery}"),style="width:100%; display:flex; flex-direction:row; justify-content:space-between; font-size:25px; color:black; "),
                A(Button("Go to checkout"),href='/purchase'),
                Span("Purchase protected by",A(" eBay Money Back Guarantee",href="#"),style="font-size:15px;"),
-               style="background:rgb(232, 232, 232); border-radius:15px; padding:15px; display:flex; flex-direction:column; gap:15px; width:100%; max-height: 320px;",id='cart-summary'),
+               style="background:var(--lavender-web-2); border-radius:15px; padding:15px; display:flex; flex-direction:column; gap:15px; width:100%; max-height: 320px;",id='cart-summary'),
             style="width:100%; display:grid; grid-template-columns:2fr 1fr; gap:20px;",
             ),
          ),
          style="padding:20px; max-width:1024px; margin: 0 auto;"
       )
    except Exception as e:
-      return Script(str(e))
+      return Script(f"alert('{str(e)}'); window.location.href='/'")
    
 def add_to_cart(id:str,amount:str,session):
    try:

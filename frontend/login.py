@@ -17,6 +17,12 @@ def login_method(session,username:str,password:str):
    try:
       result = main_system.login(username,password)
       session['auth'] = result
-      return Redirect('/')
+      return Script(""" 
+        alert('Login Successful');  
+        window.location.href = '/';  
+    """)
    except Exception as e:
-      Script(f"alert('{str(e)}'); window.location.href = '/login';")
+      return Script(f""" 
+        alert('{str(e)}');  
+        window.location.href = '/login';
+    """)

@@ -15,7 +15,7 @@ class System:
       for user in self.__list_users:
          if user.get_username == username and user.get_password == password:
             return [user.get_user_id,type(user).__name__]
-      raise Exception('user not found')
+      raise Exception('user or password incorrect')
    
    #function for validation duplicate name in list of instances
    def __validate_name(self,name:str,instance:list[object]) -> bool:
@@ -53,8 +53,8 @@ class System:
       raise Exception('item not found')
    
    def get_bid_item_by_id(self,id:str):
-      for item in self.__list_bid_items:
-         if str(item.get_id) == str(id): return item
+      for item in self.__list_items:
+         if str(item.get_id) == str(id) and isinstance(item, BidItem): return item
       raise Exception('bid item not found')
       
    def get_users(self,query:str = ''):
@@ -88,10 +88,15 @@ class System:
       if not self.__validate_name(username,self.__list_users): raise Exception('Name already exist') 
       self.__list_users.append(Admin(name, user_id, email, phone_number, username, password, birth_date,gender))
       return 'Admin created'
-   
+      
    def create_customer(self,name:str, user_id:str, email:str, phone_number:int, username:str, password:str, birth_date,gender,address:str,e_bux:float=0):
-      if not self.__validate_name(email,self.__list_users): raise Exception('Email already exist')
-      if not self.__validate_name(username,self.__list_users): raise Exception('username already exist')
+      for item in self.__list_users:
+         if item.get_email == email:
+            raise Exception('email already exist')
+      for item in self.__list_users:
+         if item.get_username == username:
+            raise Exception('username already exist')
+      print('test creat user')
       cart = Cart()
       self.__list_users.append(Customer(name, user_id, email, phone_number, username, password, birth_date,gender,address,e_bux,cart))
       return 'Customer created'
@@ -134,7 +139,7 @@ class System:
                if category.get_id == cat_id:
                   category_list.append(category)
          if len(category_list) == 0: raise Exception('Category not found')
-         self.__list_bid_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
+         self.__list_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
          return 'Bid item created'
       except Exception as e:
          raise Exception((str(e)))
@@ -395,7 +400,7 @@ def createInstance():
    #create bid item
    print("---############ bid item #############---")
    for bid_item in bid_items:
-      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'] ,'sell001', bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
+      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_bid_items()
    [print(bid_item) for bid_item in bid_items_instance]
    #test buy item in cart

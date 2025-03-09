@@ -17,4 +17,8 @@ vegetables = [
     {"id": "9", "name": "Root Vegetables", "description": "Vegetables like carrots, potatoes, etc."}
 ]
 
-categories = fruits + berries + vegetables
+Auction = [
+    {"id": "10", "name": "Auction Items", "description": "Items available for auction"}
+]
+
+categories = fruits + berries + vegetables + Auction

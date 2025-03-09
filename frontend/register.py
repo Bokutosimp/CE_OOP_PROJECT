@@ -31,9 +31,9 @@ def register_post(name:str,email:str,phone_number:str,username:str,password:str,
       return Script('alert("date format is incorrect"); window.location.href="/register"')
    try:
       print('test')
-      result = main_system.create_customer(name,uuid.uuid4(),email,phone_number,username,password,date,gender,address)
+      result = main_system.create_customer(name,str(uuid.uuid4()),email,phone_number,username,password,date,gender,address)
       user = main_system.login(username,password)
       session['auth'] = user
       return Redirect('/')
-   except:
-      return Script(f'alert({result}); window.location.href="/register"')
+   except (Exception,ValueError,KeyError) as e:
+      return Script(f'alert("{str(e)}"); window.location.href="/register"')
