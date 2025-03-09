@@ -53,8 +53,8 @@ class System:
       raise Exception('item not found')
    
    def get_bid_item_by_id(self,id:str):
-      for item in self.__list_bid_items:
-         if str(item.get_id) == str(id): return item
+      for item in self.__list_items:
+         if str(item.get_id) == str(id) and isinstance(item, BidItem): return item
       raise Exception('bid item not found')
       
    def get_users(self,query:str = ''):
@@ -133,7 +133,7 @@ class System:
                if category.get_id == cat_id:
                   category_list.append(category)
          if len(category_list) == 0: raise Exception('Category not found')
-         self.__list_bid_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
+         self.__list_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
          return 'Bid item created'
       except Exception as e:
          raise Exception((str(e)))
