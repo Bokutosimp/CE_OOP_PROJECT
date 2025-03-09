@@ -15,7 +15,7 @@ class System:
       for user in self.__list_users:
          if user.get_username == username and user.get_password == password:
             return [user.get_user_id,type(user).__name__]
-      raise Exception('user not found')
+      raise Exception('user or password incorrect')
    
    #function for validation duplicate name in list of instances
    def __validate_name(self,name:str,instance:list[object]) -> bool:
@@ -53,8 +53,8 @@ class System:
       raise Exception('item not found')
    
    def get_bid_item_by_id(self,id:str):
-      for item in self.__list_bid_items:
-         if str(item.get_id) == str(id): return item
+      for item in self.__list_items:
+         if str(item.get_id) == str(id) and isinstance(item, BidItem): return item
       raise Exception('bid item not found')
       
    def get_users(self,query:str = ''):
@@ -108,7 +108,8 @@ class System:
       
    def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img=''):
       try:
-         if not self.__validate_name(name,self.__list_items): raise Exception('user not found')
+         result = self.__validate_name(name,self.__list_items)
+         if not result: raise Exception('item already exist')
          current_user = self.get_user_by_id(current_user_id)
          if not isinstance(current_user,Seller): raise Exception('User is not a seller')
          category_list:list[Category] = []
@@ -133,7 +134,7 @@ class System:
                if category.get_id == cat_id:
                   category_list.append(category)
          if len(category_list) == 0: raise Exception('Category not found')
-         self.__list_bid_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
+         self.__list_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
          return 'Bid item created'
       except Exception as e:
          raise Exception((str(e)))
@@ -145,9 +146,11 @@ class System:
    #    raise Exception('item not ')
    
    def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str):
+      if (user_id == '' or name == '' or price == '' or amount == '' or category_id == ''):
+         return Exception((str(e)))
       try:
          item_id = str(uuid.uuid4())
-         self.create_item(user_id, item_id, name, price, amount, [category_id], img)
+         self.create_item(user_id, item_id, name, price, amount, category_id, img)
          return 'Item saved successfully'
       except Exception as e:
          raise Exception(str(e))
@@ -168,16 +171,15 @@ class System:
       except ValueError as e:
          raise ValueError(str(e))
 
-   def edit_item(self, id, name: str, description: str, price: int):
+   def edit_item(self, id, name: str, category : str ,description: str, price: int , img : str):
       try:
          if price <= 0:
                raise ValueError('Price should be positive')
-
          item_current = main_system.get_item_by_id(id)
          if not item_current:
                return "Item not found"
 
-         item_current.edit_item(name, description, price)
+         item_current.edit_item(name , category , description ,price , img)
          return "Item updated successfully"
       except Exception as e:
          raise Exception(str(e))
@@ -194,8 +196,12 @@ class System:
       except ValueError as e:
          raise ValueError(str(e))
       
-   def edit_bid_item(self):
-      pass
+   # def edit_item(self,user_id, name, price, amount, category, image, start_time, end_time) :
+   #    try :
+      
+   #    except:
+   #       pass
+      
 
    def save_discount_code(self,name,ID, discount_percent,description):
       try:
@@ -364,7 +370,7 @@ def createInstance():
    #create bid item
    print("---############ bid item #############---")
    for bid_item in bid_items:
-      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'] ,'sell001', bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
+      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_bid_items()
    [print(bid_item) for bid_item in bid_items_instance]
    #test buy item in cart

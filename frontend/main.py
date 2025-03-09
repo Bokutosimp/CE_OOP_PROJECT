@@ -1,6 +1,7 @@
 from fasthtml.common import *
 import os
 import dotenv
+import json
 #import page
 from layout import layout
 from cart import *
@@ -69,6 +70,7 @@ def post(name:str,email:str,phone_number:str,username:str,password:str,birth_dat
     return register_post(name,email,phone_number,username,password,birth_date,gender,address,session)
 
 @rt('/cart')
+@auth(['Customer','Seller'])
 def get(session):
     return layout(cart(session),session)
 
@@ -121,9 +123,8 @@ def get(session):
     return layout(add_product_page(session),session)
 
 @rt('/seller/add/submit', methods=["post"])
-async def get(session, product: Product):
-    content = await submit_product_page(product , session)  
-    return layout(content, session)
+async def post(session ,product:Product ):
+    return layout(submit_product_page(product,session), session)
 
 @rt('/seller/add_bid')
 def get(session):
@@ -169,5 +170,5 @@ def get(session):
 @rt('/ship/{id}')
 def get(id:str,session):
     return check_status(id)
-print(os.getenv("PORT"))
+
 serve(port=int(os.getenv("PORT")))

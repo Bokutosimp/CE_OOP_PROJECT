@@ -14,9 +14,15 @@ def login_form():
          style='''display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 50px; gap:15px;''')
 
 def login_method(session,username:str,password:str):
-   result = main_system.login(username,password)
-   if result == None:
-      return Script("alert('Invalid username or password'); window.location.href = '/login';")
-   else:
+   try:
+      result = main_system.login(username,password)
       session['auth'] = result
-      return Redirect('/')
+      return Script(""" 
+        alert('Login Successful');  
+        window.location.href = '/';  
+    """)
+   except Exception as e:
+      return Script(f""" 
+        alert('{str(e)}');  
+        window.location.href = '/login';
+    """)
