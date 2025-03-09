@@ -53,8 +53,8 @@ class System:
       raise Exception('item not found')
    
    def get_bid_item_by_id(self,id:str):
-      for item in self.__list_bid_items:
-         if str(item.get_id) == str(id): return item
+      for item in self.__list_items:
+         if str(item.get_id) == str(id) and isinstance(item, BidItem): return item
       raise Exception('bid item not found')
       
    def get_users(self,query:str = ''):
@@ -134,7 +134,7 @@ class System:
                if category.get_id == cat_id:
                   category_list.append(category)
          if len(category_list) == 0: raise Exception('Category not found')
-         self.__list_bid_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
+         self.__list_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
          return 'Bid item created'
       except Exception as e:
          raise Exception((str(e)))
@@ -354,7 +354,7 @@ def createInstance():
    #create bid item
    print("---############ bid item #############---")
    for bid_item in bid_items:
-      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'] ,'sell001', bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
+      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_bid_items()
    [print(bid_item) for bid_item in bid_items_instance]
    #test buy item in cart
