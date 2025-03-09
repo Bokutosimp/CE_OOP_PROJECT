@@ -19,7 +19,7 @@ def search_page(keyword):
                      style="display:flex; flex-direction:row; width:100%; margin-top:20px;"),
                   style="display:flex; flex-direction:column; width:100%; margin:10px 20px;"),
                style="display:flex; flex-direction:row; gap:20px; text-decoration:none; color:black; width:100%; background:rgb(232, 232, 232); border-radius:15px; padding:0; overflow:hidden;",
-               href=f"/item/{item.get_id}"               
+               href=f"{'/item/'+str(item.get_id) if item.__class__.__name__ == 'Item' else '/bid/'+str(item.get_id)}"               
             ) 
             for item in filtered_items],
              style="display:flex; flex-direction:column; gap:10px; width:100%;",
