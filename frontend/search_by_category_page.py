@@ -20,7 +20,7 @@ def search_by_category_page(category):
                style="padding:10px;"
             ),
             style="",
-            href=f"/item/{item.get_id}"
+            href=f"{'/item/'+str(item.get_id) if item.__class__.__name__ == 'Item' else '/bid/'+str(item.get_id)}",
             ) 
             for item in filtered_items],
              style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:20px; width:100%;",),
