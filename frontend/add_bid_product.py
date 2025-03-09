@@ -21,24 +21,24 @@ def add_bid_product_page(session):
             H1("Add Bid Item Management", style="text-align: center; margin-bottom: 20px; color: #0074bd;"),  
         ),
         Form( 
-            Label("Bid Product Name:", Input(type="text", id="name", placeholder="Enter your product name", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
-            Label("Start Price:", Input(type="number", id="price", placeholder="Enter your price", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
-            Label("Amount:", Input(id="amount", name="amount", type="number", placeholder="Enter your amount")),
+            Label("Bid Product Name:", Input(type="text", id="name", placeholder="Enter your product name", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true')),
+            Label("Start Price:", Input(type="number", id="price", placeholder="Enter your price", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true')),
+            Label("Amount:", Input(id="amount", name="amount", type="number", placeholder="Enter your amount" , required='true')),
             Details(
                 Summary("เลือกหมวดหมู่"), 
                 Div(
                     *[Label(
-                        Input(type="checkbox", id=f"cat-{cat.get_id}", value=cat.get_id, name="category",cls="checkbox"),
+                        Input(type="checkbox", id=f"cat-{cat.get_id}", value=cat.get_id, name="category",cls="checkbox" , required='true' ) ,
                         cat.get_name
                     ) for cat in load_category],
                     style="display: flex; flex-direction: column; padding: 10px;"
                 ),
                 style="border: 1px solid #ccc; padding: 5px; width: 100%;"
             ),
-            Label("Start Time", Input(type="datetime-local", id="start_time", placeholder="Enter end time", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
-            Label("End Time", Input(type="datetime-local", id="end_time", placeholder="Enter category", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+            Label("Start Time", Input(type="datetime-local", id="start_time", placeholder="Enter end time", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;") , required='true'),
+            Label("End Time", Input(type="datetime-local", id="end_time", placeholder="Enter category", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;") , required='true'),
             Label("Description:", Textarea(id="description", rows=5, placeholder="Product description...", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
-            Label("Image:", Input(type="text", id="image", placeholder="Enter your image url" , style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")), 
+            Label("Image:", Input(type="text", id="image", placeholder="Enter your image url" , style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;") ), 
 
             Button("Submit", type="submit"),
             enctype="multipart/form-data",

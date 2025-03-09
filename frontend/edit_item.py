@@ -13,9 +13,9 @@ def edit_item(session,item_id:str):
    return Div(
             Form(
                 H3("Edit Product"),
-                Input(type="hidden", id="edit_item_id", name="edit_item_id",value=current_item.get_id),  
+                Input(type="hidden", id="edit_item_id", name="edit_item_id",value=current_item.get_id , required='true'),  
                 Input(type="text", id= "new_name" , name="new_name", placeholder="New Product Name",value=current_item.get_name,
-                      style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
+                      style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true'),
                  Details(
                         Summary("เลือกหมวดหมู่"), 
                             Div(
@@ -24,16 +24,16 @@ def edit_item(session,item_id:str):
                                           checked=f'{True if is_check(current_item.get_category,cat.get_id) else ''}', name="new_category",cls="checkbox"),
                                     cat.get_name
                                 ) for cat in load_category],
-                                style="display: flex; flex-direction: column; padding: 10px;"
+                                style="display: flex; flex-direction: column; padding: 10px;", required='true'
                             ),
                             style="border: 1px solid #ccc; padding: 5px; width: 100%;"
                         ),
                 Input(type="text", id = "new_detail" , name="new_detail", placeholder="New Detail",value='',
-                      style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
+                      style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"  ),
                 Input(type="number", id= "new_price" , name="new_price", placeholder="New Price",value=current_item.get_price,
-                      style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
+                      style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true'),
                 Input(type="text", id = "new_image", name="new_image", placeholder="New image",value=current_item.get_image,
-                      style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
+                      style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" ),
                 Button("Submit", type="submit", style="background: #0074bd; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer; margin-top: 10px;"),
                     style="display: flex; flex-direction: column; gap: 15px; width: 50%; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1); color: #222;",
                     onsubmit="""
@@ -88,20 +88,20 @@ def edit_bid_item(session, item_id: str):
                 style="border: 1px solid #ccc; padding: 5px; width: 100%;"
             ),
             Input(type="text", id="new_detail", name="new_detail", placeholder="New Detail",
-                  value='',
-                  style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
+                  value='', 
+                  style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" ,),
             Input(type="number", id="new_start_price", name="new_start_price", placeholder="New Start Price",
                   value=current_item.get_price,
-                  style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
+                  style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true' ),
             Input(type="datetime-local", id="new_start_time", name="new_start_time", placeholder="Start time",
                   value=current_item.get_start_time,
-                  style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
+                  style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true' ),
             Input(type="datetime-local", id="new_end_time", name="new_end_time", placeholder="End time",
                   value=current_item.get_end_time,
-                  style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
+                  style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true' ),
             Input(type="text", id="new_image", name="new_image", placeholder="New Image",
                   value=current_item.get_image,
-                  style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
+                  style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" ),
             Button("Submit", type="submit", 
                    style="background: #0074bd; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer; margin-top: 10px;"),
             style="display: flex; flex-direction: column; gap: 15px; width: 50%; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1); color: #222;",
