@@ -15,6 +15,8 @@ class Product:
 def add_product_page(session):
     load_category = main_system.get_categories()
     # แสดงค่า ID ของแต่ละหมวดหมู่ที่โหลดมา
+    for cate in load_category:
+        print(cate.get_id)  
     return Container(
         Grid(H1("Add Item Management", style="text-align: center; margin-bottom: 20px; color: #0074bd;")),
          Form(
@@ -49,13 +51,12 @@ def add_product_page(session):
                     form.append('description',document.getElementById("description").value | '')
                     form.append('image',document.getElementById("image").value | '')
                     fetch('/seller/add/submit', {{method: "POST", body: form}})
+                    .then(response => console.log(response.text()))
                     .then(data => {{
                     alert("Product added successfully!");  
                     window.location.href = '/seller';  
                     }})
-                    .catch(error => alert("Error: " + error));
-                        """
-
+                    .catch(error => alert("Error: " + error));""",
         )
     )
 
@@ -67,8 +68,12 @@ def submit_product_page( product: Product, session):
         print(f"💰 Price: {product.price}")
         print(f"🏷️ Category: {product.category.split(',')}")    
         print(f"🖼️ Image: {product.image}")    
+
+        # บันทึกสินค้าที่เลือกหมวดหมู่
         result = main_system.save_item(user_id, product.name, product.price, product.amount, product.category.split(','), product.image)
-        return Redirect('/seller')
-    
+        
+        return Script(""" 
+                alert('Add Product Successfully');  
+                window.location.href='/seller';""")
     except (Exception,ValueError, KeyError) as e:
         return Script(f""" alert('{str(e)}'); window.location.href='/seller/add';""")

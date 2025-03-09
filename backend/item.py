@@ -57,6 +57,12 @@ class Item:
       self.__price = price
       self.__category = category
       self.__image = img
+      
+   def edit_item_name(self , new_name) :
+      self.__name = new_name
+
+   def edit_item_price(self, new_price):
+      self.__price = new_price
 
    def check_availlability(self,quantity:int) -> bool:
       return quantity <= self.__amount
@@ -144,6 +150,7 @@ class User:
    @property
    def get_gender(self) -> str:
       return self.__gender
+
       
 class Admin(User):
    def __init__(self, name, user_id, email, phone_number, username, password, birth_date, gender):
@@ -263,6 +270,14 @@ class BidItem(Item):
       self.__start_time = start_time
       self.__end_time = end_time
 
+   def edit_bid_item(self, name : str, price : float , category : list[Category] , description : str , img : str , start_time : str, end_time : str)  :
+      self.edit_item_name(name)
+      self.edit_item_price(price)
+      # self.__description = description
+      self.__category = category
+      self.__start_time = start_time
+      self.__end_time = end_time
+
    def __str__(self):
       return super().__str__() + f"\nStart Time: {self.__start_time}\nEnd Time: {self.__end_time}\nStatus: {self.__status}\nTop Bidder: {self.__top_bidder}\nBids History: {self.__bids_history}"
               
@@ -286,6 +301,14 @@ class BidItem(Item):
    def bids_history(self):
       return self.__bids_history
    
+   @property
+   def get_start_time(self):
+      return self.__start_time 
+   
+   @property
+   def get_end_time(self):
+      return self.__end_time
+   
    def set_top_bidder(self, user : User):
       self.__top_bidder = user
       
@@ -306,11 +329,13 @@ class BidItem(Item):
    def is_price_valid(self, price : float):
       return price > self.__price
    
-   # def edit_bid_item(self, name, price, amount, category, image, start_time, end_time):
+
+   # def edit_item(self, name:str , category:list[Category] ,desciption:str , price:float , img:str ) :
    #    self.__name = name 
    #    self.__price = price
-   #    self.__amount = amount
    #    self.__category = category
+   #    self.__image = img
+
          
 class Review:
    def __init__(self,score:int,comment:str,reviewer:Customer):

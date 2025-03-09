@@ -38,9 +38,15 @@ class EditBidProduct:
 def product_management(session):
     user_id = session['auth'][0]
     seller = main_system.get_user_by_id(user_id)
-    products = main_system.get_items()
-    bid_products = main_system.get_bid_items()
-    load_category = main_system.get_categories()
+    list_item = main_system.get_items()
+    products = []
+    bid_products = []
+
+    #check bid item
+    for i in list_item :
+         if main_system.is_bid_item(i):
+              bid_products.append(i)
+         else: products.append(i)
 
     def create_product_card(item, is_bid=False):
             # กำหนด ID ของ input และ URL ให้แตกต่างกัน
@@ -173,10 +179,10 @@ def edit_product(session ,edit_item_id:str,new_name:str,new_price:float,new_cate
     print('trying in seller.py editing id = ',edit_item_id+"cat = "+str(type(new_category))+f"({new_category.split(',')})")
     main_system.edit_item(edit_item_id ,new_name , new_category.split(',') , new_detail ,new_price , new_image)  
 
-
-
-@rt("/edit_bid_product", methods=["post"])
-async def edit_bid_product(edit: EditBidProduct, session):
+def edit_bid_product(session ,edit_bid_item_id:str,new_name:str,new_price:float,new_category:str,new_detail:str,new_image:str , new_start_time : str , new_end_time : str):
     user_id = session['auth'][0]
+    print(f"{new_image}")
+    print('trying in seller.py editing id = ',edit_bid_item_id+"cat = "+str(type(new_category))+f"({new_category.split(',')})")
+    main_system.edit_bid_item(edit_bid_item_id ,new_name , new_category.split(',') , new_detail ,new_price , new_image , new_start_time , new_end_time)  
 
-    return Script(""" alert('Edit Bid Product successfully'); setTimeout(function(){ window.location.href = '/seller'; });""")
+

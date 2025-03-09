@@ -35,8 +35,8 @@ def add_bid_product_page(session):
                 ),
                 style="border: 1px solid #ccc; padding: 5px; width: 100%;"
             ),
-            Label("Start Time", Input(type="date", id="start_time", placeholder="Enter end time", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
-            Label("End Time", Input(type="date", id="end_time", placeholder="Enter category", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+            Label("Start Time", Input(type="datetime-local", id="start_time", placeholder="Enter end time", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
+            Label("End Time", Input(type="datetime-local", id="end_time", placeholder="Enter category", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
             Label("Description:", Textarea(id="description", rows=5, placeholder="Product description...", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
             Label("Image:", Input(type="text", id="image", placeholder="Enter your image url" , style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")), 
 
