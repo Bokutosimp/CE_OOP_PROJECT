@@ -69,7 +69,7 @@ def cart(session):
          style="padding:20px; max-width:1024px; margin: 0 auto;"
       )
    except Exception as e:
-      return Script(str(e))
+      return Script(f"alert('{str(e)}'); window.location.href='/'")
    
 def add_to_cart(id:str,amount:str,session):
    try:

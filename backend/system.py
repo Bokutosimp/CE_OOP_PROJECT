@@ -15,7 +15,7 @@ class System:
       for user in self.__list_users:
          if user.get_username == username and user.get_password == password:
             return [user.get_user_id,type(user).__name__]
-      raise Exception('user not found')
+      raise Exception('user or password incorrect')
    
    #function for validation duplicate name in list of instances
    def __validate_name(self,name:str,instance:list[object]) -> bool:

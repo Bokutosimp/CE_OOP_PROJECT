@@ -170,5 +170,5 @@ def get(session):
 @rt('/ship/{id}')
 def get(id:str,session):
     return check_status(id)
-print(os.getenv("PORT"))
+
 serve(port=int(os.getenv("PORT")))
