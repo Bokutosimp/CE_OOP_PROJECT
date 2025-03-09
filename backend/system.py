@@ -233,7 +233,6 @@ class System:
          if item.get_id == item_id:
             return item.is_ended
 
-
    def show_success_message():
       return "So good "
    
