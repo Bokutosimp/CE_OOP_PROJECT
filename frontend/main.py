@@ -11,7 +11,7 @@ from seller import *
 from add_product import *
 from add_bid_product import *
 from item_page import item_page
-from bid_page import bid_page
+from bid_page import *
 from review_page import *
 from search_page import search_page
 from search_by_category_page import search_by_category_page
@@ -105,6 +105,10 @@ def get(session,id:str):
 @rt('/bid/{id}')
 def get(id:str,session):
     return (layout(bid_page(id),session))
+
+@rt('/bid/submit',methods=["post"])
+def post(bid:float,item_id:str,session):
+    return submit_bid_page(bid,item_id,session)
 
 @rt('/review/{id}')
 def get(id:str,session):
