@@ -216,7 +216,10 @@ class Customer(User):
       order_history = OrderHistory(orderClass)
       return order_history
    
-
+   def decrease_e_bux(self, amount: float):
+        if amount > self.__e_bux:
+            raise Exception("Insufficient e-bux")
+        self.__e_bux -= amount
       
    
    def SeaTung(self,amount):
@@ -352,6 +355,10 @@ class Code :
    def verify_code(self,input):
       if input == self.__name:
          return True
+      
+   @property
+   def get_name(self):
+      return self.__name
 
 class FreeDelivery(Code):
    def __init__(self,ID:str,name:str,minimum:float):
@@ -363,10 +370,11 @@ class Discount(Code):
       super().__init__(ID,name)
       self.__percentage = percentage
       self.__owner = owner
-      
-      def get_discount(self):
+   
+   @property   
+   def get_discount(self):
          return self.__percentage
       
-      @property
-      def get_discount(self):
-         return self.__percentage
+   @property
+   def get_code(self):
+      return self.__name

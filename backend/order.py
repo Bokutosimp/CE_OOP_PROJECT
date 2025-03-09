@@ -21,6 +21,8 @@ class Order:
     @property
     def get_list_item_select(self) : return self.__list_items
     
+
+
     
 class ShippingStatus:
    def __init__(self,status:str,shipping_date:str,get_item_date=None):
