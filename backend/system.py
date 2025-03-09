@@ -361,6 +361,13 @@ class System:
          item.show_review()
       except Exception as e:
          raise Exception(str(e))
+      
+   def check_cart_with_stock(self,user_id:str):
+      try:
+         user = self.get_user_by_id(user_id)
+         user.check_availability()
+      except Exception as e:
+         raise Exception(str(e))
    
    #buy item in cart
    def buy_item_in_cart(self,user_id:str):

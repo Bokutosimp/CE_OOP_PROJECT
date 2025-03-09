@@ -64,7 +64,7 @@ class Item:
    def edit_item_price(self, new_price):
       self.__price = new_price
 
-   def check_availlability(self,quantity:int) -> bool:
+   def check_availability(self,quantity:int) -> bool:
       return quantity <= self.__amount
    
    def add_review(self,review:object):
@@ -215,6 +215,13 @@ class Customer(User):
       orderClass = Order(10,total_price,buy_list)
       order_history = OrderHistory(orderClass)
       return order_history
+   
+   def check_cart_with_stock(self):
+      for item_in_cart in self.__cart.get_list_item_in_cart:
+         if not item_in_cart.get_item.check_availlability(item_in_cart.get_amount_in_cart):
+            return f"Payment denied"
+         
+         return item_in_cart.get_amount_in_cart
 
       
    
