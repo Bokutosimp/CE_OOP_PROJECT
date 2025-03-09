@@ -183,7 +183,7 @@ class Customer(User):
    
    def add_to_cart(self,item:Item,quantity:int):
       if quantity < 0: raise Exception('quantity can not be less than or equal to zero')
-      if not item.check_availlability(quantity): raise Exception('Item out of stock')
+      if not item.check_availability(quantity): raise Exception('Item out of stock')
       for item_in_cart in self.__cart.get_list_item_in_cart:
          if item_in_cart.get_item == item:
             item_in_cart.set_amount_int_cart = quantity
@@ -218,7 +218,7 @@ class Customer(User):
    
    def check_cart_with_stock(self):
       for item_in_cart in self.__cart.get_list_item_in_cart:
-         if not item_in_cart.get_item.check_availlability(item_in_cart.get_amount_in_cart):
+         if not item_in_cart.get_item.check_availability(item_in_cart.get_amount_in_cart):
             return f"Payment denied"
          
          return item_in_cart.get_amount_in_cart
