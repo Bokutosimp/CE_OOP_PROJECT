@@ -64,6 +64,9 @@ class Item:
    def edit_item_price(self, new_price):
       self.__price = new_price
 
+   def edit_category(self, new_category):
+      self.__category = new_category
+
    def check_availlability(self,quantity:int) -> bool:
       return quantity <= self.__amount
    
@@ -274,7 +277,7 @@ class BidItem(Item):
       self.edit_item_name(name)
       self.edit_item_price(price)
       # self.__description = description
-      self.__category = category
+      self.edit_category(category)
       self.__start_time = start_time
       self.__end_time = end_time
 

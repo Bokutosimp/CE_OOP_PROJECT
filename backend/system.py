@@ -31,7 +31,7 @@ class System:
       
    def get_category_by_id(self,id:str):
       for cat in self.__list_categories:
-         if cat.get_id == id:
+         if str(cat.get_id) == str(id):
             return cat
       raise Exception('Not found')
    
@@ -68,7 +68,7 @@ class System:
       for item in self.__list_items:
          for category in item.get_category:
             print(category.get_id,category_id)
-            if category.get_id.lower() == category_id.lower():
+            if str(category.get_id) == str(category_id):
                filtered_items.append(item)
       return filtered_items
    
@@ -120,8 +120,11 @@ class System:
          category_list:list[Category] = []
          for cat_id in category_id:
             for category in self.__list_categories:
-               if category.get_id == cat_id:
+
+               print(f"{category.get_id} and {cat_id}" , str(category.get_id) == str(cat_id))
+               if str(category.get_id) == str(cat_id):
                   category_list.append(category)
+         
          if len(category_list) == 0: raise Exception('Category not found')
          self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list))
          return {'success':True}
@@ -136,7 +139,8 @@ class System:
          category_list:list[Category] = []
          for cat_id in category_id:
             for category in self.__list_categories:
-               if category.get_id == cat_id:
+               print(f"{category.get_id} and {cat_id}" , str(category.get_id) == str(cat_id))
+               if str(category.get_id) == str(cat_id):
                   category_list.append(category)
          if len(category_list) == 0: raise Exception('Category not found')
          self.__list_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
@@ -151,6 +155,7 @@ class System:
    #    raise Exception('item not ')
    
    def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str):
+      print(f"somthegfdgfdgfd {category_id}")
       if (user_id == '' or name == '' or price == '' or amount == '' or category_id == ''):
          return Exception((str(e)))
       try:
@@ -211,7 +216,7 @@ class System:
          cat_instaces  = []
          for cat in self.__list_categories:
             for cat_id in category:
-               if cat_id == cat.get_id: cat_instaces.append(cat)
+               if str(cat_id) == str(cat.get_id): cat_instaces.append(cat)
          item_current.edit_item(name , cat_instaces , description ,price , img)
          return "Item updated successfully"
       except Exception as e:
@@ -237,7 +242,7 @@ class System:
             cat_instaces  = []
             for cat in self.__list_categories:
                for cat_id in category:
-                  if cat_id == cat.get_id: cat_instaces.append(cat)
+                  if str(cat_id) == str(cat.get_id): cat_instaces.append(cat)
             item_current.edit_bid_item(name , price , cat_instaces , description , img , start_time ,end_time )
             return "Item updated successfully"
          except Exception as e:
@@ -415,6 +420,10 @@ def createInstance():
 
    for bid_item in bid_items:
       end_bid_time = start_bid_time + timedelta(minutes=increase_time)
+
+      #ตัด micromillisec ออก by Chevfy ถึง Shogun Sarat Jeeraon (ถ้าไม่ทำ มันดึงข้อมูลมาไม่ได้)
+      start_bid_time = start_bid_time.replace(microsecond=0)
+      end_bid_time = end_bid_time.replace(microsecond=0)
     
       main_system.create_bid_item(
          bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], 

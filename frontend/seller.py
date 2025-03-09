@@ -207,6 +207,7 @@ def edit_product(session ,edit_item_id:str,new_name:str,new_price:float,new_cate
 
 def edit_bid_product(session ,edit_bid_item_id:str,new_name:str,new_price:float,new_category:str,new_detail:str,new_image:str , new_start_time : str , new_end_time : str):
     user_id = session['auth'][0]
+    print(f'{new_category} , {new_price}')
     print(f"{new_image}")
     print('trying in seller.py editing id = ',edit_bid_item_id+"cat = "+str(type(new_category))+f"({new_category.split(',')})")
     main_system.edit_bid_item(edit_bid_item_id ,new_name , new_category.split(',') , new_detail ,new_price , new_image , new_start_time , new_end_time)  

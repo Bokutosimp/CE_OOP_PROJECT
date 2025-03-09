@@ -9,11 +9,11 @@ def is_check(item_cat_list,cat_id):
    return False 
 
 def edit_item(session,item_id:str):
-   current_item = main_system.get_item_by_id(item_id)
+   current_item = main_system.get_item_by_id(str(item_id))
    return Div(
             Form(
                 H3("Edit Product"),
-                Input(type="hidden", id="edit_item_id", name="edit_item_id",value=current_item.get_id , required='true'),  
+                Input(type="hidden", id="edit_item_id", name="edit_item_id",value=(current_item.get_id) , required='true'),  
                 Input(type="text", id= "new_name" , name="new_name", placeholder="New Product Name",value=current_item.get_name,
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true'),
                  Details(
@@ -68,6 +68,7 @@ def edit_item(session,item_id:str):
 
 def edit_bid_item(session, item_id: str):
     current_item = main_system.get_bid_item_by_id(item_id)
+    print(f"{(current_item.get_end_time)} ,,,, {current_item.get_start_time}")
     return Div(
         Form(
             H3("Edit Bid Product"),
