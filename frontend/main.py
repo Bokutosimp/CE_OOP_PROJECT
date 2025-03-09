@@ -94,7 +94,7 @@ def get(category:str,session):
     return (layout(search_by_category_page(category),session))
 
 @rt('/search/')
-def get(keyword:str,session):
+def get(session,keyword:str=''):
     return layout(search_page(keyword),session)
 
 @rt('/item/{id}')
