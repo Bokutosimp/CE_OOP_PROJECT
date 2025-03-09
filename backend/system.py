@@ -1,5 +1,5 @@
 from .category import Category
-from datetime import datetime
+from datetime import datetime,timedelta
 from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review
 import uuid
 
@@ -411,11 +411,18 @@ def createInstance():
    #create bid item
    print("---############ bid item #############---")
    start_bid_time = datetime.now()
-   increase_time = 5
+   increase_time = 5  # Initial increment in minutes
+
    for bid_item in bid_items:
-      end_bid_time = start_bid_time.replace(minute=start_bid_time.minute+increase_time)
-      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', start_bid_time, end_bid_time, bid_item['status'], bid_item['top_bidder'])
-      increase_time += 5
+      end_bid_time = start_bid_time + timedelta(minutes=increase_time)
+    
+      main_system.create_bid_item(
+         bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], 
+         ['10'], bid_item['image'], 'sell001', start_bid_time, end_bid_time, 
+         bid_item['status'], bid_item['top_bidder']
+    )
+    # Update start time for the next bid
+      start_bid_time = end_bid_time
       # main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', datetime.strptime(bid_item['start_time'], "%Y-%m-%d %H:%M:%S"), datetime.strptime(bid_item['end_time'], "%Y-%m-%d %H:%M:%S"), bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_items()
    for item in bid_items_instance:
