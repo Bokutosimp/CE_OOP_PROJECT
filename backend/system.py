@@ -375,8 +375,11 @@ def createInstance():
    [print(bid_item) for bid_item in bid_items_instance]
    #test buy item in cart
    print("---###### buy item in cart of user cust001 #####---")
-   main_system.buy_item_in_cart('cust001')
-   print(main_system.get_user_by_id('cust001').get_order_history[0].get_order)
+   check_stock = main_system.check_cart_with_stock('cust001')
+   if check_stock :
+      main_system.buy_item_in_cart('cust001')
+      
+   
    
    return main_system
 

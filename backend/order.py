@@ -11,7 +11,7 @@ class Order:
         return f'total price is {self.__total_price}'
         
     # def check_amount(self):
-    #     return Item.checkavaillability(self.__list_items)
+    #     return Item.checkavailability(self.__list_items)
         
     def item_price(self):
         return self.__item_price
