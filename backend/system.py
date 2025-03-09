@@ -108,7 +108,8 @@ class System:
       
    def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img=''):
       try:
-         if not self.__validate_name(name,self.__list_items): raise Exception('user not found')
+         result = self.__validate_name(name,self.__list_items)
+         if not result: raise Exception('item already exist')
          current_user = self.get_user_by_id(current_user_id)
          if not isinstance(current_user,Seller): raise Exception('User is not a seller')
          category_list:list[Category] = []
@@ -149,7 +150,7 @@ class System:
          return Exception((str(e)))
       try:
          item_id = str(uuid.uuid4())
-         self.create_item(user_id, item_id, name, price, amount, [category_id], img)
+         self.create_item(user_id, item_id, name, price, amount, category_id, img)
          return 'Item saved successfully'
       except Exception as e:
          raise Exception(str(e))

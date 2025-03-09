@@ -176,7 +176,8 @@ async def update_stock(add_stock: Stock_product, session):
         item_id = add_stock.stock_item_id
         if main_system.add_stock(user_id, item_id, amount) == 'Success' :
                 return Script(""" alert('Add stock successfully'); setTimeout(function(){ window.location.href = '/seller ';  });""")
-    except :
+    except Exception as e:
+        print(f"Error: {str(e)}")
         return  Script("""Invalid'; setTimeout(function(){ window.location.href = '/seller ';  });""")
 
 @rt("/edit_product", methods=["post"])
@@ -201,5 +202,4 @@ async def edit_product(edit: Edit_product, session):
 async def edit_bid_product(edit: EditBidProduct, session):
     user_id = session['auth'][0]
 
-    return Script(""" alert('Edit Bid Product successfully'); 
-                          setTimeout(function(){ window.location.href = '/seller'; });""")
+    return Script(""" alert('Edit Bid Product successfully'); setTimeout(function(){ window.location.href = '/seller'; });""")
