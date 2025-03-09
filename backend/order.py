@@ -1,4 +1,3 @@
-
 class Order:
     def __init__(self,shipping_fee:float,total_price:float,list_item:list[object]):
         # self.__total_amount = total_amount
@@ -10,22 +9,20 @@ class Order:
     def __str__(self):
         return f'total price is {self.__total_price}'
         
-    # def check_amount(self):
-    #     return Item.checkavailability(self.__list_items)
+    def check_cart_with_stock(self,user:object):
+        select_stock = [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected]
+        for item in select_stock:
+            if not item.get_item.check_availability(item.get_amount_in_cart):
+                return "Payment denied"
         
     def item_price(self):
         return self.__item_price
+    
+    @property
+    def get_list_item_select(self) : return self.__list_items
+    
 
-    # def apply_code(self,input_code):
-    #     verify = Code.verify_code(input_code)
-    #     if verify == True:
-    #         self.__total_amount -= self.__total_amount * Code.get_discount
-    #         self.__isApply = True
-    #     else:
-    #         return "Invalid code"
-                
-    # def buy(self):
-    #     return Customer.SeaTung(self.__total_amount)
+
     
 class ShippingStatus:
    def __init__(self,status:str,shipping_date:str,get_item_date=None):
