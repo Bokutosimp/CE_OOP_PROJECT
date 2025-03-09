@@ -18,6 +18,7 @@ def bid_page(id):
                      type='number',
                      min=round(bid_item.get_price + 0.1, 1),
                      step = 0.1,
+                     required=true,
                      style="width:200px; margin:0; text-align:center; border-radius:50px;", placeholder='Enter your bid'),
                style="display:flex; flex-direction:row; gap:10px; width:100%; align-items:center;"
             ),
@@ -31,5 +32,8 @@ def bid_page(id):
    except:
       return Div("Item not found")
    
-def submit_bid_page(bid: float, item_id: str, session):
-   pass
+def submit_bid_page(bid_input: float, item_id: str, session):
+   user_id, user_role = session['auth']
+   print(f"Bid: {bid_input}, Item ID: {item_id}, User ID: {user_id}")
+   main_system.set_top_bidder(item_id, bid_input, user_id)
+   return Redirect(f"/bid/{item_id}")

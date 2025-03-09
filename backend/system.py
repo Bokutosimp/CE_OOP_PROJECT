@@ -251,18 +251,26 @@ class System:
       pass
 
    def get_top_bidder(self, item_id:str):
-      for item in self.__list_bid_items:
+      for item in self.__list_items:
          if item.get_id == item_id:
             return item.get_top_bidder
          
+   def set_top_bidder(self, item_id:str,bid_input:float, user_id:str):
+      for item in self.__list_items:
+         if str(item.get_id) == str(item_id):
+            user = self.get_user_by_id(user_id)
+            item.set_top_bidder(user)
+            item.edit_item_price(bid_input)
+            return 'Top bidder set'
+         
    def start_bid(self, item_id:str):
-      for item in self.__list_bid_items:
+      for item in self.__list_items:
          if item.get_id == item_id:
             item.start_bid()
             return 'Bid started'
          
    def end_bid(self, item_id:str):
-      for item in self.__list_bid_items:
+      for item in self.__list_items:
          if item.get_id == item_id:
             item.end_bid()
             return 'Bid ended'
@@ -402,10 +410,17 @@ def createInstance():
    print("set item(2) select to true",[f'{cart.get_item.get_id} is {cart.get_is_selected}' for cart in main_system.get_cart('cust001').get_list_item_in_cart])
    #create bid item
    print("---############ bid item #############---")
+   start_bid_time = datetime.now()
+   increase_time = 5
    for bid_item in bid_items:
-      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
-   bid_items_instance = main_system.get_bid_items()
-   [print(bid_item) for bid_item in bid_items_instance]
+      end_bid_time = start_bid_time.replace(minute=start_bid_time.minute+increase_time)
+      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', start_bid_time, end_bid_time, bid_item['status'], bid_item['top_bidder'])
+      increase_time += 5
+      # main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', datetime.strptime(bid_item['start_time'], "%Y-%m-%d %H:%M:%S"), datetime.strptime(bid_item['end_time'], "%Y-%m-%d %H:%M:%S"), bid_item['status'], bid_item['top_bidder'])
+   bid_items_instance = main_system.get_items()
+   for item in bid_items_instance:
+      if isinstance(item,BidItem): print(item)
+   
    #test buy item in cart
    print("---###### buy item in cart of user cust001 #####---")
    main_system.buy_item_in_cart('cust001')

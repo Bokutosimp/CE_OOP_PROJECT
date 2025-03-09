@@ -311,9 +311,6 @@ class BidItem(Item):
    
    def set_top_bidder(self, user : User):
       self.__top_bidder = user
-      
-   def set__price(self, price : float):
-      self.__price = price
    
    def add_history(self, bid_history : BiddingHistory):
       self.__bids_history.append(bid_history)
