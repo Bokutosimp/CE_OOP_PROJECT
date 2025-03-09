@@ -5,6 +5,14 @@ from backend.system import main_system
 def admin_page():
    list_categories = main_system.get_categories()
    return Div(H2('admin panel',style='color:black;'),
-              H3('category list'),
-              Div(*[A(cat.get_name,style='border-bottom: solid gray 1px; margin-bottom:5px; display:block;',href=f'/category/{cat.get_id}') for cat in list_categories],style='text-align:center; color: black; width:300px;'),
-              A('add category',href='/admin/create_category',style='text-decoration:underline;'),style='display:flex; align-items:center; flex-direction:column; padding:20px; margin:40px; background-color:#CAD5CA; border-radius:20px;')
+              H3('category list',style='color:black'),
+              Div(
+                 *[Div(Span(cat.get_name,style=''),
+                     A(Button('view',style='background-color:rgb(255, 153, 0)'),href=f'/category/{cat.get_id}',style=''),
+                     style='border-bottom: solid gray 1px; margin-bottom:10px; display:flex; width:100%; justify-content:space-between; align-items:center; padding:4px;')
+                     for cat in list_categories],
+                  style='text-align:center; color: black; width:300px;'),
+                  A(Button('add category'),
+                     href='/admin/create_category',
+                     style='text-decoration:underline;'),
+               style='display:flex; align-items:center; flex-direction:column; padding:20px; margin:40px; background-color:var(--lavender-web); border-radius:20px;')

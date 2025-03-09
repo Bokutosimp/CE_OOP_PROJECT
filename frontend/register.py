@@ -36,4 +36,4 @@ def register_post(name:str,email:str,phone_number:str,username:str,password:str,
       session['auth'] = user
       return Redirect('/')
    except (Exception,ValueError,KeyError) as e:
-      return Script(f'alert({str(e)}); window.location.href="/register"')
+      return Script(f'alert("{str(e)}"); window.location.href="/register"')

@@ -2,6 +2,7 @@ from .category import Category
 from datetime import datetime
 from .order import Order,ShippingStatus
 from .item import Item,BidItem,User,Discount,Code,Customer,Seller,Admin,Cart,Review
+from datetime import datetime,timedelta
 import uuid
 
 class System:
@@ -89,10 +90,15 @@ class System:
       if not self.__validate_name(username,self.__list_users): raise Exception('Name already exist') 
       self.__list_users.append(Admin(name, user_id, email, phone_number, username, password, birth_date,gender))
       return 'Admin created'
-   
+      
    def create_customer(self,name:str, user_id:str, email:str, phone_number:int, username:str, password:str, birth_date,gender,address:str,e_bux:float=0):
-      if not self.__validate_name(email,self.__list_users): raise Exception('Email already exist')
-      if not self.__validate_name(username,self.__list_users): raise Exception('username already exist')
+      for item in self.__list_users:
+         if item.get_email == email:
+            raise Exception('email already exist')
+      for item in self.__list_users:
+         if item.get_username == username:
+            raise Exception('username already exist')
+      print('test creat user')
       cart = Cart()
       self.__list_users.append(Customer(name, user_id, email, phone_number, username, password, birth_date,gender,address,e_bux,cart))
       return 'Customer created'
@@ -169,8 +175,13 @@ class System:
       try:
          if amount <= 0:
                raise ValueError('Amount should be positive')
+         
 
          item_current = main_system.get_item_by_id(id)
+         
+         print(f"wow : {user_id}")
+         print(f"wow : {id}")
+         print(f"wow : {amount}")
          if not item_current:
                return "Item not found"
 
@@ -180,16 +191,39 @@ class System:
          raise Exception(str(e))
       except ValueError as e:
          raise ValueError(str(e))
+      
+   def add_bid_stock(self, user_id, id, amount):
+      try:
+         if amount <= 0:
+               raise ValueError('Amount should be positive')
+         item_current = main_system.get_bid_item_by_id(id)
+         print(item_current)
 
-   def edit_item(self, id, name: str, category : str ,description: str, price: int , img : str):
+         print(f"bid : {user_id}")
+         print(f"bid : {id}")
+         print(f"bid : {amount}")
+         if not item_current:
+               return "Item not found"
+
+         item_current.add_amount(amount)
+         return 'Success'
+      except Exception as e:
+         raise Exception(str(e))
+      except ValueError as e:
+         raise ValueError(str(e))
+      
+   
+
+   def edit_item(self, id:str, name: str, category : list[str] ,description: str, price: int , img : str):
       try:
          if price <= 0:
                raise ValueError('Price should be positive')
          item_current = main_system.get_item_by_id(id)
-         if not item_current:
-               return "Item not found"
-
-         item_current.edit_item(name , category , description ,price , img)
+         cat_instaces  = []
+         for cat in self.__list_categories:
+            for cat_id in category:
+               if cat_id == cat.get_id: cat_instaces.append(cat)
+         item_current.edit_item(name , cat_instaces , description ,price , img)
          return "Item updated successfully"
       except Exception as e:
          raise Exception(str(e))
@@ -206,11 +240,22 @@ class System:
       except ValueError as e:
          raise ValueError(str(e))
       
-   # def edit_item(self,user_id, name, price, amount, category, image, start_time, end_time) :
-   #    try :
-      
-   #    except:
-   #       pass
+   def edit_bid_item(self, id:str, name: str, category : list[str] ,description: str, price: int , img : str, start_time : str , end_time : str):
+         try:
+            if price <= 0:
+                  raise ValueError('Price should be positive')
+            item_current = main_system.get_bid_item_by_id(id)
+            cat_instaces  = []
+            for cat in self.__list_categories:
+               for cat_id in category:
+                  if cat_id == cat.get_id: cat_instaces.append(cat)
+            item_current.edit_bid_item(name , price , cat_instaces , description , img , start_time ,end_time )
+            return "Item updated successfully"
+         except Exception as e:
+            raise Exception(str(e))
+         except ValueError as e:
+            raise ValueError(str(e))
+
       
 
    def save_discount_code(self,name,ID, discount_percent,description):
@@ -226,18 +271,26 @@ class System:
          raise ValueError(str(e))
 
    def get_top_bidder(self, item_id:str):
-      for item in self.__list_bid_items:
+      for item in self.__list_items:
          if item.get_id == item_id:
             return item.get_top_bidder
          
+   def set_top_bidder(self, item_id:str,bid_input:float, user_id:str):
+      for item in self.__list_items:
+         if str(item.get_id) == str(item_id):
+            user = self.get_user_by_id(user_id)
+            item.set_top_bidder(user)
+            item.edit_item_price(bid_input)
+            return 'Top bidder set'
+         
    def start_bid(self, item_id:str):
-      for item in self.__list_bid_items:
+      for item in self.__list_items:
          if item.get_id == item_id:
             item.start_bid()
             return 'Bid started'
          
    def end_bid(self, item_id:str):
-      for item in self.__list_bid_items:
+      for item in self.__list_items:
          if item.get_id == item_id:
             item.end_bid()
             return 'Bid ended'
@@ -251,6 +304,11 @@ class System:
       for item in self.__list_bid_items:
          if item.get_id == item_id:
             return item.is_ended
+         
+   def is_bid_item(self , item ):
+      if isinstance(item , BidItem) : return True
+      else : return False
+      
 
 
    def show_success_message():
@@ -401,10 +459,24 @@ def createInstance():
    print("set item(2) select to true",[f'{cart.get_item.get_id} is {cart.get_is_selected}' for cart in main_system.get_cart('cust001').get_list_item_in_cart])
    #create bid item
    print("---############ bid item #############---")
+   start_bid_time = datetime.now()
+   increase_time = 5  # Initial increment in minutes
+
    for bid_item in bid_items:
-      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
-   bid_items_instance = main_system.get_bid_items()
-   [print(bid_item) for bid_item in bid_items_instance]
+      end_bid_time = start_bid_time + timedelta(minutes=increase_time)
+    
+      main_system.create_bid_item(
+         bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], 
+         ['10'], bid_item['image'], 'sell001', start_bid_time, end_bid_time, 
+         bid_item['status'], bid_item['top_bidder']
+    )
+    # Update start time for the next bid
+      start_bid_time = end_bid_time
+      # main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', datetime.strptime(bid_item['start_time'], "%Y-%m-%d %H:%M:%S"), datetime.strptime(bid_item['end_time'], "%Y-%m-%d %H:%M:%S"), bid_item['status'], bid_item['top_bidder'])
+   bid_items_instance = main_system.get_items()
+   for item in bid_items_instance:
+      if isinstance(item,BidItem): print(item)
+   
    #test buy item in cart
    print("---###### buy item in cart of user cust001 #####---")
    user = main_system.get_user_by_id('cust001')
@@ -414,9 +486,6 @@ def createInstance():
    confirm_purchase = main_system.buy_item_with_code('cust001', 'SUMMER_SALE')
    print("Discounted price:", confirm_purchase)
    print(f"User money after purchase: {user.get_e_bux}")
-   
-      
-   
    
    return main_system
 

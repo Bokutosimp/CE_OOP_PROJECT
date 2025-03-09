@@ -20,14 +20,14 @@ def add_product_page(session):
     return Container(
         Grid(H1("Add Item Management", style="text-align: center; margin-bottom: 20px; color: #0074bd;")),
          Form(
-            Label("Product Name:", Input(id="name", name="name", type="text", placeholder="Enter your product name")),
-            Label("Price:", Input(id="price", name="price", type="number", placeholder="Enter your price")),
-            Label("Amount:", Input(id="amount", name="amount", type="number", placeholder="Enter your amount")),
+            Label("Product Name:", Input(id="name", name="name", type="text", placeholder="Enter your product name" , required='true')),
+            Label("Price:", Input(id="price", name="price", type="number", placeholder="Enter your price" , required='true')),
+            Label("Amount:", Input(id="amount", name="amount", type="number", placeholder="Enter your amount" , required='true')),
             Details(
                 Summary("เลือกหมวดหมู่"), 
                 Div(
                     *[Label(
-                        Input(type="checkbox", id=f"cat-{cat.get_id}", value=cat.get_id, name="category",cls="checkbox"),
+                        Input(type="checkbox", id=f"cat-{cat.get_id}", value=cat.get_id, name="category",cls="checkbox" , required='true'),
                         cat.get_name
                     ) for cat in load_category],
                     style="display: flex; flex-direction: column; padding: 10px;"
@@ -52,7 +52,10 @@ def add_product_page(session):
                     form.append('image',document.getElementById("image").value | '')
                     fetch('/seller/add/submit', {{method: "POST", body: form}})
                     .then(response => console.log(response.text()))
-                    .then(data => alert("Product added successfully!"))
+                    .then(data => {{
+                    alert("Product added successfully!");  
+                    window.location.href = '/seller';  
+                    }})
                     .catch(error => alert("Error: " + error));""",
         )
     )

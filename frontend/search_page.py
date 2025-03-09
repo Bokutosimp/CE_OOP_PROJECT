@@ -7,9 +7,9 @@ def search_page(keyword):
    filtered_items = main_system.get_items(keyword)
    if filtered_items:
       return Div(
-         H4(f"result for {keyword}"),
+         H4(f"{'result for '+keyword if keyword != '' else ''}"),
          Div(*[A(
-               Div(Img(src=item.get_image,style="width:256px; height:auto; object-fit:contain;"),style="display:grid; place-items:center; width:256px; height: 256px; background:rgb(200, 200, 200); border-radius:15px;"),
+               Div(style=f"width:256px; height: 256px; background:rgb(200, 200, 200); background-image:url({item.get_image});  background-position:center; background-size:contain; background-repeat: no-repeat; border-radius:15px;"),
                Div(
                   Div(item.get_name,style="font-size:20px;"),
                   Div('New-Open box',style="font-size:15px; color:gray;"),
@@ -18,7 +18,7 @@ def search_page(keyword):
                      Div("Save up to 15% when you buy more ginosurplus713 (282) 100%",style="justify-self:end; font-size:15px; width:50%;"),
                      style="display:flex; flex-direction:row; width:100%; margin-top:20px;"),
                   style="display:flex; flex-direction:column; width:100%; margin:10px 20px;"),
-               style="display:flex; flex-direction:row; gap:20px; text-decoration:none; color:black; width:100%; background:rgb(232, 232, 232); border-radius:15px; padding:0; overflow:hidden;",
+               style="display:flex; flex-direction:row; gap:20px; text-decoration:none; color:black; width:100%; background:var(--lavender-web-2); border-radius:15px; padding:0; overflow:hidden;",
                href=f"{'/item/'+str(item.get_id) if item.__class__.__name__ == 'Item' else '/bid/'+str(item.get_id)}"               
             ) 
             for item in filtered_items],
