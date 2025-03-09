@@ -158,7 +158,7 @@ def post(session , add_stock : Stock_product):
     return layout(result , session)
 
 @rt("/edit_product", methods=["patch"])
-def patch(session ,edit_item_id:str,new_name:str,new_price:float,new_category:str,new_detail:str,new_image:str):
+def patch(session ,edit_item_id:str,new_name:str, new_price:float ,new_category:str,new_detail:str,new_image:str):
     print(f"item {edit_item_id},new name = {new_name}")
     return edit_product(session,edit_item_id,new_name,new_price,new_category,new_detail,new_image)
 
