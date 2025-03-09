@@ -26,7 +26,7 @@ def add_bid_product_page(session):
             Label("Amount:", Input(id="amount", name="amount", type="number", placeholder="Enter your amount")),
             Select(  *[Option(cat.get_name , value = cat.get_id) for cat in load_category] ,
                     style="width:100%; margin:0;",
-                    name='category[]',
+                    name='category',
                     id='category'
                 ),
             Label("Start Time", Input(type="date", id="start_time", placeholder="Enter end time", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
