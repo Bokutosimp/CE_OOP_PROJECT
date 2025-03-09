@@ -3,7 +3,6 @@ from datetime import datetime
 from .order import Order,ShippingStatus
 from .item import Item,BidItem,User,Discount,Code,Customer,Seller,Admin,Cart,Review
 from datetime import datetime,timedelta
-from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review
 import uuid
 
 class System:
@@ -487,9 +486,6 @@ def createInstance():
    confirm_purchase = main_system.buy_item_with_code('cust001', 'SUMMER_SALE')
    print("Discounted price:", confirm_purchase)
    print(f"User money after purchase: {user.get_e_bux}")
-   
-      
-   
    
    return main_system
 
