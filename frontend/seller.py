@@ -101,7 +101,7 @@ def product_management(session):
         Grid(*[create_product_card(p, is_bid=True) for p in bid_products if p.get_owner.get_user_id == user_id],
              style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;"),
         Div(
-    Form(
+        Form(
                 H3("Stock Item"),
                 Input(type="hidden", id="stock_item_id", name="stock_item_id"),  
                 Input(type="hidden", id="stock_bid_item_id", name="stock_bid_item_id"),  
@@ -138,37 +138,41 @@ def product_management(session):
                             ),
                             style="border: 1px solid #ccc; padding: 5px; width: 100%;"
                         ),
-                Input(type="text", id = "new_datail" , name="new_detail", placeholder="New Detail",
+                Input(type="text", id = "new_datial" , name="new_detail", placeholder="New Detail",
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
                 Input(type="number", id= "new_price" , name="new_price", placeholder="New Price",
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
                 Input(type="text", id = "new_image", name="new_image", placeholder="New image",
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
-                Button("Submit", type="submit",
-                       style="background: #0074bd; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer; margin-top: 10px;"),
-                action=f"/edit_product", method="post",
-            ),
-            id="popup-edit",
-            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;"
-            ,onsubmit=f"""
+                Button("Submit", type="submit", style="background: #0074bd; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer; margin-top: 10px;"),
+                    style="display: flex; flex-direction: column; gap: 15px; width: 50%; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1); color: #222;",
+                    onsubmit=f"""
                     event.preventDefault();
                     const checkboxes = document.querySelectorAll('.checkbox');
                     const selected = Array.from(checkboxes).filter(checkbox => checkbox.checked);
-                    const cat_id_selected = selected.map(checkbox => checkbox.value)
+                    const cat_id_selected = selected.map(checkbox => checkbox.value);
                     const form = new FormData();
-                    form.append('new_name',document.getElementById("new_name").value) 
-                    form.append('new_price',document.getElementById("new_price").value) 
-                    form.append('new_amount',document.getElementById("new_amount").value)
-                    form.append('new_category',cat_id_selected)
-                    form.append('new_detial',document.getElementById("new_detial").value | '')
-                    form.append('new_image',document.getElementById("new_image").value | '')
-                    fetch('/edit_product', {{method: "POST", body: form}})
-                    .then(data => {{
-                    alert("Product edit successfully!");  
-                    window.location.href = '/seller';  
-                    }})
-                    .catch(error => alert("Error: " + error));""",
-        ),
+                    form.append('new_name', document.getElementById("new_name").value);
+                    form.append('new_price', document.getElementById("new_price").value);
+                    form.append('new_amount', document.getElementById("new_amount").value);
+                    form.append('new_category', cat_id_selected);
+                    form.append('new_detail', document.getElementById("new_detail").value || '');
+                    form.append('new_image', document.getElementById("new_image").value || '');
+                    fetch('/edit_product', {{ method: "POST", body: form }})
+                        .then(response => response.json())
+                        .then(data => {{
+                            alert("Product edited successfully!");  
+                            window.location.href = '/seller';  
+                        }})
+                        .catch(error => alert("Error: " + error));
+                """
+            ),
+            id="popup-edit",
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;"
+        )
+        ,
+
+
          Div(
             Form(
                 H3("Edit Bid Product"),
@@ -248,11 +252,9 @@ def update_bid_stock(add_bid_stock: Stock_bid_product, session):
         print(amount)
         print(item_id)
         
-       
         result = main_system.add_bid_stock(user_id, item_id, amount) 
         return Script(""" alert('Add stock successfully'); setTimeout(function(){ window.location.href = '/seller ';  });""")
 
-        
     # except Exception as e:
     #     print(f"Error: {str(e)}")
     #     return Script(""" alert('Invalid stock update'); setTimeout(function(){ window.location.href = '/seller ';  });""")
