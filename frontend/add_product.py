@@ -8,11 +8,10 @@ class Product:
     name: str
     price: float
     amount: int
-    category: list
+    category: str
     description: str
     image: str 
 
-@rt("/seller/add")
 def add_product_page(session):
     load_category = main_system.get_categories()
     # แสดงค่า ID ของแต่ละหมวดหมู่ที่โหลดมา
@@ -28,7 +27,7 @@ def add_product_page(session):
                 Summary("เลือกหมวดหมู่"), 
                 Div(
                     *[Label(
-                        Input(type="checkbox", id=f"cat-{cat.get_id}", value=cat.get_id, name="category"),
+                        Input(type="checkbox", id=f"cat-{cat.get_id}", value=cat.get_id, name="category",cls="checkbox"),
                         cat.get_name
                     ) for cat in load_category],
                     style="display: flex; flex-direction: column; padding: 10px;"
@@ -37,75 +36,41 @@ def add_product_page(session):
             ),
             Label("Description:", Textarea(id="description", name="description", rows=5, placeholder="Product description...")),
             Label("Image:", Input(id="image", name="image", type="text", placeholder="Enter your image url")),
-            Button("Submit", type="submit"),
-            enctype="multipart/form-data",
+            Button("Submit",type='submit'),
             style="display: flex; flex-direction: column; gap: 15px; width: 50%; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1); color: #222;",
-            action=f"/seller/add/submit",
-            method="post"
-        ) , Script("""
-            document.querySelector("form").addEventListener("submit", function(event) {
-                event.preventDefault();  // ป้องกันการ submit แบบปกติ
-
-                // สร้าง Array สำหรับเก็บ ID ของหมวดหมู่ที่เลือก
-                let selectedCategories = [];
-
-                // ตรวจสอบทุก checkbox ว่าถูกเลือกหรือไม่
-                document.querySelectorAll('input[name="category"]:checked').forEach(function(checkbox) {
-                    selectedCategories.push(checkbox.value);  // เพิ่ม ID ของหมวดหมู่ที่เลือก
-                });
-
-                // ถ้าไม่ได้เลือกหมวดหมู่
-                if (selectedCategories.length === 0) {
-                    alert('Please select at least one category');
-                    return;
-                }
-
-                // ส่งค่าหมวดหมู่ที่เลือกไปที่ backend ด้วย AJAX
-                fetch('/seller/add/submit', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',  // ระบุ Content-Type เป็น JSON
-                    },
-                    body: JSON.stringify({
-                        categories: selectedCategories  // ส่งค่าหมวดหมู่ที่เลือก
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Product added successfully');
-                        window.location.href = '/seller';
-                    } else {
-                        alert('Error adding product');
-                    }
-                })
-                .catch(error => {
-                    alert('An error occurred');
-                    console.error(error);
-                });
-            });
-        """)
+            onsubmit=f"""
+                    event.preventDefault();
+                    const checkboxes = document.querySelectorAll('.checkbox');
+                    const selected = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+                    const cat_id_selected = selected.map(checkbox => checkbox.value)
+                    const form = new FormData();
+                    form.append('name',document.getElementById("name").value) 
+                    form.append('price',document.getElementById("price").value) 
+                    form.append('amount',document.getElementById("amount").value)
+                    form.append('category',cat_id_selected)
+                    form.append('description',document.getElementById("description").value | '')
+                    form.append('image',document.getElementById("image").value | '')
+                    fetch('/seller/add/submit', {{method: "POST", body: form}})
+                    .then(response => console.log(response.text()))
+                    .then(data => alert("Product added successfully!"))
+                    .catch(error => alert("Error: " + error));""",
+        )
     )
 
-@rt("/seller/add/submit", methods=["post"])
-async def submit_product_page( request : Request , product: Product, session):
-    user_id = session['auth'][0]
-    print(f"User ID: {user_id}")
+def submit_product_page( product: Product, session):
+    try:
+        user_id = session['auth'][0]
+        print(f"User ID: {user_id}")
+        print(f"📦 Product Name: {product.name}")
+        print(f"💰 Price: {product.price}")
+        print(f"🏷️ Category: {product.category.split(',')}")    
+        print(f"🖼️ Image: {product.image}")    
 
-    data = await request.json()  
-    categories = data.get('categories') 
-    print(categories)
-    
-    # ตรวจสอบว่าได้รับค่าหมวดหมู่หรือไม่
-    if not product.category:
-        return Script(""" alert('Please select at least one category'); setTimeout(function(){ window.location.href = '/seller ';  });""")
-    
-    print(f"📦 Product Name: {product.name}")
-    print(f"💰 Price: {product.price}")
-    print(f"🏷️ Category: {product.category}")    
-    print(f"🖼️ Image: {product.image}")    
-
-    # บันทึกสินค้าที่เลือกหมวดหมู่
-    main_system.save_item(user_id, product.name, product.price, product.amount, product.category, product.image)
-    
-    return Script(""" alert('Add Product Successfully'); setTimeout(function(){ window.location.href = '/seller ';  });""")
+        # บันทึกสินค้าที่เลือกหมวดหมู่
+        result = main_system.save_item(user_id, product.name, product.price, product.amount, product.category.split(','), product.image)
+        
+        return Script(""" 
+                alert('Add Product Successfully');  
+                window.location.href='/seller';""")
+    except (Exception,ValueError, KeyError) as e:
+        return Script(f""" alert('{str(e)}'); window.location.href='/seller/add';""")

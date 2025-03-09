@@ -84,7 +84,7 @@ def remove_from_cart(item_id:str,session):
    try:
       result = main_system.remove_from_cart(item_id,session['auth'][0])
       return Script(f'alert("item has been removed"); window.location.href = "/cart"')
-   except Exception as e:
+   except (Exception,ValueError, KeyError) as e:
       return Script(f'alert("{str(e)}"); window.location.href = "/cart"')
 
 def set_selected(item_id:str, select, session):
@@ -94,5 +94,5 @@ def set_selected(item_id:str, select, session):
       items_in_cart = main_system.get_cart(session['auth'][0])
       summary_html = generate_cart_summary(items_in_cart)
       return summary_html
-   except Exception as e:
+   except (Exception,ValueError, KeyError) as e:
       return Script(f'alert("{str(e)}"); window.location.href = "/cart"')
