@@ -348,7 +348,7 @@ def createInstance():
    #create bid item
    print("---############ bid item #############---")
    for bid_item in bid_items:
-      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['1'], bid_item['image'] ,'sell001', bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
+      main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', bid_item['start_time'], bid_item['end_time'], bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_bid_items()
    [print(bid_item) for bid_item in bid_items_instance]
    #test buy item in cart
