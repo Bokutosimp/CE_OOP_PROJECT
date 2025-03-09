@@ -52,7 +52,10 @@ def add_product_page(session):
                     form.append('image',document.getElementById("image").value | '')
                     fetch('/seller/add/submit', {{method: "POST", body: form}})
                     .then(response => console.log(response.text()))
-                    .then(data => alert("Product added successfully!"))
+                    .then(data => {{
+                    alert("Product added successfully!");  
+                    window.location.href = '/seller';  
+                    }})
                     .catch(error => alert("Error: " + error));""",
         )
     )

@@ -24,6 +24,7 @@ from decorators.auth import auth
 from decorators.redirect_path import redirect_path
 from admin import admin_page
 from shipping_status import check_status
+from edit_item import edit_item,edit_bid_item
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
@@ -122,9 +123,17 @@ def get(session):
 def get(session):
     return layout(add_product_page(session),session)
 
+@rt('/edit_item/{item_id}')
+def get(session,item_id:str):
+    return edit_item(session,item_id)
+
+@rt('/edit_bid_item/{item_id}')
+def get(session,item_id:str):
+    return edit_bid_item(session,item_id)
+
 @rt('/seller/add/submit', methods=["post"])
 async def post(session ,product:Product ):
-    return layout(submit_product_page(product,session), session)
+    return submit_product_page(product,session)
 
 @rt('/seller/add_bid')
 def get(session):
@@ -134,15 +143,25 @@ def get(session):
 def get(session , product : Bid_Product):
     return layout(submit_bid_product_page(product , session ),session)
 
-@rt("/update_stock", methods=["post"])
-async def post(session , add_stock : Stock_product):
-    result = await update_stock(add_stock, session)
+@rt("/update_bid_stock", methods=["post"])
+def post(session , add_bid_stock : Stock_bid_product):
+    result =  update_bid_stock(add_bid_stock, session)
     return layout(result , session)
 
-@rt("/edit_product", methods=["post"])
-async def post(session , edit : Edit_product, ):
-    result = await edit_product(edit , session)
-    return layout(result,session)
+@rt("/update_stock", methods=["post"])
+def post(session , add_stock : Stock_product):
+    result =  update_stock(add_stock, session)
+    return layout(result , session)
+
+@rt("/edit_product", methods=["patch"])
+def patch(session ,edit_item_id:str,new_name:str,new_price:float,new_category:str,new_detail:str,new_image:str):
+    print(f"item {edit_item_id},new name = {new_name}")
+    return edit_product(session,edit_item_id,new_name,new_price,new_category,new_detail,new_image)
+
+@rt("/edit_bid_product", methods=["patch"])
+def patch(session ,edit_bid_item_id:str,new_name:str,new_start_price:float,new_category:str,new_detail:str,new_image:str , new_start_time : str , new_end_time : str):
+    print(f"bid item {edit_bid_item_id},new name = {new_name}")
+    return edit_bid_product(session,edit_bid_item_id,new_name,new_start_price,new_category,new_detail,new_image , new_start_time , new_end_time)
 
 @rt('/admin/create_category')
 @auth(['Admin'])

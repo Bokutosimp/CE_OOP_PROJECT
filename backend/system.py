@@ -164,8 +164,13 @@ class System:
       try:
          if amount <= 0:
                raise ValueError('Amount should be positive')
+         
 
          item_current = main_system.get_item_by_id(id)
+         
+         print(f"wow : {user_id}")
+         print(f"wow : {id}")
+         print(f"wow : {amount}")
          if not item_current:
                return "Item not found"
 
@@ -175,16 +180,39 @@ class System:
          raise Exception(str(e))
       except ValueError as e:
          raise ValueError(str(e))
+      
+   def add_bid_stock(self, user_id, id, amount):
+      try:
+         if amount <= 0:
+               raise ValueError('Amount should be positive')
+         item_current = main_system.get_bid_item_by_id(id)
+         print(item_current)
 
-   def edit_item(self, id, name: str, category : str ,description: str, price: int , img : str):
+         print(f"bid : {user_id}")
+         print(f"bid : {id}")
+         print(f"bid : {amount}")
+         if not item_current:
+               return "Item not found"
+
+         item_current.add_amount(amount)
+         return 'Success'
+      except Exception as e:
+         raise Exception(str(e))
+      except ValueError as e:
+         raise ValueError(str(e))
+      
+   
+
+   def edit_item(self, id:str, name: str, category : list[str] ,description: str, price: int , img : str):
       try:
          if price <= 0:
                raise ValueError('Price should be positive')
          item_current = main_system.get_item_by_id(id)
-         if not item_current:
-               return "Item not found"
-
-         item_current.edit_item(name , category , description ,price , img)
+         cat_instaces  = []
+         for cat in self.__list_categories:
+            for cat_id in category:
+               if cat_id == cat.get_id: cat_instaces.append(cat)
+         item_current.edit_item(name , cat_instaces , description ,price , img)
          return "Item updated successfully"
       except Exception as e:
          raise Exception(str(e))
@@ -201,11 +229,22 @@ class System:
       except ValueError as e:
          raise ValueError(str(e))
       
-   # def edit_item(self,user_id, name, price, amount, category, image, start_time, end_time) :
-   #    try :
-      
-   #    except:
-   #       pass
+   def edit_bid_item(self, id:str, name: str, category : list[str] ,description: str, price: int , img : str, start_time : str , end_time : str):
+         try:
+            if price <= 0:
+                  raise ValueError('Price should be positive')
+            item_current = main_system.get_bid_item_by_id(id)
+            cat_instaces  = []
+            for cat in self.__list_categories:
+               for cat_id in category:
+                  if cat_id == cat.get_id: cat_instaces.append(cat)
+            item_current.edit_bid_item(name , price , cat_instaces , description , img , start_time ,end_time )
+            return "Item updated successfully"
+         except Exception as e:
+            raise Exception(str(e))
+         except ValueError as e:
+            raise ValueError(str(e))
+
       
 
    def save_discount_code(self,ID, discount_percent):
@@ -237,6 +276,12 @@ class System:
       for item in self.__list_bid_items:
          if item.get_id == item_id:
             return item.is_ended
+         
+   def is_bid_item(self , item ):
+      if isinstance(item , BidItem) : return True
+      else : return False
+      
+
 
 
    def show_success_message():
