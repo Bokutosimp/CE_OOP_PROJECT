@@ -107,8 +107,8 @@ def get(id:str,session):
     return (layout(bid_page(id),session))
 
 @rt('/bid/submit',methods=["post"])
-def post(bid:float,item_id:str,session):
-    return submit_bid_page(bid,item_id,session)
+def post(bid_input:float,item_id:str,session):
+    return submit_bid_page(bid_input,item_id,session)
 
 @rt('/review/{id}')
 def get(id:str,session):
