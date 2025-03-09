@@ -105,6 +105,9 @@ class System:
    def create_discount_code(self, name:str, discount_percent:float):
       self.__list_codes.append(Code(name,discount_percent))
       return 'Code created'
+   
+   def apply_code(self,code:str):
+      pass
       
    def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img=''):
       try:
@@ -303,10 +306,15 @@ class System:
       except Exception as e:
          raise Exception(str(e))
       
-   def check_cart_with_stock(self,user_id:str):
+   def buy_cart_check_stock(self,user_id:str): # return price of selected product
       try:
          user = self.get_user_by_id(user_id)
-         user.check_availability()
+         select_stock = [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected]
+         for item in select_stock:
+            if not item.get_item.check_availability(item.get_amount_in_cart):
+                return "Payment denied"
+
+         return sum((round(item.get_item.get_price * item.get_amount_in_cart, 3) if item.get_is_selected else 0) for item in user.get_cart.get_list_item_in_cart)
       except Exception as e:
          raise Exception(str(e))
    
@@ -375,9 +383,10 @@ def createInstance():
    [print(bid_item) for bid_item in bid_items_instance]
    #test buy item in cart
    print("---###### buy item in cart of user cust001 #####---")
-   check_stock = main_system.check_cart_with_stock('cust001')
-   if check_stock :
-      main_system.buy_item_in_cart('cust001')
+   check_stock = main_system.buy_cart_check_stock('cust001')
+   print("return price :",check_stock,"E")
+   confirm_purchase = main_system.buy_item_with_code('cust001','SUMMER_SALE')
+   
       
    
    

@@ -209,12 +209,6 @@ class Customer(User):
       order_history = OrderHistory(orderClass)
       return order_history
    
-   def check_cart_with_stock(self):
-      for item_in_cart in self.__cart.get_list_item_in_cart:
-         if not item_in_cart.get_item.check_availability(item_in_cart.get_amount_in_cart):
-            return f"Payment denied"
-         
-         return item_in_cart.get_amount_in_cart
 
       
    
