@@ -93,7 +93,7 @@ def buy(session,item_id=None,amount=None):
                         style="display: flex; gap: 15px; margin-top: 20px;",
                     ),
                     method="post",
-                    action="/purchase"
+                    action=f"/purchase{'' if redirect_id == None else '/'+redirect_id+'/'+str(amount)}"
                 ),
                 style="background-color: #ffffff; padding: 30px; border-radius: 12px; width: 600px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);",
             ),
@@ -139,7 +139,10 @@ def buy_one_item(session,item_id:str,amount:str,code_name:str):
     try:
         user_id = session['auth'][0]
         result = main_system.buy_item(user_id,item_id,int(amount),code_name)
-        main_system.remove_from_cart(item_id,user_id)
+        try:
+            main_system.remove_from_cart(item_id,user_id)
+        except:
+            pass
         return Script("alert('buy successfull'); window.location.href='/profile'")
     except (Exception,ValueError,KeyError) as e:
         return Script(f"alert('{str(e)}'); window.location.href='/purchase'")
