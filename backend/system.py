@@ -275,8 +275,9 @@ class System:
 
       
 
-   def save_discount_code(self,name,ID, discount_percent,description):
+   def save_discount_code(self,name , discount_percent,description):
       try:
+            ID = str(uuid.uuid1)
             if not isinstance(discount_percent, (int, float)) or discount_percent <= 0 or discount_percent > 100:
                 raise ValueError("Discount percent must be a number between 1 and 100")
             new_discount_code = Discount(ID, name, discount_percent, description)
