@@ -111,7 +111,7 @@ class System:
       self.__list_codes.append(Code(name,discount_percent))
       return 'Code created'
       
-   def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img=''):
+   def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img='',description:str=''):
       try:
          result = self.__validate_name(name,self.__list_items)
          if not result: raise Exception('item already exist')
@@ -126,12 +126,12 @@ class System:
                   category_list.append(category)
          
          if len(category_list) == 0: raise Exception('Category not found')
-         self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list))
+         self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list,description))
          return {'success':True}
       except Exception as e:
          raise Exception((str(e)))
    
-   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner_id:str,start_time:str,end_time:str,status:str,top_bidder:str):
+   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner_id:str,start_time:str,end_time:str,status:str,top_bidder:str,description:str=''):
       try:
          if not self.__validate_name(name,self.__list_bid_items): raise Exception('Item already exist')
          current_user = self.get_user_by_id(owner_id)
@@ -143,7 +143,7 @@ class System:
                if str(category.get_id) == str(cat_id):
                   category_list.append(category)
          if len(category_list) == 0: raise Exception('Category not found')
-         self.__list_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
+         self.__list_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,description,start_time,end_time,status,top_bidder)) 
          return 'Bid item created'
       except Exception as e:
          raise Exception((str(e)))
@@ -388,10 +388,10 @@ def createInstance():
    print("---############### create item ############---")
    for item in items:
       print(f"id item is {item['id']} ")
-      main_system.create_item('sell001', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])
+      main_system.create_item('sell001', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'],item['description'])
    for item in items_2:
       print(f"id item is {item['id']} ")
-      main_system.create_item('sell002', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])     
+      main_system.create_item('sell002', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'],item['description'])     
       
    items_instance = main_system.get_items()
    [print(f'item is {item}') for item in items_instance]
