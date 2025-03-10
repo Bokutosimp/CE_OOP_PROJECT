@@ -63,6 +63,7 @@ def review_page(id, session):
 
 def submit_review_page(review: str, rating: int, item_id: str, session):
     user_id = session['auth'][0]
-    print(f"Review: {review}, Rating: {rating}, Item ID: {item_id}, User ID: {user_id}")
-    main_system.add_review(item_id, rating, review, user_id)
+    user = main_system.get_user_by_id(user_id)
+    print(f"Review: {review}, Rating: {rating}, Item ID: {item_id}, User ID: {user}")
+    main_system.add_review(item_id, rating, review, user)
     return Redirect(f"/")

@@ -78,9 +78,9 @@ class Item:
    def check_availability(self,quantity:int) -> bool:
       return quantity <= self.__amount
    
-   def add_review(self,review:object):
-      self.__review.append(review)
-
+   def add_review(self, rating:int,review:str,user:object):
+      self.__review.append(Review(rating,review,user))
+      
 class ItemInCart:
    def __init__(self,item:Item,amount_in_cart:int,is_selected:bool):
       self.__item = item
@@ -272,13 +272,13 @@ class BidHistory:
         self.__status = status
 
 class BiddingHistory:
-   def __init__(self, user_id : str, bidAmount : float, bidTime : datetime):
-      self.__user_id = user_id
+   def __init__(self, user: User, bidAmount : float, bidTime : datetime):
+      self.__user = user
       self.__bidAmount = bidAmount
       self.__bidTime = bidTime
         
    def __str__(self):
-      return f"User ID: {self.__user_id}\nBid Amount: {self.__bidAmount}\nBid Time: {self.__bidTime}"
+      return f"User ID: {self.__user}\nBid Amount: {self.__bidAmount}\nBid Time: {self.__bidTime}"
 
 class BidItem(Item):
    def __init__(self, id: str, name: str, price: float, amount: int, owner: Seller, image: str, category: list[Category], description:str,start_time: datetime, end_time: datetime, top_bidder=None, status="Not Started"):
@@ -342,6 +342,11 @@ class BidItem(Item):
    
    def set_top_bidder(self, user : User):
       self.__top_bidder = user
+      
+   def set_new_top_bidder(self, user: User, price: float, time: datetime):
+      self.set_top_bidder(user)
+      self.edit_item_price(price)
+      self.add_history(user,price,time)
    
    def add_history(self, user_id : str, bidAmount : float, bidTime : datetime):
       self.__bids_history.append(BiddingHistory(user_id, bidAmount, bidTime))
