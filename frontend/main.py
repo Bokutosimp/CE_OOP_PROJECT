@@ -18,7 +18,7 @@ from search_page import search_page
 from search_by_category_page import search_by_category_page
 from create_category import *
 from history_item import *
-from buy import buy,buy_post
+from buy import buy,buy_post,buy_one_item
 from login import *
 from register import *
 from decorators.auth import auth
@@ -202,10 +202,19 @@ def get(session):
 def get(session):
     return layout(buy(session),session)
 
+@rt('/purchase/{item_id}/{amount}')
+def get(session,item_id:str,amount:str):
+    return layout(buy(session,item_id,amount),session)
+
 @rt('/purchase')
 def post(session,coupon:str=''):
+    print('working here')
     print(f"post request get {coupon}")
     return buy_post(session,coupon)
+
+@rt('/purchase/{item_id}/{amount}')
+def post(session,item_id:str,amount:str,coupon:str=''):
+    return buy_one_item(session,item_id,amount,coupon)
 
 @rt('/ship/{id}')
 def get(id:str,session):
