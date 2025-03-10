@@ -1,7 +1,7 @@
 from fasthtml.common import *
 import os
 import dotenv
-import json
+
 #import page
 from layout import layout
 from cart import *
@@ -17,7 +17,7 @@ from search_page import search_page
 from search_by_category_page import search_by_category_page
 from create_category import *
 from history_item import *
-from buy import buy
+from buy import buy,buy_post
 from login import *
 from register import *
 from decorators.auth import auth
@@ -25,6 +25,7 @@ from decorators.redirect_path import redirect_path
 from admin import admin_page
 from shipping_status import check_status
 from edit_item import edit_item,edit_bid_item
+from profile import profile
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
@@ -184,14 +185,23 @@ def get(session):
 
 @rt('/history')
 def get(session):
-    return layout(order_history_page(),session)
+    return layout(order_history_page(session),session)
 
 @rt('/purchase')
 def get(session):
     return layout(buy(session),session)
 
+@rt('/purchase')
+def post(session,coupon:str=''):
+    print(f"post request get {coupon}")
+    return buy_post(session,coupon)
+
 @rt('/ship/{id}')
 def get(id:str,session):
     return check_status(id)
+
+@rt('/profile')
+def get(session):
+    return layout(profile(session),session)
 
 serve(port=int(os.getenv("PORT")))

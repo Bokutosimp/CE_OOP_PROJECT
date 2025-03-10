@@ -108,6 +108,8 @@ class Cart:
    
    @property
    def get_list_item_in_cart(self): return self.__list_item_in_cart
+   @get_list_item_in_cart.setter
+   def set_list_item_in_cart(self,list): self.__list_item_in_cart = list
     
    def add_cart(self,itemInCart:ItemInCart):
       self.__list_item_in_cart.append(itemInCart)
@@ -184,9 +186,12 @@ class Customer(User):
    @property
    def get_cart(self) -> Cart: return self.__cart
    @property
-   def get_order_history(self) -> list: return self.__order_history
+   def get_order_history(self) -> list[OrderHistory]: return self.__order_history
    
    def add_history(self,order_history):
+      not_selected_items = [item for item in self.__cart.get_list_item_in_cart if not item.get_is_selected]
+      print(f"not selected item is {not_selected_items}")
+      self.__cart.set_list_item_in_cart = not_selected_items
       self.__order_history.append(order_history)
    
    def add_to_cart(self,item:Item,quantity:int):

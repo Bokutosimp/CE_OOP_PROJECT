@@ -2,10 +2,11 @@ from fasthtml.common import *
 import os,sys
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
-from mock.users import *
 
 def buy(session):
     user_id = session['auth'][0]
+    if main_system.buy_cart_check_stock(user_id) <= 0:
+        return Script("alert('please select atleast one item'); window.location.href='/cart'")
     user = main_system.get_user_by_id(user_id)
     if not user :
         return Body(H4("User not found", style="color: red;"))
@@ -42,7 +43,12 @@ def buy(session):
                 ),
                 Div(style="border-bottom: 2px solid #000000; width: 100%; margin-top: 10px;"),
                 Div(
-                    Button("confirm purchases", type="button", onclick="openDialog()", style="background-color: #6fc276; color: white; padding: 10px 15px; border: none; border-radius: 20px; cursor: pointer; width: auto;"),
+                    Button("confirm purchases", type="button", 
+                           onclick="""fetch('/purchase',{method:"POST",body:'bla'}).then(data => {alert('buy successfull'); window.location.href='/cart'})""", 
+                           style="background-color: #6fc276; color: white; padding: 10px 15px; border: none; border-radius: 20px; cursor: pointer; width: auto; margin-right:10px;"),
+                    Button("buy with code",type='button' ,
+                           onclick="""openDialog()""",
+                           style="background-color:#ff872b ; color: white; padding: 10px 15px; border: none; border-radius: 20px; cursor: pointer; width: auto;"),
                     style="text-align: middle; margin-top: 10px;",
                 ),
                 style="background-color: #dddddd; flex: 1; padding: 10px; height: 30%; margin-top: 27px; weight: 50%;",
@@ -58,11 +64,11 @@ def buy(session):
                     Input(type="text", id="coupon", placeholder="Enter code or coupon here!", style="padding: 10px; border-radius: 5px; border: 1px solid #000000;"),
                     Div(
                         Button("Submit", type="submit", style="background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 20px; cursor: pointer; width: auto;"),
-                        Button("Close", type="button", onclick="closeDialog()", style="background-color: #C30F16; color: white; padding: 10px 15px; border: none; border-radius: 20px; cursor: pointer; width: auto;"),
+                        Button("Cancel", type="button", onclick="closeDialog()", style="background-color: #C30F16; color: white; padding: 10px 15px; border: none; border-radius: 20px; cursor: pointer; width: auto;"),
                         style="display: flex; gap: 10px; margin-top: 10px;",  # Ensure buttons are on the same line
                     ),
-                    method="post", hx_post='',
-                    action="/submit"
+                    method="post",
+                    action="/purchase"
                 ),
                 style="background-color: #FFFFFF; padding: 20px; border-radius: 10px; width: 600px; text-align: center;",
             ),
@@ -89,3 +95,16 @@ def buy(session):
         
         style="background-color: #EEEEEE; min-height: 100vh; margin: 0;",
     )
+def buy_post(session,code_name:str):
+    try:
+        user_id = session['auth'][0]
+        if main_system.buy_cart_check_stock(user_id) == 0:
+            return Script("alert('please select atleast one item'); window.location.href='/cart'")
+        main_system.buy_item_in_cart(user_id,code_name)
+        user = main_system.get_user_by_id(user_id)
+        print("#### printing user history #####")
+        for history in user.get_order_history:
+            print(history.get_order)
+        return Script("alert('buy successfull'); window.location.href='/cart'")
+    except (Exception,ValueError,KeyError) as e:
+        return Script(f"alert('{str(e)}'); window.location.href='/purchase'")
