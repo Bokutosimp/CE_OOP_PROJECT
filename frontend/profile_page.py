@@ -6,7 +6,7 @@ def profile_page(session):
    user_id = session['auth'][0]
    user = main_system.get_user_by_id(user_id)
    
-   order_history = user.get_order_history
+   order_history = main_system.get_shipping_items(user_id)
    order_history_div = None
 
    if order_history:
