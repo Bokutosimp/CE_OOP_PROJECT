@@ -2,9 +2,11 @@ from fasthtml.common import *
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from backend.system import main_system
 
-def bid_page(id):
+def bid_page(id, session):
     try:
         bid_item = main_system.get_bid_item_by_id(id)
+        user_id = session['auth'][0]
+        user = main_system.get_user_by_id(user_id)
         print(bid_item)
         
         return Div(
@@ -45,6 +47,7 @@ def bid_page(id):
                                        id="bid_input",
                                        type='number',
                                        min=round(bid_item.get_price + 0.1, 1),
+                                       max=round(user.get_e_bux, 2),
                                        step=0.01,
                                        required=True,
                                        style="width:100%; max-width:300px; text-align:center; border-radius:50px; font-size:20px; padding:15px; border: 2px solid #ccc; transition: border 0.3s ease; margin-bottom: 15px;",
