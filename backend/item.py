@@ -260,10 +260,13 @@ class BidHistory:
         self.__status = status
 
 class BiddingHistory:
-    def __init__(self, user : User, bidAmount : float, bidTime : datetime):
-        self.__user = user
-        self.__bidAmount = bidAmount
-        self.__bidTime = bidTime
+   def __init__(self, user_id : str, bidAmount : float, bidTime : datetime):
+      self.__user_id = user_id
+      self.__bidAmount = bidAmount
+      self.__bidTime = bidTime
+        
+   def __str__(self):
+      return f"User ID: {self.__user_id}\nBid Amount: {self.__bidAmount}\nBid Time: {self.__bidTime}"
 
 class BidItem(Item):
    def __init__(self, id: str, name: str, price: float, amount: int, owner: Seller, image: str, category: list[Category], description:str,start_time: datetime, end_time: datetime, top_bidder=None, status="Not Started"):
@@ -317,11 +320,19 @@ class BidItem(Item):
    def get_end_time(self):
       return self.__end_time
    
+   @property
+   def get_history(self):
+      return self.__bids_history
+   
+   def show_history(self):
+      for history in self.__bids_history:
+         print(history)
+   
    def set_top_bidder(self, user : User):
       self.__top_bidder = user
    
-   def add_history(self, bid_history : BiddingHistory):
-      self.__bids_history.append(bid_history)
+   def add_history(self, user_id : str, bidAmount : float, bidTime : datetime):
+      self.__bids_history.append(BiddingHistory(user_id, bidAmount, bidTime))
 
    @property
    def is_started(self):
@@ -330,6 +341,13 @@ class BidItem(Item):
    @property
    def is_ended(self):
       return self.__status == "Ended"
+   
+   @property
+   def get_status(self):
+      now = datetime.now()
+      if now > self.__end_time:
+         self.__status = "Ended"
+      return self.__status
    
    def is_price_valid(self, price : float):
       return price > self.__price

@@ -10,7 +10,7 @@ def review_page(id, session):
         return Div(
             Div(Img(src=review.get_image),style="width:50%; height:auto; border-radius:15px; overflow:hidden;"),
             Form(
-                P(review.get_name,style="color:black; font-weight:600;"),
+                P(review.get_name,style="color:black; font-weight:Bold; font-size:30px; text-align:center;"),
                 Textarea(id = 'review',name = 'review',type='text',placeholder='Enter your review',style="width:100%; margin:0;"),
                 Select(
                         Option('⭐',value=1),
