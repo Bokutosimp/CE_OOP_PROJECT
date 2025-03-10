@@ -1,8 +1,8 @@
 from .category import Category
 from datetime import datetime
 from .order import Order,ShippingStatus
-from .item import Item,BidItem,User,Discount,Code,Customer,Seller,Admin,Cart,Review
 from datetime import datetime,timedelta
+from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review , Discount , FreeDelivery
 import uuid
 
 class System:
@@ -37,6 +37,18 @@ class System:
             return cat
       raise Exception('Not found')
    
+   def get_codes(self, query: str = '') -> list[Code]:
+      if query == '':
+         return self.__list_codes
+      else:
+         return [code for code in self.__list_codes if query.lower() in code.get_name.lower()]
+   
+   def get_code_by_id(self, id: str) -> Code:
+      for code in self.__list_codes:
+         if str(code.get_id) == str(id):
+            return code
+      raise Exception('Code not found')
+
    def get_items(self,query:str = ''):
       if(query == ''):
          return self.__list_items
@@ -163,13 +175,12 @@ class System:
    #         return item 
    #    raise Exception('item not ')
    
-   def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str):
-      print(f"somthegfdgfdgfd {category_id}")
+   def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, description : str, img: str):
       if (user_id == '' or name == '' or price == '' or amount == '' or category_id == ''):
          return Exception((str(e)))
       try:
          item_id = str(uuid.uuid4())
-         self.create_item(user_id, item_id, name, price, amount, category_id, img)
+         self.create_item(user_id, item_id, name, price, amount, category_id, img , description )
          return 'Item saved successfully'
       except Exception as e:
          raise Exception(str(e))
@@ -233,10 +244,12 @@ class System:
       except ValueError as e:
          raise ValueError(str(e))
 
-   def save_bid_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str, start_time: str, end_time: str):
+   def save_bid_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str, start_time: str, end_time: str , new_description : str):
       try:
          item_id = str(uuid.uuid4())
-         main_system.create_bid_item(item_id, name, price, amount, category_id, img, user_id, start_time, end_time, status=None, top_bidder=None)
+         
+         main_system.create_bid_item(item_id, name, price, amount, category_id, img, user_id, start_time, end_time, status=None, top_bidder=None , description=new_description )
+         print(main_system.get_bid_item_by_id(item_id)) 
          return "Save Bid item success"
       except Exception as e:
          raise Exception(str(e))
@@ -261,8 +274,9 @@ class System:
 
       
 
-   def save_discount_code(self,name,ID, discount_percent,description):
+   def save_discount_code(self,name , discount_percent,description):
       try:
+            ID = str(uuid.uuid1)
             if not isinstance(discount_percent, (int, float)) or discount_percent <= 0 or discount_percent > 100:
                 raise ValueError("Discount percent must be a number between 1 and 100")
             new_discount_code = Discount(ID, name, discount_percent, description)
@@ -312,9 +326,13 @@ class System:
          if item.get_id == item_id:
             return item.is_ended
          
-   def is_bid_item(self , item ):
-      if isinstance(item , BidItem) : return True
-      else : return False
+   def is_bid_item(self, item) -> bool:
+       return isinstance(item, BidItem)
+
+
+   def is_discount_code(self, code) -> bool:
+      return isinstance(code, Discount)
+
       
 
 
