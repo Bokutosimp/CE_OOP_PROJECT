@@ -342,6 +342,11 @@ class BidItem(Item):
    
    def set_top_bidder(self, user : User):
       self.__top_bidder = user
+      
+   def set_new_top_bidder(self, user: User, price: float, time: datetime):
+      self.set_top_bidder(user)
+      self.edit_item_price(price)
+      self.add_history(user,price,time)
    
    def add_history(self, user_id : str, bidAmount : float, bidTime : datetime):
       self.__bids_history.append(BiddingHistory(user_id, bidAmount, bidTime))

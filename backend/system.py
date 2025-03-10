@@ -292,15 +292,12 @@ class System:
          if item.get_id == item_id:
             return item.get_top_bidder
          
-   def set_top_bidder(self, item_id:str,bid_input:float, user_id:str):
+   def set_top_bidder(self, item_id:str,bid_input:float, user:User):
+      now = datetime.now()
+      now = now.replace(microsecond=0)
       for item in self.__list_items:
          if str(item.get_id) == str(item_id):
-            user = self.get_user_by_id(user_id)
-            item.set_top_bidder(user)
-            item.edit_item_price(bid_input)
-            now = datetime.now()
-            now = now.replace(microsecond=0)
-            item.add_history(user_id,bid_input,now)
+            item.set_new_top_bidder(user, bid_input, now)
             item.show_history()
             return 'Top bidder set'
          

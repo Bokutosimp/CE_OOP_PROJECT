@@ -98,7 +98,8 @@ def submit_bid_page(bid_input: float, item_id: str, session):
     bid_item = main_system.get_bid_item_by_id(item_id)
     if bid_item.get_status != "Started":
         return Redirect(f"/bid/{item_id}")
-    user_id, user_role = session['auth']
+    user_id = session['auth'][0]
+    user = main_system.get_user_by_id(user_id)
     print(f"Bid: {bid_input}, Item ID: {item_id}, User ID: {user_id}")
-    main_system.set_top_bidder(item_id, bid_input, user_id)
+    main_system.set_top_bidder(item_id, bid_input, user)
     return Redirect(f"/bid/{item_id}")
