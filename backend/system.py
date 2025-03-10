@@ -383,12 +383,11 @@ class System:
       except Exception as e:
          raise Exception(str(e))
    
-   def add_review(self,item_id:str,rating:int,review:str,user_id:str):
+   def add_review(self,item_id:str,rating:int,review:str,user:User):
       try:
-         user = self.get_user_by_id(user_id)
          if not isinstance(user,Customer): raise Exception('User is not a customer')
          item = self.get_item_by_id(item_id)
-         item.add_review(Review(rating,review,user))
+         item.add_review(rating,review,user)
          item.show_review()
       except Exception as e:
          raise Exception(str(e))
