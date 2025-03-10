@@ -1,6 +1,6 @@
 from .category import Category
 from datetime import datetime,timedelta
-from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review
+from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review , Discount , FreeDelivery
 import uuid
 
 class System:
@@ -107,9 +107,14 @@ class System:
             self.__list_users[i] = Seller(customer,store_name,store_address)
             return 'Seller created'  
       
-   def create_discount_code(self, name:str, discount_percent:float):
-      self.__list_codes.append(Code(name,discount_percent))
-      return 'Code created'
+   def create_discount_code(self, owner : Seller, code_id : str , name:str, discount_percent : int):
+      self.__list_codes.append(Discount(code_id , name , discount_percent , owner))
+      return 'Discount code created'
+   
+   def create_free_delivery_code(self, name : str , minimum : float):
+      code_id = str(uuid.uuid4())
+      self.__list_codes.append(FreeDelivery(code_id , name , minimum ))
+      return 'Free delivery code created'
       
    def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img=''):
       try:
@@ -155,7 +160,6 @@ class System:
    #    raise Exception('item not ')
    
    def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str):
-      print(f"somthegfdgfdgfd {category_id}")
       if (user_id == '' or name == '' or price == '' or amount == '' or category_id == ''):
          return Exception((str(e)))
       try:
@@ -252,8 +256,21 @@ class System:
 
       
 
-   def save_discount_code(self,ID, discount_percent):
+   def save_discount_code(self, user_id , name , discount_percent):
+      try: 
+         code_id = str(uuid.uuid1())
+         current_user = main_system.get_user_by_id(user_id)
+         if discount_percent <= 0 and discount_percent >= 100 :
+               main_system.create_discount_code(current_user , code_id , name , discount_percent ) 
+         return 'discount code saved'
+      except Exception as e:
+            raise Exception(str(e))
+      except ValueError as e:
+            raise ValueError(str(e))
+
+   def save_derivery_code():
       pass
+         
 
    def get_top_bidder(self, item_id:str):
       for item in self.__list_items:

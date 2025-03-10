@@ -354,6 +354,12 @@ class Code :
    def verify_code(self,input):
       if input == self.__name:
          return True
+      
+   def get_id(self):
+      return self.__ID
+   
+   def get_name(self):
+      return self.__name
 
 class FreeDelivery(Code):
    def __init__(self,ID:str,name:str,minimum:float):
@@ -366,5 +372,9 @@ class Discount(Code):
       self.__percentage = percentage
       self.__owner = owner
       
-      def get_discount(self):
+   def get_discount(self):
          return self.__percentage
+      
+   def get_owner(self):
+         return self.__owner
+   
