@@ -26,7 +26,7 @@ from decorators.redirect_path import redirect_path
 from admin import admin_page
 from shipping_status import check_status
 from edit_item import edit_item,edit_bid_item
-from profile import profile
+from profile_page import profile_page
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
@@ -213,6 +213,6 @@ def get(id:str,session):
 
 @rt('/profile')
 def get(session):
-    return layout(profile(session),session)
+    return layout(profile_page(session),session)
 
 serve(port=int(os.getenv("PORT")))
