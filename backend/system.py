@@ -388,12 +388,16 @@ class System:
       except Exception as e:
          raise Exception(str(e))
       
-   def buy_item_with_code(self, user_id: str, code: str):
+   def buy_item_with_code(self, user_id: str, code: str = None):
     try:
         user = self.get_user_by_id(user_id)
-        discount = self.apply_code(code)
         total_price = self.buy_cart_check_stock(user_id)
-        discounted_price = total_price * (1 - discount)
+        if code and code.strip():
+            discount = self.apply_code(code)
+            discounted_price = total_price * (1 - discount)
+        else:
+            discounted_price = total_price
+        
         order = Order(10.0, discounted_price, [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
         user.add_history(order)
         user.decrease_e_bux(discounted_price)
@@ -492,6 +496,12 @@ def createInstance():
    confirm_purchase = main_system.buy_item_with_code('cust001', 'SUMMER_SALE')
    print("Discounted price:", confirm_purchase)
    print(f"User money after purchase: {user.get_e_bux}")
+   print("---###### buy item in cart of user cust001 without code #####---")
+   user = main_system.get_user_by_id('cust001')
+   print(f"User money before purchase: {user.get_e_bux}")
+   confirm_purchase_no_code = main_system.buy_item_with_code('cust001')
+   print("Price without code:", confirm_purchase_no_code)
+   print(f"User money after purchase without code: {user.get_e_bux}")
    
    return main_system
 
