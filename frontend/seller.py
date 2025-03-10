@@ -93,7 +93,7 @@ def product_management(session):
 # { '/edit_bid_item/'+str(item.get_id) if is_bid else '/edit_item/'+str(item.get_id) }
 
     return Main(
-    H1("Product Management", style="text-align: center;"),
+    H1("Product Management", style="text-align: center ; color : black;"),
 
     Card(
         H3("Profile", style="color: #0074bd;"),
