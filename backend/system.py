@@ -1,7 +1,6 @@
 from .category import Category
 from datetime import datetime
 from .order import Order,ShippingStatus
-from .item import Item,BidItem,User,Discount,Code,Customer,Seller,Admin,Cart,Review
 from datetime import datetime,timedelta
 from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review , Discount , FreeDelivery
 import uuid

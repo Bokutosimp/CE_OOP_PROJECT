@@ -1,6 +1,7 @@
 from fasthtml.common import *
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from backend.system import main_system
+from stylesheet import *
 
 def review_page(id, session):
     try:
@@ -9,6 +10,8 @@ def review_page(id, session):
         print(session['auth'])
 
         return Div(
+            Script(f"<style>{stylesheet}</style>"),
+
             H1("Leave a Review", style="text-align: center; color: #333; font-size: 36px; font-weight: bold; margin-bottom: 20px;"),
 
             Div(
@@ -17,7 +20,7 @@ def review_page(id, session):
             ),
             
             Form(
-                P(review.get_name, style="color:#333; font-size:28px; font-weight:600; text-align:center"),
+                P(review.get_name, style="color:#333; font-size:28px; font-weight:600; text-align:center; margin-top: 1px;"),
                 
                 Textarea(
                     id='review',
@@ -42,9 +45,7 @@ def review_page(id, session):
                 
                 Button(
                     'Submit Review',
-                    style="""background: #0074bd; color: white; padding:15px; font-size:18px; font-weight:bold; border-radius:50px; width:100%; border:none; cursor:pointer; transition: background-color 0.3s;""",
-                    onmouseover="this.style.background='#005fa3';",
-                    onmouseout="this.style.background='#0074bd';",
+                    style=""" background-color :#333 ; class color: white; padding:15px; font-size:18px; font-weight:bold; border-radius:50px; width:100%; border:none; cursor:pointer; transition: background-color 0.3s;""",
                     type='submit'
                 ),
 
@@ -52,9 +53,11 @@ def review_page(id, session):
                 action=f"/review/submit?item_id={id}",
                 method="post"
             ),
-
-            style="display: flex; flex-direction: column; align-items: center; padding: 30px 0; background-color: #f9f9f9; gap: 40px;"
+            
+            style="""display: flex; flex-direction: column; align-items: center; padding: 30px 0; background-color: #ced9f3ff; gap: 40px;
+                border-radius: 15px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border: 1px solid #ddd; padding: 30px; max-width: 650px; margin: auto;"""
         )
+
     except:
         return Div("Item not found", style="color:red; font-size:24px; font-weight:bold; text-align:center;")
 
