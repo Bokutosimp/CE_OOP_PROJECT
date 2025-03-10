@@ -44,6 +44,7 @@ def bid_page(id):
                                  Input(
                                        id="bid_input",
                                        type='number',
+                                       min=round(bid_item.get_price + 0.1, 1),
                                        step=0.01,
                                        required=True,
                                        style="width:100%; max-width:300px; text-align:center; border-radius:50px; font-size:20px; padding:15px; border: 2px solid #ccc; transition: border 0.3s ease; margin-bottom: 15px;",
