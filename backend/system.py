@@ -266,6 +266,10 @@ class System:
             user = self.get_user_by_id(user_id)
             item.set_top_bidder(user)
             item.edit_item_price(bid_input)
+            now = datetime.now()
+            now = now.replace(microsecond=0)
+            item.add_history(user_id,bid_input,now)
+            item.show_history()
             return 'Top bidder set'
          
    def start_bid(self, item_id:str):
