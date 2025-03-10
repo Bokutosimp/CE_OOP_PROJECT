@@ -72,7 +72,7 @@ class Item:
    def edit_category(self, new_category):
       self.__category = new_category
 
-   def check_availlability(self,quantity:int) -> bool:
+   def check_availability(self,quantity:int) -> bool:
       return quantity <= self.__amount
    
    def add_review(self,review:object):
@@ -191,7 +191,7 @@ class Customer(User):
    
    def add_to_cart(self,item:Item,quantity:int):
       if quantity < 0: raise Exception('quantity can not be less than or equal to zero')
-      if not item.check_availlability(quantity): raise Exception('Item out of stock')
+      if not item.check_availability(quantity): raise Exception('Item out of stock')
       for item_in_cart in self.__cart.get_list_item_in_cart:
          if item_in_cart.get_item == item:
             item_in_cart.set_amount_int_cart = quantity
@@ -223,7 +223,11 @@ class Customer(User):
       orderClass = Order(10,total_price,buy_list)
       order_history = OrderHistory(orderClass)
       return order_history
-
+   
+   def decrease_e_bux(self, amount: float):
+        if amount > self.__e_bux:
+            raise Exception("Insufficient e-bux")
+        self.__e_bux -= amount
       
    
    def SeaTung(self,amount):
@@ -377,6 +381,10 @@ class Code :
    def verify_code(self,input):
       if input == self.__name:
          return True
+      
+   @property
+   def get_name(self):
+      return self.__name
 
 class FreeDelivery(Code):
    def __init__(self,ID:str,name:str,minimum:float):
@@ -388,6 +396,11 @@ class Discount(Code):
       super().__init__(ID,name)
       self.__percentage = percentage
       self.__owner = owner
-      
-      def get_discount(self):
+   
+   @property   
+   def get_discount(self):
          return self.__percentage
+      
+   @property
+   def get_code(self):
+      return self.__name
