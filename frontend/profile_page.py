@@ -11,7 +11,7 @@ def profile_page(session):
 
    if order_history:
        order_history_div = Div(
-           H3('Order History', style='color: black;'),
+           H3('Shipping Status', style='color: black;'),
            Div(*[Div(
                Div(f'Total Price: {item.get_order.get_total_price}', style='color: black;'),
                Div(f'Shipping Date: {item.get_shipping_status.get_shipping_date}', style='color: black;'),
@@ -25,7 +25,7 @@ def profile_page(session):
    return Main(
 Div( 
       Div(
-          H2(f'Profile', style='color: black; text-shadow: 0 0 10px rgba(0, 0,0, 0.8), 0 0 20px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 0, 0, 0.4);') ,
+          H2(f'Profile', style='color: black; text-shadow: 0 0 10px rgba(0, 0,0, 0.2);') ,
          Div(
             Div(
                Img(src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKsAAACUCAMAAADbGilTAAAAY1BMVEUAAAD////7+/sEBAT39/cICAjz8/Pk5OS9vb3p6emxsbFXV1cfHx+Pj4/ExMSDg4NiYmJAQEC3t7eqqqrPz89tbW13d3eioqJHR0eampotLS3d3d03NzcREREyMjJSUlImJiaVTqGeAAAEiElEQVR4nO2c63KqMBCAczOIXBVEEam+/1OeIG2PimLIhg3nTL5/LZ3pNzsh2Ww2EOLxeDwej8fj8Xg8Ho/HY5n2uo3yfX7ZXlvXKu/gXGlGVVFK+oMsiypq+0cL45SlIX0mTJMv12IDzgcpGXtWVb9h8rAg2xUhx80govfsjre/WgKrJKBMvDUVjAbJIlQ5+SpHg9pTfpEFvGL79xG9G7hU7B17qlDVgg5eqZeysiaOQ5tomfa2iUNPTlY1HU5U71wZrVfOIstJInRNb7YicTcKIjHJVTAZuRFdkS/52e85tCc3i0Kbar9Xv6o0dZN9ZVNNb7aZC9VtYKCqMq8tuiknhZEqpQX2XKD+3eTB2sMo/vJ1MHY9IJuS03APoEtwQnbNdLKr14gKV7XdGauqbQLucrBtAK4N5rTFSQ5QpTRHnAlUggVyxU231oYzVgeja0RTQiDDVQ1YVNfp2eA9ElOVg1QpxRyuMdA19q7eFdG1BbqibrrMs6wOgalKzLPXjhDVNQW5pqi5Sw3KB2o00851D3CldI+aZx1DQFyDI6KpmrTWgLCuketEiXlcBXbNeGs+a2FXicxLRPhFIk5O1GztYvSE7boyXg5SskIvxBuOWAc1TdJV30xAr7zdiAODGnyAmbr+siLH6XMsOzo52+C8WxAmnW9Rlrjr0thMdN048ryV0qeVNnduT4932kuC6FQdwkmsn3CtY+ftDnrnxww9u3oBJ5XOoVxQOQ/q7WXZ7igbaSPoHu22rpsyepTDpRkbB6y5LMP0uwcvSxkdTLa3pYKlGVlYo168LyR90lU/yGLvJAMYoQ9bXgTyd1ZgQgZFfnvo1u0tcZ7Vh6IoDnWWLy2gj/DHJAp/A+Dx/L9wNX/dWOxU9U/SxtfrOcqj8/UaL7Zpn5BTVNXr5u82QTTrQxVhN7docM125WMhpl9rw3KXXV3L/dC9QW1VypH8VZZVSxaRFrR58fmEXha529H7nbgK+qm5uHssnKex+eiG4Mm4yd2Jkn35MaSPwS1dNe4fNwa1tw3uedE3Sagf07vYhsh1AvWGRDoXS15TXnBfsSQAnHEihpZ3tUwYG7RLEVEDOjnult8G6aJBFQJVO9kQpQk2g/W8/SARmvcPw1KQCQzh9Mi0pfyV7cyy9djFwmmImXtJpp27fGLWc5nazlj96zpXZDmkF+Ot7kzt0NWLi8VQVTbHZQOVrcCXgBeyNIxmiKzZFajPBPZ3jbvp2aomdo8TVboJuP/yCZHZzGc5OcMaM0dh4dnqKDDfBehQWjQl1ayqlFqbuNQIgOxYdAjsjQK7acCQLjGw5JrL2V2lrZIMpH9Ul9SO6hFBlVIb7XBczVczv1m0GwWljRF7sZ9evXC1c90fWrfQxcIe4ThXfvWMhY7zDEmVUmDBgM+dCdzTwBJZtbwiTAI9jMIWWuhF2GnUwGkLbwiAU8OznUKbHvIMcp1x6zIE+N0PrIWgB7QcxJjDVQ1Y8y4pTi5Yi1aPWrpMZwKu9x0vewjzS2gccYHtyQAzLOZK0AE4+FpBvuBhwvhXP/4ARPk50MLrd+0AAAAASUVORK5CYII=',
@@ -44,5 +44,5 @@ Div(
       ), 
       order_history_div 
    )
-   , style='background-color : #ced9f3ff ;'
+
    )
