@@ -331,6 +331,13 @@ class BidItem(Item):
    def is_ended(self):
       return self.__status == "Ended"
    
+   @property
+   def get_status(self):
+      now = datetime.now()
+      if now > self.__end_time:
+         self.__status = "Ended"
+      return self.__status
+   
    def is_price_valid(self, price : float):
       return price > self.__price
    
