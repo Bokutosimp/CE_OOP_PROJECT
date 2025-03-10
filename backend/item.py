@@ -72,6 +72,9 @@ class Item:
    def edit_category(self, new_category):
       self.__category = new_category
 
+   def edit_describtion(self, new_describtion):
+      self.__description = new_describtion
+
    def check_availability(self,quantity:int) -> bool:
       return quantity <= self.__amount
    
@@ -293,10 +296,10 @@ class BidItem(Item):
    def edit_bid_item(self, name : str, price : float , category : list[Category] , description : str , img : str , start_time : str, end_time : str)  :
       self.edit_item_name(name)
       self.edit_item_price(price)
-      self.__description = description
+      self.edit_describtion(description)
       self.edit_category(category)
-      self.__start_time = start_time
-      self.__end_time = end_time
+      self.__start_time = str(datetime.strptime(start_time ,"%y%m-%d-%dT%H:%M"))
+      self.__end_time = str(datetime.strptime(end_time ,"%y%m-%d-%dT%H:%M"))
 
    def __str__(self):
       return super().__str__() + f"\nStart Time: {self.__start_time}\nEnd Time: {self.__end_time}\nStatus: {self.__status}\nTop Bidder: {self.__top_bidder}\nBids History: {self.__bids_history}"
@@ -354,7 +357,8 @@ class BidItem(Item):
    @property
    def get_status(self):
       now = datetime.now()
-      if now > self.__end_time:
+
+      if now > self.__end_time :
          self.__status = "Ended"
       return self.__status
    
@@ -386,6 +390,14 @@ class Code :
    def verify_code(self,input):
       if input == self.__name:
          return True
+   
+   @property
+   def get_id(self):
+      return self.__ID
+   @property
+   def get_name(self):
+      return self.__name
+
       
    @property
    def get_name(self):
@@ -405,7 +417,10 @@ class Discount(Code):
    @property   
    def get_discount(self):
          return self.__percentage
-      
+   @property  
+   def get_owner(self):
+         return self.__owner
+   
    @property
    def get_code(self):
       return self.__name

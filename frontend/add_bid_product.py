@@ -1,5 +1,6 @@
 from fasthtml.common import *
 from backend.system import *
+from datetime import datetime
 
 app, rt = fast_app()
 
@@ -28,7 +29,7 @@ def add_bid_product_page(session):
                 Summary("เลือกหมวดหมู่"), 
                 Div(
                     *[Label(
-                        Input(type="checkbox", id=f"cat-{cat.get_id}", value=cat.get_id, name="category",cls="checkbox" , required='true' ) ,
+                        Input(type="checkbox", id=f"cat-{cat.get_id}", value=cat.get_id, name="category",cls="checkbox") ,
                         cat.get_name
                     ) for cat in load_category],
                     style="display: flex; flex-direction: column; padding: 10px;"
@@ -77,16 +78,19 @@ def submit_bid_product_page(product: Bid_Product, session):
         print(f"💰 Price: {product.price}")
         print(f"🏷️ Category: {product.category.split(',')}")    
         print(f"🖼️ Image: {product.image}")    
-        print(f"⏳ Start Time: {product.start_time}")    
-        print(f"⏳ End Time: {product.end_time}")    
+        start_time = datetime.strptime(product.start_time, "%Y-%m-%dT%H:%M")
+        end_time = datetime.strptime(product.end_time, "%Y-%m-%dT%H:%M")
+        print(f"⏳ Start Time: {start_time}")    
+        print(f"⏳ End Time: {end_time}")
+        
 
         # if not product.name or not product.category or not product.image or not product.start_time or not product.end_time:
         #     return Script(""" alert('Please fill in all required fields'); setTimeout(function(){ window.location.href = '/seller '; });""")
         
         # if not product.price or not product.amount:  
         #     return Script(""" alert('Price and amount must not be empty'); setTimeout(function(){ window.location.href = '/seller '; });""")
-
-        main_system.save_bid_item(user_id, product.name, product.price, product.amount, product.category.split(','), product.image, product.start_time, product.end_time)
+        
+        main_system.save_bid_item(user_id, product.name, product.price, product.amount, product.category.split(','), product.image, start_time, end_time , product.description)
 
         return Script(""" alert('Add bid Product Successfully'); setTimeout(function(){ window.location.href = '/seller ';  });""")
 
