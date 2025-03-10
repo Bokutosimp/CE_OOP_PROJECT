@@ -32,7 +32,6 @@ class System:
       if(query == ''): return self.__list_categories
       else: return [category for category in self.__list_categories if query in category.get_name]
       
-      
    def get_category_by_id(self,id:str):
       for cat in self.__list_categories:
          if str(cat.get_id) == str(id):
@@ -51,7 +50,6 @@ class System:
             return code
       raise Exception('Code not found')
 
-   
    def get_items(self,query:str = ''):
       if(query == ''):
          return self.__list_items
@@ -178,12 +176,12 @@ class System:
    #         return item 
    #    raise Exception('item not ')
    
-   def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str):
+   def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, description : str, img: str):
       if (user_id == '' or name == '' or price == '' or amount == '' or category_id == ''):
          return Exception((str(e)))
       try:
          item_id = str(uuid.uuid4())
-         self.create_item(user_id, item_id, name, price, amount, category_id, img)
+         self.create_item(user_id, item_id, name, price, amount, category_id, img , description )
          return 'Item saved successfully'
       except Exception as e:
          raise Exception(str(e))
@@ -247,10 +245,12 @@ class System:
       except ValueError as e:
          raise ValueError(str(e))
 
-   def save_bid_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str, start_time: str, end_time: str):
+   def save_bid_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str, start_time: str, end_time: str , new_description : str):
       try:
          item_id = str(uuid.uuid4())
-         main_system.create_bid_item(item_id, name, price, amount, category_id, img, user_id, start_time, end_time, status=None, top_bidder=None)
+         
+         main_system.create_bid_item(item_id, name, price, amount, category_id, img, user_id, start_time, end_time, status=None, top_bidder=None , description=new_description )
+         print(main_system.get_bid_item_by_id(item_id)) 
          return "Save Bid item success"
       except Exception as e:
          raise Exception(str(e))
