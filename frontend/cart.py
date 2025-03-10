@@ -31,7 +31,7 @@ def cart(session):
             Div(*[Div(Div(
                Div(style=f"width:100%; aspect-ratio:1/1; overflow:hidden; background-image:url({item.get_item.get_image}); background-size:contain; background-position:center; background-repeat:no-repeat;"),
                A(item.get_item.get_name,style="",href=f'/item/{item.get_item.get_id}'),
-               Div(Label(f"Qty"),Input(type="number",value=item.get_amount_in_cart,min=1,id='amount',
+               Div(Label(f"Qty"),Input(type="number",value=item.get_amount_in_cart,min=1,id=f'amount-{item.get_item.get_id}',
                   style="width:70px; background-color:white; color:black;",
                   hx_post=f'/cart/{item.get_item.get_id}',hx_swap='innerHTML'),
                style="justify-self:end; display:flex; align-items:center; gap:10px;"),
@@ -44,7 +44,11 @@ def cart(session):
                            style=' margin:0;justify-self:center; align-self:center;'),
                      style='justify-self:center; align-self:center; display:flex;',),
                   Span("|"),
-                  A("But it now",style="text-decoration:underline; cursor:pointer;",href=''),
+                  A("But it now",style="text-decoration:underline; cursor:pointer;",
+                    onclick=f"""
+                           const input = document.getElementById("amount-{item.get_item.get_id}");
+                           window.location.href=`/purchase/{item.get_item.get_id}/${{input.value}}`;
+                    """),
                   Span("|"),
                   Span("Remove",style="text-decoration:underline; color:black;cursor:pointer;",
                   hx_delete=f'/cart/{item.get_item.get_id}',hx_swap='outerHTML',hx_confirm='Are you sure?',),

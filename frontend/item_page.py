@@ -15,7 +15,16 @@ def item_page(id):
                   Span('Quantity:',style="color:black; font-size:15px;"),
                   Input(type='number',value=1,min=1,max=item.get_amount,style="width:70px; margin:0;",id='amount',),
                    style="display:flex; flex-direction:row; gap:10px; width:100%; align-items:center;"),
-               A(Button('But It Now',style="width:100%; border-radius:50px; margin:0;",type='button'),href='#',style='width:100%;'),
+               A(
+                  Button('But It Now',
+                         style="width:100%; border-radius:50px; margin:0;",
+                         type='button',
+                         onclick=f"""
+                           event.preventDefault();
+                           const input = document.getElementById("amount")
+                           window.location.href=`/purchase/{item.get_id}/${{input.value}}`
+                         """),
+                 href='#',style='width:100%;'),
                Button('Add to Cart',style="width:100%;border-radius:50px;",type='submit'),
                style="display:flex; flex-direction:column; gap:10px; width:50%; align-items:center;",
                method='post',
@@ -23,5 +32,5 @@ def item_page(id):
                ),
             Style="display:flex; flex-direction:row; width:100%; padding:30px; gap:20px;",)
    except Exception as e:
-      return Div(str(e))
+      return Script(f"alert(\"{str(e)}\"); window.location.href='/'")
    

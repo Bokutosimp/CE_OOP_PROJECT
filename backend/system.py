@@ -2,7 +2,7 @@ from .category import Category
 from datetime import datetime
 from .order import Order,ShippingStatus,OrderHistory
 from datetime import datetime,timedelta
-from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review , Discount , FreeDelivery
+from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review , Discount , FreeDelivery,ItemInCart
 import uuid
 
 class System:
@@ -406,13 +406,12 @@ class System:
       except Exception as e:
          raise Exception(str(e))
       
-   def buy_item_with_code(self, user_id: str, code: str,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(minutes=5)):
+   def buy_item_with_code(self, user_id: str, code: str,is_selected_list:list,total_price:float,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(minutes=5)):
     try:
       user = self.get_user_by_id(user_id)
       discount = self.apply_code(code)
-      total_price = self.buy_cart_check_stock(user_id)
       discounted_price = total_price * (1 - discount)
-      order = Order(10.0, discounted_price, [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
+      order = Order(10.0, discounted_price, is_selected_list)
       shipping_status = ShippingStatus(shipping_date,get_item_date)
       for Dcode in self.__list_codes:
          if Dcode.get_name == code:
@@ -427,11 +426,26 @@ class System:
    #buy item in cart
    def buy_item_in_cart(self,user_id:str,code:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(minutes=5)):
       try:
-         if code != None and code != '':
-            return self.buy_item_with_code(user_id,code,shipping_date,get_item_date)
-         user = self.get_user_by_id(user_id)
+         user = self.get_user_by_id(user_id)  # Assign user variable here
          total_price = self.buy_cart_check_stock(user_id)
+         if code != None and code != '':
+            return self.buy_item_with_code(user_id,code,[item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected],total_price,shipping_date,get_item_date)
          order = Order(10.0, total_price, [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
+         shipping_status = ShippingStatus(shipping_date,get_item_date)
+         user.add_history(OrderHistory(order,shipping_status))
+         user.decrease_e_bux(total_price)
+         return total_price
+      except Exception as e:
+         raise Exception(str(e))
+      
+   def buy_item(self,user_id:str,item_id:str,amount:int,code:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(minutes=5)):
+      try:
+         item = self.get_item_by_id(item_id)
+         total_price = round(item.get_price*int(amount),2)
+         if code != None and code != '':
+            return self.buy_item_with_code(user_id,code,[ItemInCart(item,amount,True)],total_price,shipping_date,get_item_date)
+         user = self.get_user_by_id(user_id)
+         order = Order(10.0, total_price,[ItemInCart(item,amount,True)])
          shipping_status = ShippingStatus(shipping_date,get_item_date)
          user.add_history(OrderHistory(order,shipping_status))
          user.decrease_e_bux(total_price)
@@ -540,7 +554,7 @@ def createInstance():
    print(f"User money before purchase: {user.get_e_bux}")
    check_stock = main_system.buy_cart_check_stock('cust001')
    print("return price :", check_stock, "E")
-   confirm_purchase = main_system.buy_item_with_code('cust001', 'SUMMER_SALE')
+   confirm_purchase = main_system.buy_item_in_cart('cust001', 'SUMMER_SALE')
    print("Discounted price:", confirm_purchase)
    print(f"User money after purchase: {user.get_e_bux}")
    now = datetime.now()
@@ -550,7 +564,13 @@ def createInstance():
    print(f"update user cart {[item.get_item.get_name for item in user.get_cart.get_list_item_in_cart]}")
    print(f"get shipping item \n {main_system.get_shipping_items('cust001')[0].get_shipping_status}")
    print(f"get history of item \n {main_system.get_history_items('cust001')[0].get_shipping_status}")
-   print(f"get order in history\n {main_system.get_history_items('cust001')[0].get_order.get_list_item_select}")
+   # try buy one item at the time
+   main_system.buy_item("cust001","1",3)
+   print(f'listing all shipping items')
+   for his in main_system.get_shipping_items('cust001'):
+      print(f"shipping status of item is{his.get_shipping_status}")
+      for item in his.get_order.get_list_item_select:
+         print(f"item in order is {item.get_item.get_name}")
    
    return main_system
 
