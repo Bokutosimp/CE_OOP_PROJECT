@@ -15,7 +15,7 @@ def search_page(keyword):
                   Div('New-Open box',style="font-size:15px; color:gray;"),
                   Div(
                      Div(f"US ${item.get_price}",style="font-weight:bold; font-size:25px; width:50%;"),
-                     Div("Save up to 15% when you buy more ginosurplus713 (282) 100%",style="justify-self:end; font-size:15px; width:50%;"),
+                     Div(f"{item.get_description}",style="justify-self:end; font-size:15px; width:50%;"),
                      style="display:flex; flex-direction:row; width:100%; margin-top:20px;"),
                   style="display:flex; flex-direction:column; width:100%; margin:10px 20px;"),
                style="display:flex; flex-direction:row; gap:20px; text-decoration:none; color:black; width:100%; background:var(--lavender-web-2); border-radius:15px; padding:0; overflow:hidden;",

@@ -4,7 +4,7 @@ from datetime import datetime
 from .order import Order,OrderHistory
 
 class Item:
-   def __init__(self,id:str,name :str , price:float,amount:int, owner:object,image:str,category:list[Category]):
+   def __init__(self,id:str,name :str , price:float,amount:int, owner:object,image:str,category:list[Category],description:str):
       self.__id = id
       self.__name = name
       self.__price = price
@@ -15,9 +15,10 @@ class Item:
       self.__owner = owner
       self.__category = category
       self.__review = []
+      self.__description = description
    
    def __str__(self):
-      return f"ID: {self.__id}\nName: {self.__name}\nPrice: {self.__price}\nAmount: {self.__amount}\nOwner: {self.__owner}\nCategory: {self.__category}"
+      return f"ID: {self.__id}\nName: {self.__name}\nPrice: {self.__price}\nAmount: {self.__amount}\nOwner: {self.__owner}\nCategory: {self.__category} \n description: {self.__description}"
       
    @property
    def get_id(self) -> str:
@@ -43,6 +44,9 @@ class Item:
    @property
    def get_review(self) -> list:
       return self.__review
+   @property
+   def get_description(self) -> str:
+      return self.__description
    
    def show_review(self) -> str:
       for review in self.__review:
@@ -57,12 +61,16 @@ class Item:
       self.__price = price
       self.__category = category
       self.__image = img
+      self.__description = desciption
       
    def edit_item_name(self , new_name) :
       self.__name = new_name
 
    def edit_item_price(self, new_price):
       self.__price = new_price
+
+   def edit_category(self, new_category):
+      self.__category = new_category
 
    def check_availability(self,quantity:int) -> bool:
       return quantity <= self.__amount
@@ -256,15 +264,18 @@ class BidHistory:
         self.__status = status
 
 class BiddingHistory:
-    def __init__(self, user : User, bidAmount : float, bidTime : datetime):
-        self.__user = user
-        self.__bidAmount = bidAmount
-        self.__bidTime = bidTime
+   def __init__(self, user_id : str, bidAmount : float, bidTime : datetime):
+      self.__user_id = user_id
+      self.__bidAmount = bidAmount
+      self.__bidTime = bidTime
+        
+   def __str__(self):
+      return f"User ID: {self.__user_id}\nBid Amount: {self.__bidAmount}\nBid Time: {self.__bidTime}"
 
 class BidItem(Item):
-   def __init__(self, id: str, name: str, price: float, amount: int, owner: Seller, image: str, category: list[Category], start_time: datetime, end_time: datetime, top_bidder=None, status="Not Started"):
+   def __init__(self, id: str, name: str, price: float, amount: int, owner: Seller, image: str, category: list[Category], description:str,start_time: datetime, end_time: datetime, top_bidder=None, status="Not Started"):
       # Call Item's constructor
-      super().__init__(id, name, price, amount, owner, image, category)
+      super().__init__(id, name, price, amount, owner, image, category,description)
       
       # Explicitly re-assign attributes
       self.__owner = owner  # Ensure owner is correctly assigned
@@ -277,8 +288,8 @@ class BidItem(Item):
    def edit_bid_item(self, name : str, price : float , category : list[Category] , description : str , img : str , start_time : str, end_time : str)  :
       self.edit_item_name(name)
       self.edit_item_price(price)
-      # self.__description = description
-      self.__category = category
+      self.__description = description
+      self.edit_category(category)
       self.__start_time = start_time
       self.__end_time = end_time
 
@@ -313,11 +324,19 @@ class BidItem(Item):
    def get_end_time(self):
       return self.__end_time
    
+   @property
+   def get_history(self):
+      return self.__bids_history
+   
+   def show_history(self):
+      for history in self.__bids_history:
+         print(history)
+   
    def set_top_bidder(self, user : User):
       self.__top_bidder = user
    
-   def add_history(self, bid_history : BiddingHistory):
-      self.__bids_history.append(bid_history)
+   def add_history(self, user_id : str, bidAmount : float, bidTime : datetime):
+      self.__bids_history.append(BiddingHistory(user_id, bidAmount, bidTime))
 
    @property
    def is_started(self):
@@ -326,6 +345,13 @@ class BidItem(Item):
    @property
    def is_ended(self):
       return self.__status == "Ended"
+   
+   @property
+   def get_status(self):
+      now = datetime.now()
+      if now > self.__end_time:
+         self.__status = "Ended"
+      return self.__status
    
    def is_price_valid(self, price : float):
       return price > self.__price

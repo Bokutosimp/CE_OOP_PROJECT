@@ -22,7 +22,7 @@ def add_bid_product_page(session):
         ),
         Form( 
             Label("Bid Product Name:", Input(type="text", id="name", placeholder="Enter your product name", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true')),
-            Label("Start Price:", Input(type="number", id="price", placeholder="Enter your price", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true')),
+            Label("Start Price:", Input(type="number", id="price",  step="0.01" ,placeholder="Enter your price", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true')),
             Label("Amount:", Input(id="amount", name="amount", type="number", placeholder="Enter your amount" , required='true')),
             Details(
                 Summary("เลือกหมวดหมู่"), 
@@ -35,8 +35,8 @@ def add_bid_product_page(session):
                 ),
                 style="border: 1px solid #ccc; padding: 5px; width: 100%;"
             ),
-            Label("Start Time", Input(type="datetime-local", id="start_time", placeholder="Enter end time", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;") , required='true'),
-            Label("End Time", Input(type="datetime-local", id="end_time", placeholder="Enter category", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;") , required='true'),
+            Label("Start Time", Input(type="datetime-local", id="start_time", placeholder="Enter end time", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;") ,),
+            Label("End Time", Input(type="datetime-local", id="end_time", placeholder="Enter category", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" ) ,),
             Label("Description:", Textarea(id="description", rows=5, placeholder="Product description...", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;")),
             Label("Image:", Input(type="text", id="image", placeholder="Enter your image url" , style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;") ), 
 
@@ -53,8 +53,8 @@ def add_bid_product_page(session):
                     form.append('price',document.getElementById("price").value) 
                     form.append('amount',document.getElementById("amount").value)
                     form.append('category',cat_id_selected)
-                    form.append('start_time',document.getElementById("start_time").value | '')
-                    form.append('end_time',document.getElementById("end_time").value | '')
+                    form.append('start_time',document.getElementById("start_time").value )
+                    form.append('end_time',document.getElementById("end_time").value )
                     form.append('description',document.getElementById("description").value | '')
                     form.append('image',document.getElementById("image").value | '')
                     fetch('/seller/add_bid/submit', {{method: "POST", body: form}})
@@ -75,7 +75,7 @@ def submit_bid_product_page(product: Bid_Product, session):
         print(f"👤 User ID: {user_id}")
         print(f"📦 Product Name: {product.name}")
         print(f"💰 Price: {product.price}")
-        print(f"🏷️ Category: {product.category}")    
+        print(f"🏷️ Category: {product.category.split(',')}")    
         print(f"🖼️ Image: {product.image}")    
         print(f"⏳ Start Time: {product.start_time}")    
         print(f"⏳ End Time: {product.end_time}")    
@@ -86,7 +86,7 @@ def submit_bid_product_page(product: Bid_Product, session):
         # if not product.price or not product.amount:  
         #     return Script(""" alert('Price and amount must not be empty'); setTimeout(function(){ window.location.href = '/seller '; });""")
 
-        main_system.save_bid_item(user_id, product.name, product.price, product.amount, product.category, product.image, product.start_time, product.end_time)
+        main_system.save_bid_item(user_id, product.name, product.price, product.amount, product.category.split(','), product.image, product.start_time, product.end_time)
 
         return Script(""" alert('Add bid Product Successfully'); setTimeout(function(){ window.location.href = '/seller ';  });""")
 

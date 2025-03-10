@@ -21,13 +21,13 @@ def add_product_page(session):
         Grid(H1("Add Item Management", style="text-align: center; margin-bottom: 20px; color: #0074bd;")),
          Form(
             Label("Product Name:", Input(id="name", name="name", type="text", placeholder="Enter your product name" , required='true')),
-            Label("Price:", Input(id="price", name="price", type="number", placeholder="Enter your price" , required='true')),
-            Label("Amount:", Input(id="amount", name="amount", type="number", placeholder="Enter your amount" , required='true')),
+            Label("Price:", Input(id="price", name="price", type="number", placeholder="Enter your price" , step="0.01",  required='true')),
+            Label("Amount:", Input(id="amount", name="amount", type="number", placeholder="Enter your amount" ,required='true')),
             Details(
                 Summary("เลือกหมวดหมู่"), 
                 Div(
                     *[Label(
-                        Input(type="checkbox", id=f"cat-{cat.get_id}", value=cat.get_id, name="category",cls="checkbox" , required='true'),
+                        Input(type="checkbox", id=f"cat-{cat.get_id}", value=cat.get_id, name="category",cls="checkbox"),
                         cat.get_name
                     ) for cat in load_category],
                     style="display: flex; flex-direction: column; padding: 10px;"

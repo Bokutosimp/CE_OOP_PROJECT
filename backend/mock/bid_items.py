@@ -12,7 +12,7 @@ bid_items = [
         "owner": "sell002",
         "start_time": "2025-03-20 22:09:00",
         "end_time": "2025-03-28 21:01:00",
-        "status": "Not Started",
+        "status": "Started",
         "top_bidder": "Bidder_1"
     },
     {
@@ -25,7 +25,7 @@ bid_items = [
         "owner": "sell001",
         "start_time": "2025-03-10 07:23:00",
         "end_time": "2025-03-17 04:19:00",
-        "status": "Not Started",
+        "status": "Started",
         "top_bidder": "Bidder_2"
     },
     {
@@ -38,7 +38,7 @@ bid_items = [
         "owner": "sell002",
         "start_time": "2025-03-14 17:35:00",
         "end_time": "2025-03-21 02:18:00",
-        "status": "Not Started",
+        "status": "Started",
         "top_bidder": "Bidder_3"
     },
     {
@@ -51,7 +51,7 @@ bid_items = [
         "owner": "sell001",
         "start_time": "2025-03-25 16:17:00",
         "end_time": "2025-03-27 12:11:00",
-        "status": "Not Started",
+        "status": "Started",
         "top_bidder": "Bidder_4"
     },
     {
@@ -64,7 +64,7 @@ bid_items = [
         "owner": "sell001",
         "start_time": "2025-03-18 11:25:00",
         "end_time": "2025-03-21 20:56:00",
-        "status": "Not Started",
+        "status": "Started",
         "top_bidder": "Bidder_5"
     },
     {
@@ -90,7 +90,7 @@ bid_items = [
         "owner": "sell002",
         "start_time": "2025-03-26 12:59:00",
         "end_time": "2025-04-02 23:52:00",
-        "status": "Not Started",
+        "status": "Started",
         "top_bidder": "Bidder_7"
     },
     {
@@ -129,7 +129,7 @@ bid_items = [
         "owner": "sell002",
         "start_time": "2025-03-22 02:00:00",
         "end_time": "2025-03-28 11:03:00",
-        "status": "Not Started",
+        "status": "Started",
         "top_bidder": "Bidder_10"
     }
 ]

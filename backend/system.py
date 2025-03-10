@@ -33,7 +33,7 @@ class System:
       
    def get_category_by_id(self,id:str):
       for cat in self.__list_categories:
-         if cat.get_id == id:
+         if str(cat.get_id) == str(id):
             return cat
       raise Exception('Not found')
    
@@ -70,7 +70,7 @@ class System:
       for item in self.__list_items:
          for category in item.get_category:
             print(category.get_id,category_id)
-            if category.get_id.lower() == category_id.lower():
+            if str(category.get_id) == str(category_id):
                filtered_items.append(item)
       return filtered_items
    
@@ -113,16 +113,14 @@ class System:
       if not self.__validate_name(name,self.__list_codes): raise Exception('Name already exist')
       self.__list_codes.append(Discount(ID,name,discount_percent,seller))
       return 'Code created'
-   
    def apply_code(self, code: str):
-    for Dcode in self.__list_codes:
-        print(f"Checking code: {Dcode.get_name} against provided code: {code}")
-        if Dcode.get_name == code:
+      for Dcode in self.__list_codes:
+         print(f"Checking code: {Dcode.get_name} against provided code: {code}")
+         if Dcode.get_name == code:
             discount = Dcode.get_discount / 100
             return discount
-    raise Exception('Invalid discount code')
-      
-   def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img=''):
+      raise Exception('Invalid discount code')
+   def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img='',description:str=''):
       try:
          result = self.__validate_name(name,self.__list_items)
          if not result: raise Exception('item already exist')
@@ -131,15 +129,18 @@ class System:
          category_list:list[Category] = []
          for cat_id in category_id:
             for category in self.__list_categories:
-               if category.get_id == cat_id:
+
+               print(f"{category.get_id} and {cat_id}" , str(category.get_id) == str(cat_id))
+               if str(category.get_id) == str(cat_id):
                   category_list.append(category)
+         
          if len(category_list) == 0: raise Exception('Category not found')
-         self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list))
+         self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list,description))
          return {'success':True}
       except Exception as e:
          raise Exception((str(e)))
    
-   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner_id:str,start_time:str,end_time:str,status:str,top_bidder:str):
+   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner_id:str,start_time:str,end_time:str,status:str,top_bidder:str,description:str=''):
       try:
          if not self.__validate_name(name,self.__list_bid_items): raise Exception('Item already exist')
          current_user = self.get_user_by_id(owner_id)
@@ -147,10 +148,11 @@ class System:
          category_list:list[Category] = []
          for cat_id in category_id:
             for category in self.__list_categories:
-               if category.get_id == cat_id:
+               print(f"{category.get_id} and {cat_id}" , str(category.get_id) == str(cat_id))
+               if str(category.get_id) == str(cat_id):
                   category_list.append(category)
          if len(category_list) == 0: raise Exception('Category not found')
-         self.__list_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
+         self.__list_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,description,start_time,end_time,status,top_bidder)) 
          return 'Bid item created'
       except Exception as e:
          raise Exception((str(e)))
@@ -162,6 +164,7 @@ class System:
    #    raise Exception('item not ')
    
    def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, img: str):
+      print(f"somthegfdgfdgfd {category_id}")
       if (user_id == '' or name == '' or price == '' or amount == '' or category_id == ''):
          return Exception((str(e)))
       try:
@@ -222,7 +225,7 @@ class System:
          cat_instaces  = []
          for cat in self.__list_categories:
             for cat_id in category:
-               if cat_id == cat.get_id: cat_instaces.append(cat)
+               if str(cat_id) == str(cat.get_id): cat_instaces.append(cat)
          item_current.edit_item(name , cat_instaces , description ,price , img)
          return "Item updated successfully"
       except Exception as e:
@@ -248,7 +251,7 @@ class System:
             cat_instaces  = []
             for cat in self.__list_categories:
                for cat_id in category:
-                  if cat_id == cat.get_id: cat_instaces.append(cat)
+                  if str(cat_id) == str(cat.get_id): cat_instaces.append(cat)
             item_current.edit_bid_item(name , price , cat_instaces , description , img , start_time ,end_time )
             return "Item updated successfully"
          except Exception as e:
@@ -281,6 +284,10 @@ class System:
             user = self.get_user_by_id(user_id)
             item.set_top_bidder(user)
             item.edit_item_price(bid_input)
+            now = datetime.now()
+            now = now.replace(microsecond=0)
+            item.add_history(user_id,bid_input,now)
+            item.show_history()
             return 'Top bidder set'
          
    def start_bid(self, item_id:str):
@@ -427,10 +434,10 @@ def createInstance():
    print("---############### create item ############---")
    for item in items:
       print(f"id item is {item['id']} ")
-      main_system.create_item('sell001', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])
+      main_system.create_item('sell001', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'],item['description'])
    for item in items_2:
       print(f"id item is {item['id']} ")
-      main_system.create_item('sell002', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])     
+      main_system.create_item('sell002', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'],item['description'])     
    print("---############### create discount codes ############---")
    seller = main_system.get_user_by_id('sell001')
    for discount_code in discount_codes:
@@ -460,18 +467,17 @@ def createInstance():
    #create bid item
    print("---############ bid item #############---")
    start_bid_time = datetime.now()
+   start_bid_time = start_bid_time.replace(microsecond=0)
    increase_time = 5  # Initial increment in minutes
-
    for bid_item in bid_items:
-      end_bid_time = start_bid_time + timedelta(minutes=increase_time)
-    
+      end_bid_time = start_bid_time + timedelta(minutes=increase_time)  
       main_system.create_bid_item(
          bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], 
          ['10'], bid_item['image'], 'sell001', start_bid_time, end_bid_time, 
-         bid_item['status'], bid_item['top_bidder']
-    )
+         bid_item['top_bidder'], bid_item['status']
+      )
     # Update start time for the next bid
-      start_bid_time = end_bid_time
+      increase_time += 5
       # main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', datetime.strptime(bid_item['start_time'], "%Y-%m-%d %H:%M:%S"), datetime.strptime(bid_item['end_time'], "%Y-%m-%d %H:%M:%S"), bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_items()
    for item in bid_items_instance:

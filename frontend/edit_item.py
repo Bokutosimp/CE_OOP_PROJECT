@@ -9,11 +9,11 @@ def is_check(item_cat_list,cat_id):
    return False 
 
 def edit_item(session,item_id:str):
-   current_item = main_system.get_item_by_id(item_id)
+   current_item = main_system.get_item_by_id(str(item_id))
    return Div(
             Form(
                 H3("Edit Product"),
-                Input(type="hidden", id="edit_item_id", name="edit_item_id",value=current_item.get_id , required='true'),  
+                Input(type="hidden", id="edit_item_id", name="edit_item_id",value=(current_item.get_id) , required='true'),  
                 Input(type="text", id= "new_name" , name="new_name", placeholder="New Product Name",value=current_item.get_name,
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true'),
                  Details(
@@ -31,7 +31,7 @@ def edit_item(session,item_id:str):
                 Input(type="text", id = "new_detail" , name="new_detail", placeholder="New Detail",value='',
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"  ),
                 Input(type="number", id= "new_price" , name="new_price", placeholder="New Price",value=current_item.get_price,
-                      style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true'),
+                      style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , step="0.01", required='true'),
                 Input(type="text", id = "new_image", name="new_image", placeholder="New image",value=current_item.get_image,
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" ),
                 Button("Submit", type="submit", style="background: #0074bd; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer; margin-top: 10px;"),
@@ -68,6 +68,7 @@ def edit_item(session,item_id:str):
 
 def edit_bid_item(session, item_id: str):
     current_item = main_system.get_bid_item_by_id(item_id)
+    print(f"{(current_item.get_end_time)} ,,,, {current_item.get_start_time}")
     return Div(
         Form(
             H3("Edit Bid Product"),
@@ -91,8 +92,8 @@ def edit_bid_item(session, item_id: str):
                   value='', 
                   style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" ,),
             Input(type="number", id="new_start_price", name="new_start_price", placeholder="New Start Price",
-                  value=current_item.get_price,
-                  style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true' ),
+                  value=current_item.get_price, 
+                  style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" ,step="0.01" , required='true' ),
             Input(type="datetime-local", id="new_start_time", name="new_start_time", placeholder="Start time",
                   value=current_item.get_start_time,
                   style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true' ),
