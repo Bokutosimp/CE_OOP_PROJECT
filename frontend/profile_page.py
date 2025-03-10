@@ -2,7 +2,7 @@ from fasthtml.common import *
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
 
-def profile(session):
+def profile_page(session):
    user_id = session['auth'][0]
    user = main_system.get_user_by_id(user_id)
    return Div(
