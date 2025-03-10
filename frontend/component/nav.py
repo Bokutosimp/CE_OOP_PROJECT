@@ -53,7 +53,7 @@ def nav(session):
             A(Span('e', style="color: #e74c3c;"), Span('b', style="color: #3498db;"), Span('a', style="color: #f39c12;"), Span('y', style="color: #2ecc71;"), href='/', style="""text-decoration: none; font-size: 32px; font-weight: bold;"""),
             Div(P('Shop by', style="margin:0; color: #34495e;"), P('category', style="margin:0; color: #34495e;"), style=""),
             Form(
-                Input(type='text', placeholder='Search', id="keyword", requires = 'true' ,
+                Input(type='text', placeholder='Search', id="keyword", required = 'true' ,
                 style="""border-radius: 30px; color: #34495e; width: 80%; border: solid 2px #3498db; height: 45px; margin-bottom: 0px; background: #fff; padding: 0 15px; font-size: 16px;""",),
                 Button('Search', className="button", 
                     style="""background: #3498db; border-radius: 30px; color: white; height: 45px; padding: 0; width: 20%; margin-bottom: 0px; font-size: 16px; transition: background 0.3s;""",
