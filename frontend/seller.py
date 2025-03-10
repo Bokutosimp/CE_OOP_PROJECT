@@ -39,14 +39,22 @@ def product_management(session):
     user_id = session['auth'][0]
     seller = main_system.get_user_by_id(user_id)
     list_item = main_system.get_items()
+    list_codes = main_system.get_codes()
     products = []
     bid_products = []
+    load_discount_code = []
 
     #check bid item
     for i in list_item :
          if main_system.is_bid_item(i):
               bid_products.append(i)
          else: products.append(i)
+
+    for j in list_codes :
+         print(j)
+         if main_system.is_discount_code(j): load_discount_code.append(j)
+
+    print(load_discount_code)
 
     def create_product_card(item, is_bid=False):
             # กำหนด ID ของ input และ URL ให้แตกต่างกัน
@@ -85,24 +93,105 @@ def product_management(session):
 # { '/edit_bid_item/'+str(item.get_id) if is_bid else '/edit_item/'+str(item.get_id) }
 
     return Main(
-        H1("Product Management", style="text-align: center;"),
-        Card(
-            H3("Profile", style="color: #0074bd;"),
-            H5(seller.get_store_name, style="font-size: 16px; color: #333;"),
-            Div(
-                Button("Add Product", onclick=f"window.location.href='/seller/add';", className="button"),
-                Button("Add Bid Product", onclick=f"window.location.href='/seller/add_bid';", className="button"),
-                Button("Create Discount Code", onclick=f"window.location.href='/discount_code';", className="button"),
-                style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;"
-            ),
-            style="max-width: 700px; margin: auto; text-align: center; background-color: white !important; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"
+    H1("Product Management", style="text-align: center;"),
+
+    Card(
+        H3("Profile", style="color: #0074bd;"),
+        H5(seller.get_store_name, style="font-size: 16px; color: #333;"),
+        Div(
+            Button("Add Product", onclick=f"window.location.href='/seller/add';", className="button"),
+            Button("Add Bid Product", onclick=f"window.location.href='/seller/add_bid';", className="button"),
+            Button("Create Discount Code", onclick=f"window.location.href='/seller/discount_code';", className="button"),
+            style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;"
         ),
-        H4("Products", style="text-align: center; margin-top: 20px;"),
-        Grid(*[create_product_card(p) for p in products if p.get_owner.get_user_id == user_id],
-             style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;"),
-        H4("Bid Products", style="text-align: center; margin-top: 20px;"),
-        Grid(*[create_product_card(p, is_bid=True) for p in bid_products if p.get_owner.get_user_id == user_id],
-             style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;"),
+        style="max-width: 700px; margin: auto; text-align: center; background-color: white !important; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"
+    ),
+
+        Div(
+            Button("Products", 
+                onclick="showProducts()", 
+                style="""background: #6a5acd;  color: white; padding: 8px 20px;   border-radius: 20px;   border: 2px solid #6a5acd;cursor: pointer; font-size: 16px; font-weight: bold;transition: all 0.3s;""",
+                onmouseover="this.style.background='#5a4cbf'; this.style.borderColor='#5a4cbf';",
+                onmouseout="this.style.background='#6a5acd'; this.style.borderColor='#6a5acd';"
+            ),
+                    Button("Bid Products", 
+                onclick="showBidProducts()", 
+                style="""background: #42aaff; color: white; padding: 8px 20px;  border-radius: 20px; border: 2px solid #42aaff; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s; margin-left: 12px;""",
+                onmouseover="this.style.background='#1e8eff'; this.style.borderColor='#1e8eff';",
+                onmouseout="this.style.background='#42aaff'; this.style.borderColor='#42aaff';"
+            )
+            ,
+             Button("Discount code", 
+                onclick="showCode()", 
+                style="""background: #ddc3f7; color: white; padding: 8px 20px;  border-radius: 20px; border: 2px solid #ddc3f7;cursor: pointer; font-size: 16px; font-weight: bold;transition: all 0.3s;margin-left: 12px;""",
+                onmouseover="this.style.background='#cc9dfa'; this.style.borderColor='#cc9dfa';",
+                onmouseout="this.style.background='#ddc3f7'; this.style.borderColor='#ddc3f7';"
+            ),
+            style="""display: flex ; justify-content: center; gap: 15px;margin: 20px ;"""
+        )
+
+                ,
+
+                Div(
+                    Grid(*[create_product_card(p) for p in products if p.get_owner.get_user_id == user_id],
+                        id="products-section",  
+                        style="display: none; flex-wrap: wrap; gap: 20px; justify-content: center;"
+                    )
+                ),
+
+                Div(
+                    Grid(*[create_product_card(p, is_bid=True) for p in bid_products if p.get_owner.get_user_id == user_id],
+                        id="bid-products-section",  
+                        style="display: none; flex-wrap: wrap; gap: 20px; justify-content: center;"  
+                    )
+                ),
+                 Div(
+                  Div(
+                    *[
+                        Card(
+                            H4(d.get_name, style="color: #333; font-weight: bold; text-align: center;"),
+                            P(f"Discount: {d.get_discount}%", style="color: green; font-size: 16px; text-align: center;"),
+                            Button("Copy Code", 
+                                onclick=f"copyToClipboard('{d.get_name}')", 
+                                style="""background: #ff8c00; color: white; padding: 6px 12px; border-radius: 5px; border: none; cursor: pointer; font-size: 14px; font-weight: bold; display: block; margin: 10px auto; transition: background 0.3s;""",
+                                onmouseover="this.style.background='#e07a00'",
+                                onmouseout="this.style.background='#ff8c00'"
+                            ),
+                            style="""width: 200px; padding: 15px; background: white; border-radius: 8px;box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;"""
+                        )  for d in load_discount_code
+                    ],
+                    id="discount-code-section", style="display: none; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 15px;"
+                ),
+                    Script("""
+                    function copyToClipboard(text) {
+                    navigator.clipboard.writeText(text).then(() => {
+                    alert("Copied: " + text);
+                    }).catch(err => {
+                    alert("Failed to copy: " + err);
+                    });
+                    }
+                        """)
+            )
+,
+                 Script("""
+                        function showProducts() {
+                            document.getElementById("products-section").style.display = "flex";
+                            document.getElementById("bid-products-section").style.display = "none";
+                            document.getElementById("discount-code-section").style.display = "none";
+                        }
+                        function showBidProducts() {
+                            document.getElementById("products-section").style.display = "none";
+                            document.getElementById("bid-products-section").style.display = "flex";
+                            document.getElementById("discount-code-section").style.display = "none";
+                        }
+                        function showCode() {
+                            document.getElementById("products-section").style.display = "none";
+                            document.getElementById("bid-products-section").style.display = "none";
+                            document.getElementById("discount-code-section").style.display = "flex";
+                        }
+                    """)
+                    ,
+
                 Div(
                 Form(
                     H3("Stock Item", style="text-align: center; color: #333;"),
@@ -151,20 +240,6 @@ def product_management(session):
                 """
             )  ,
 
-         Div(
-            Form(
-                H3("Edit Bid Product"),
-                Input(type="hidden", id="edit_bid_item_id", name="edit_bid_item_id"), 
-                Input(type="text", name="new_name", placeholder="New Bid Product Name", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
-                Input(type="number", name="new_start_price", placeholder="New Start Price", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),  
-                Input(type="text", name="new_detail", placeholder="New Detail", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"),
-                Button("Submit", type="submit",
-                       style="background: #0074bd; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer; margin-top: 10px;"),
-                action=f"/edit_product", method="post",
-            ),
-            id="popup-edit",
-            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;"
-        )
 
     )
 

@@ -10,6 +10,7 @@ from stylesheet import stylesheet
 from seller import *
 from add_product import *
 from add_bid_product import *
+from add_discount import *
 from item_page import item_page
 from bid_page import *
 from review_page import *
@@ -139,6 +140,14 @@ def get(session,item_id:str):
 async def post(session ,product:Product ):
     return submit_product_page(product,session)
 
+@rt('/seller/discount_code')
+async def get(session):
+    return layout(add_discount_page(session),session)
+
+@rt('/seller/discount_code/submit', methods=["post"])
+async def post(session , discount_code : Discount_code ):
+    return submit_discount_page(discount_code ,session)
+
 @rt('/seller/add_bid')
 def get(session):
     return layout(add_bid_product_page(session),session)
@@ -166,6 +175,8 @@ def patch(session ,edit_item_id:str,new_name:str, new_price:float ,new_category:
 def patch(session ,edit_bid_item_id:str,new_name:str,new_start_price:float,new_category:str,new_detail:str,new_image:str , new_start_time : str , new_end_time : str):
     print(f"bid item {edit_bid_item_id},new name = {new_name}")
     return edit_bid_product(session,edit_bid_item_id,new_name,new_start_price,new_category,new_detail,new_image , new_start_time , new_end_time)
+
+
 
 @rt('/admin/create_category')
 @auth(['Admin'])

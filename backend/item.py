@@ -354,10 +354,11 @@ class Code :
    def verify_code(self,input):
       if input == self.__name:
          return True
-      
+   
+   @property
    def get_id(self):
       return self.__ID
-   
+   @property
    def get_name(self):
       return self.__name
 
@@ -372,9 +373,10 @@ class Discount(Code):
       self.__percentage = percentage
       self.__owner = owner
       
+   @property
    def get_discount(self):
          return self.__percentage
-      
+   @property  
    def get_owner(self):
          return self.__owner
    

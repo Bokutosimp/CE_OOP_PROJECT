@@ -130,11 +130,11 @@ def edit_bid_item(session, item_id: str):
 
                 fetch('/edit_bid_product', { method: "PATCH", body: form })
                 .then(response => {
-                    console.log("🔹 Server Response Status:", response.status);  // ดู status code
+                    console.log("🔹 Server Response Status:", response.status);  
                     return response.text();
                 })
                 .then(data => {
-                    console.log("🔹 Server Response Data:", data);  // ดูข้อมูลที่เซิร์ฟเวอร์ส่งกลับมา
+                    console.log("🔹 Server Response Data:", data);  
                     alert("Bid Product edited successfully!");
                     window.location.href = '/seller';
                 })

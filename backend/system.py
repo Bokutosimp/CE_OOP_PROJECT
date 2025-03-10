@@ -29,11 +29,25 @@ class System:
       if(query == ''): return self.__list_categories
       else: return [category for category in self.__list_categories if query in category.get_name]
       
+      
    def get_category_by_id(self,id:str):
       for cat in self.__list_categories:
          if str(cat.get_id) == str(id):
             return cat
       raise Exception('Not found')
+   
+   def get_codes(self, query: str = '') -> list[Code]:
+      if query == '':
+         return self.__list_codes
+      else:
+         return [code for code in self.__list_codes if query.lower() in code.get_name.lower()]
+   
+   def get_code_by_id(self, id: str) -> Code:
+      for code in self.__list_codes:
+         if str(code.get_id) == str(id):
+            return code
+      raise Exception('Code not found')
+
    
    def get_items(self,query:str = ''):
       if(query == ''):
@@ -260,16 +274,14 @@ class System:
       try: 
          code_id = str(uuid.uuid1())
          current_user = main_system.get_user_by_id(user_id)
-         if discount_percent <= 0 and discount_percent >= 100 :
-               main_system.create_discount_code(current_user , code_id , name , discount_percent ) 
+         result = main_system.create_discount_code(current_user , code_id , name , discount_percent ) 
+         print(result)
          return 'discount code saved'
       except Exception as e:
             raise Exception(str(e))
       except ValueError as e:
             raise ValueError(str(e))
 
-   def save_derivery_code():
-      pass
          
 
    def get_top_bidder(self, item_id:str):
@@ -307,9 +319,13 @@ class System:
          if item.get_id == item_id:
             return item.is_ended
          
-   def is_bid_item(self , item ):
-      if isinstance(item , BidItem) : return True
-      else : return False
+   def is_bid_item(self, item) -> bool:
+       return isinstance(item, BidItem)
+
+
+   def is_discount_code(self, code) -> bool:
+      return isinstance(code, Discount)
+
       
 
 
