@@ -1,4 +1,7 @@
 from .category import Category
+from datetime import datetime
+from .order import Order,ShippingStatus
+from .item import Item,BidItem,User,Discount,Code,Customer,Seller,Admin,Cart,Review
 from datetime import datetime,timedelta
 from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review , Discount , FreeDelivery
 import uuid
@@ -121,16 +124,18 @@ class System:
             self.__list_users[i] = Seller(customer,store_name,store_address)
             return 'Seller created'  
       
-   def create_discount_code(self, owner : Seller, code_id : str , name:str, discount_percent : int):
-      self.__list_codes.append(Discount(code_id , name , discount_percent , owner))
-      return 'Discount code created'
-   
-   def create_free_delivery_code(self, name : str , minimum : float):
-      code_id = str(uuid.uuid4())
-      self.__list_codes.append(FreeDelivery(code_id , name , minimum ))
-      return 'Free delivery code created'
-      
-   def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img=''):
+   def create_discount_code(self,ID:str, name:str, discount_percent:float,seller:Seller):
+      if not self.__validate_name(name,self.__list_codes): raise Exception('Name already exist')
+      self.__list_codes.append(Discount(ID,name,discount_percent,seller))
+      return 'Code created'
+   def apply_code(self, code: str):
+      for Dcode in self.__list_codes:
+         print(f"Checking code: {Dcode.get_name} against provided code: {code}")
+         if Dcode.get_name == code:
+            discount = Dcode.get_discount / 100
+            return discount
+      raise Exception('Invalid discount code')
+   def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img='',description:str=''):
       try:
          result = self.__validate_name(name,self.__list_items)
          if not result: raise Exception('item already exist')
@@ -145,12 +150,12 @@ class System:
                   category_list.append(category)
          
          if len(category_list) == 0: raise Exception('Category not found')
-         self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list))
+         self.__list_items.append(Item(id,name,price,amount,current_user,img,category_list,description))
          return {'success':True}
       except Exception as e:
          raise Exception((str(e)))
    
-   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner_id:str,start_time:str,end_time:str,status:str,top_bidder:str):
+   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner_id:str,start_time:str,end_time:str,status:str,top_bidder:str,description:str=''):
       try:
          if not self.__validate_name(name,self.__list_bid_items): raise Exception('Item already exist')
          current_user = self.get_user_by_id(owner_id)
@@ -162,7 +167,7 @@ class System:
                if str(category.get_id) == str(cat_id):
                   category_list.append(category)
          if len(category_list) == 0: raise Exception('Category not found')
-         self.__list_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,start_time,end_time,status,top_bidder)) 
+         self.__list_items.append(BidItem(id,name,price,amount, current_user ,img , category_list ,description,start_time,end_time,status,top_bidder)) 
          return 'Bid item created'
       except Exception as e:
          raise Exception((str(e)))
@@ -270,19 +275,17 @@ class System:
 
       
 
-   def save_discount_code(self, user_id , name , discount_percent):
-      try: 
-         code_id = str(uuid.uuid1())
-         current_user = main_system.get_user_by_id(user_id)
-         result = main_system.create_discount_code(current_user , code_id , name , discount_percent ) 
-         print(result)
-         return 'discount code saved'
+   def save_discount_code(self,name,ID, discount_percent,description):
+      try:
+            if not isinstance(discount_percent, (int, float)) or discount_percent <= 0 or discount_percent > 100:
+                raise ValueError("Discount percent must be a number between 1 and 100")
+            new_discount_code = Discount(ID, name, discount_percent, description)
+            self.__list_codes.append(new_discount_code)
+            return "Discount code saved successfully"
       except Exception as e:
-            raise Exception(str(e))
+         raise Exception(str(e))
       except ValueError as e:
-            raise ValueError(str(e))
-
-         
+         raise ValueError(str(e))
 
    def get_top_bidder(self, item_id:str):
       for item in self.__list_items:
@@ -295,6 +298,10 @@ class System:
             user = self.get_user_by_id(user_id)
             item.set_top_bidder(user)
             item.edit_item_price(bid_input)
+            now = datetime.now()
+            now = now.replace(microsecond=0)
+            item.add_history(user_id,bid_input,now)
+            item.show_history()
             return 'Top bidder set'
          
    def start_bid(self, item_id:str):
@@ -388,6 +395,29 @@ class System:
          item.show_review()
       except Exception as e:
          raise Exception(str(e))
+      
+   def buy_cart_check_stock(self,user_id:str): # return price of selected product
+      try:
+         user = self.get_user_by_id(user_id)
+         check_stock = Order.check_cart_with_stock(self,user)
+         total_price = sum((round(item.get_item.get_price * item.get_amount_in_cart, 3) if item.get_is_selected else 0) for item in user.get_cart.get_list_item_in_cart)
+         Order(10.0, total_price, [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
+         return total_price
+      except Exception as e:
+         raise Exception(str(e))
+      
+   def buy_item_with_code(self, user_id: str, code: str):
+    try:
+        user = self.get_user_by_id(user_id)
+        discount = self.apply_code(code)
+        total_price = self.buy_cart_check_stock(user_id)
+        discounted_price = total_price * (1 - discount)
+        order = Order(10.0, discounted_price, [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
+        user.add_history(order)
+        user.decrease_e_bux(discounted_price)
+        return discounted_price
+    except Exception as e:
+        raise Exception(str(e))
    
    #buy item in cart
    def buy_item_in_cart(self,user_id:str):
@@ -403,6 +433,7 @@ def createInstance():
    from .mock.bid_items import bid_items
    from .mock.category import categories
    from .mock.users import users
+   from .mock.discount_codes import discount_codes
    main_system = System()
    #create category
    [main_system.create_category(category['id'],category['name'],category['description']) for category in categories]
@@ -421,11 +452,16 @@ def createInstance():
    print("---############### create item ############---")
    for item in items:
       print(f"id item is {item['id']} ")
-      main_system.create_item('sell001', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])
+      main_system.create_item('sell001', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'],item['description'])
    for item in items_2:
       print(f"id item is {item['id']} ")
-      main_system.create_item('sell002', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'])     
-      
+      main_system.create_item('sell002', item['id'],item['name'],item['price'],item['amount'],['1','2'],item['image'],item['description'])     
+   print("---############### create discount codes ############---")
+   seller = main_system.get_user_by_id('sell001')
+   for discount_code in discount_codes:
+      main_system.create_discount_code(discount_code['id'],discount_code['name'], discount_code['discount_percent'],seller)
+      print(f"Discount code {discount_code['name']} created")
+   
    items_instance = main_system.get_items()
    [print(f'item is {item}') for item in items_instance]
    # print('result of search by category',main_system.get_items_by_category(main_system.get_categories()[0].get_id))
@@ -449,22 +485,17 @@ def createInstance():
    #create bid item
    print("---############ bid item #############---")
    start_bid_time = datetime.now()
+   start_bid_time = start_bid_time.replace(microsecond=0)
    increase_time = 5  # Initial increment in minutes
-
    for bid_item in bid_items:
-      end_bid_time = start_bid_time + timedelta(minutes=increase_time)
-
-      #ตัด micromillisec ออก by Chevfy ถึง Shogun Sarat Jeeraon (ถ้าไม่ทำ มันดึงข้อมูลมาไม่ได้)
-      start_bid_time = start_bid_time.replace(microsecond=0)
-      end_bid_time = end_bid_time.replace(microsecond=0)
-    
+      end_bid_time = start_bid_time + timedelta(minutes=increase_time)  
       main_system.create_bid_item(
          bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], 
          ['10'], bid_item['image'], 'sell001', start_bid_time, end_bid_time, 
-         bid_item['status'], bid_item['top_bidder']
-    )
+         bid_item['top_bidder'], bid_item['status']
+      )
     # Update start time for the next bid
-      start_bid_time = end_bid_time
+      increase_time += 5
       # main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', datetime.strptime(bid_item['start_time'], "%Y-%m-%d %H:%M:%S"), datetime.strptime(bid_item['end_time'], "%Y-%m-%d %H:%M:%S"), bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_items()
    for item in bid_items_instance:
@@ -472,8 +503,13 @@ def createInstance():
    
    #test buy item in cart
    print("---###### buy item in cart of user cust001 #####---")
-   main_system.buy_item_in_cart('cust001')
-   print(main_system.get_user_by_id('cust001').get_order_history[0].get_order)
+   user = main_system.get_user_by_id('cust001')
+   print(f"User money before purchase: {user.get_e_bux}")
+   check_stock = main_system.buy_cart_check_stock('cust001')
+   print("return price :", check_stock, "E")
+   confirm_purchase = main_system.buy_item_with_code('cust001', 'SUMMER_SALE')
+   print("Discounted price:", confirm_purchase)
+   print(f"User money after purchase: {user.get_e_bux}")
    
    return main_system
 

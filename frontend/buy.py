@@ -10,7 +10,7 @@ def buy(session):
     if not user :
         return Body(H4("User not found", style="color: red;"))
     
-    total_amount = sum((item.get_item.get_price * item.get_amount_in_cart for item in user.get_cart.get_list_item_in_cart))
+    total_amount = sum((round(item.get_item.get_price*item.get_amount_in_cart,3) if item.get_is_selected else 0 ) for item in user.get_cart.get_list_item_in_cart)
     shipping_amount = 10
     grand_total = total_amount + shipping_amount
 
@@ -61,7 +61,7 @@ def buy(session):
                         Button("Close", type="button", onclick="closeDialog()", style="background-color: #C30F16; color: white; padding: 10px 15px; border: none; border-radius: 20px; cursor: pointer; width: auto;"),
                         style="display: flex; gap: 10px; margin-top: 10px;",  # Ensure buttons are on the same line
                     ),
-                    method="post",
+                    method="post", hx_post='',
                     action="/submit"
                 ),
                 style="background-color: #FFFFFF; padding: 20px; border-radius: 10px; width: 600px; text-align: center;",
