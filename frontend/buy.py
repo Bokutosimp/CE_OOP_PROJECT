@@ -137,6 +137,7 @@ def buy_post(session,code_name:str):
         user_id = session['auth'][0]
         if main_system.buy_cart_check_stock(user_id) == 0:
             return Script("alert('please select atleast one item'); window.location.href='/cart'")
+        print('this is debuging in buy item in cart')
         main_system.buy_item_in_cart(user_id,code_name)
         user = main_system.get_user_by_id(user_id)
         print("#### printing user history #####")
