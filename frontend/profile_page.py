@@ -11,16 +11,33 @@ def profile_page(session):
 
    if order_history:
        order_history_div = Div(
-           H3('Shipping Status', style='color: black;'),
-           Div(*[Div(
-               Div(f'Total Price: {item.get_order.get_total_price}', style='color: black;'),
-               Div(f'Shipping Date: {item.get_shipping_status.get_shipping_date}', style='color: black;'),
-               Div(f'Item Received Date: {item.get_shipping_status.get_get_item_date}', style='color: black;'),
-               style='border-bottom: solid 1px #ddd; padding: 10px 0; display: flex; flex-direction: column; gap: 5px; background: #ffebd6ff;'
-           ) for item in order_history],
-           style='display: flex; flex-direction: column; gap: 15px; padding: 15px; background: #ffebd6ff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); width: clamp(500px, 100%, 700px); margin: 20px auto;'),
-           style='display: flex; flex-direction: column; justify-content: center; align-items: center; background: #eaf4f4ff;'
-       )
+    H3('Shipping Status', style='color: black;'),
+    Div(
+        *[
+            Div(
+          Div(f'Total Price: {order.get_order.get_total_price}', style='color: black;'),
+      Div(f'Shipping Date: {order.get_shipping_status.get_shipping_date}', style='color: black;'),
+                     Div(f'Item Received Date: {order.get_shipping_status.get_get_item_date}', style='color: black;'),
+         Div(
+                    *[
+             Div(
+                 Img(src=item.get_item.get_image, style="width: 100px; height: auto; border-radius: 5px;"),
+                            H3(item.get_item.get_name, style="text-align: center; font-size: 1rem; , color : black"),
+                            style='display: flex; flex-direction: column; align-items: center; padding: 5px;'
+                        )
+                   for item in order.get_order.get_list_item_select
+                    ],
+         style='display: flex; flex-direction: row; gap: 10px; overflow-x: auto; padding: 10px;'
+                ),
+                style='border-bottom: solid 1px #ddd; padding: 10px 0; display: flex; flex-direction: column; gap: 5px; background: #ffebd6ff;'
+            )
+            for order in order_history
+        ],
+        style='display: flex; flex-direction: column; gap: 15px; padding: 15px; background: #ffebd6ff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); width: clamp(500px, 100%, 700px); margin: 20px auto;'
+    ),
+    style='display: flex; flex-direction: column; justify-content: center; align-items: center; background: #eaf4f4ff;'
+)
+
    
    return Main(
 Div( 
