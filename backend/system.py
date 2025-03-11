@@ -392,6 +392,20 @@ class System:
       except Exception as e:
          raise Exception(str(e))
       
+   def get_review(self,item_id:str):
+      try:
+         item = self.get_item_by_id(item_id)
+         return item.get_review
+      except (Exception) as e:
+         raise Exception(str(e))
+      
+   def get_average_score(self,item_id:str):
+      try:
+         item = self.get_item_by_id(item_id)
+         if len(item.get_review) == 0: return None
+         return sum(review.get_score for review in item.get_review)/len(item.get_review)
+      except (Exception) as e:
+         raise Exception(str(e))
    def buy_cart_check_stock(self,user_id:str): # return price of selected product
       try:
          user = self.get_user_by_id(user_id)
@@ -567,6 +581,12 @@ def createInstance():
       print(f"shipping status of item is{his.get_shipping_status}")
       for item in his.get_order.get_list_item_select:
          print(f"item in order is {item.get_item.get_name}")
+         
+   print("######## add review to item #########")
+   print(f'{main_system.add_review('1',4,'very good',main_system.get_user_by_id('cust001'))}')
+   print(f'{main_system.add_review('1',5,'very good',main_system.get_user_by_id('cust002'))}')
+   print(f'get list of review of item 1 {main_system.get_review('1')}')
+   print(f'get average score of item 1: {main_system.get_average_score('1')}')
    
    return main_system
 

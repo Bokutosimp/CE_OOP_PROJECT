@@ -1,12 +1,11 @@
 from fasthtml.common import *
-# from mock.items import items
+from math import floor
 import os,sys
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
 
 def search_by_category_page(category):
    filtered_items = main_system.get_items_by_category(str(category))
-   print(filtered_items)
    if filtered_items:
       return Div(
          H2(main_system.get_category_by_id(str(category)).get_name,style="color:black;"),
@@ -15,7 +14,7 @@ def search_by_category_page(category):
                style="display:grid; place-items:center; width:200px; height: 200px; background:var(--lavender-web-2); border-radius:15px;",
             ),Div(
                Div(item.get_name,style="font-size:20px; font-weight:400;"),
-               Div('⭐⭐⭐⭐⭐ (24)',style="color:gray;"),
+               Div(f'{"no review" if main_system.get_average_score(item.get_id) == None else floor(main_system.get_average_score(item.get_id))*'⭐'} ({len(item.get_review)})',style="color:gray;"),
                Div(f'US ${item.get_price}',style="font-size:20px;"),
                style="padding:10px;"
             ),
