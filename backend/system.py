@@ -313,41 +313,12 @@ class System:
             item.end_bid()
             return 'Bid ended'
          
-   def is_bid_started(self, item_id:str):
-      for item in self.__list_bid_items:
-         if item.get_id == item_id:
-            return item.is_started
-         
-   def is_bid_ended(self, item_id:str):
-      for item in self.__list_bid_items:
-         if item.get_id == item_id:
-            return item.is_ended
-         
    def is_bid_item(self, item) -> bool:
        return isinstance(item, BidItem)
-
 
    def is_discount_code(self, code) -> bool:
       return isinstance(code, Discount)
 
-      
-
-
-   def show_success_message():
-      return "So good "
-   
-   def show_error_message():
-      return "There's something wrong" 
-   
-   def update_top_bidder(self):
-      pass
-
-   def retrieve_bid_data() :
-      pass
-
-   def retrieve_order_data() :
-      pass
-   
    #cart and item in cart
    def add_to_cart(self,item_id:str,user_id:str,quantity:int):
       try:
