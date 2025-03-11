@@ -110,7 +110,6 @@ class System:
       for item in self.__list_users:
          if item.get_username == username:
             raise Exception('username already exist')
-      print('test creat user')
       cart = Cart()
       self.__list_users.append(Customer(name, user_id, email, phone_number, username, password, birth_date,gender,address,e_bux,cart))
       return 'Customer created'
@@ -132,6 +131,7 @@ class System:
             discount = Dcode.get_discount / 100
             return discount
       raise Exception('Invalid discount code')
+   
    def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img='',description:str=''):
       try:
          result = self.__validate_name(name,self.__list_items)
@@ -274,12 +274,13 @@ class System:
 
       
 
-   def save_discount_code(self,name , discount_percent,description):
+   def save_discount_code(self,name , discount_percent, user_id):
       try:
             ID = str(uuid.uuid1)
             if not isinstance(discount_percent, (int, float)) or discount_percent <= 0 or discount_percent > 100:
                 raise ValueError("Discount percent must be a number between 1 and 100")
-            new_discount_code = Discount(ID, name, discount_percent, description)
+            current_user = main_system.get_user_by_id(user_id)
+            new_discount_code = main_system.create_discount_code(ID , name , discount_percent , current_user )
             self.__list_codes.append(new_discount_code)
             return "Discount code saved successfully"
       except Exception as e:
@@ -287,6 +288,11 @@ class System:
       except ValueError as e:
          raise ValueError(str(e))
 
+   def bid_status(self, bid_item):
+      for item in self.__list_items:
+         if item == bid_item:
+            return item.get_status
+   
    def get_top_bidder(self, item_id:str):
       for item in self.__list_items:
          if item.get_id == item_id:
@@ -307,11 +313,24 @@ class System:
             item.start_bid()
             return 'Bid started'
          
-   def end_bid(self, item_id:str):
-      for item in self.__list_items:
-         if item.get_id == item_id:
-            item.end_bid()
+   def end_bid(self, item: BidItem):
+      now = datetime.now()
+      for temp in self.__list_items:
+         if temp == item:
+            item.sold()
+            winner = temp.top_bidder
+            winner.add_bid_history(temp, now, now+timedelta(minutes=1))
+            self.show_bid_history(winner)
+            final_price = temp.get_price
+            print(f"Customer before: {winner.get_e_bux}")
+            winner.decrease_e_bux(final_price)
+            print(f"{winner.get_username} won the bid and {final_price} e-bux was deducted.")
+            print(f"Customer after: {winner.get_e_bux}")
             return 'Bid ended'
+         
+   def show_bid_history(self, user:Customer):
+      for item in user.get_bid_history:
+         print(item)
          
    def is_bid_item(self, item) -> bool:
        return isinstance(item, BidItem)
@@ -354,10 +373,34 @@ class System:
       except Exception as e:
          raise Exception(str(e))
    
-   def add_review(self,item_id:str,rating:int,review:str,user:User):
+   def is_already_review(self,user_id:str,item_id:str) -> bool:
       try:
+         user = self.get_user_by_id(user_id)
+         item = self.get_item_by_id(item_id)
+         for review in item.get_review:
+            if review.get_reviewer == user: return True
+         return False
+      except Exception as e:
+         raise Exception(str(e))
+   
+   def is_buy_item(self,user_id:str,item_id:str) -> bool:
+      try:
+         user = self.get_user_by_id(user_id)
+         item = self.get_item_by_id(item_id)
+         for history in user.get_order_history:
+            for item_usr in history.get_order.get_list_item_select:
+               if item_usr.get_item == item: return True
+         return False
+      except Exception as e:
+         raise Exception(str(e))
+      
+   def add_review(self,item_id:str,rating:int,review:str,user_id:str):
+      try:
+         user = self.get_user_by_id(user_id)
          if not isinstance(user,Customer): raise Exception('User is not a customer')
          item = self.get_item_by_id(item_id)
+         if self.is_already_review(user_id,item_id): raise Exception('user already reviewed')
+         if not self.is_buy_item(user_id,item_id): raise Exception('User not buy this item yet')
          item.add_review(rating,review,user)
          item.show_review()
       except Exception as e:
@@ -457,6 +500,11 @@ class System:
             history_list.append(his) 
       return history_list
    
+   def get_history_bids(self,user_id:str):
+      user = self.get_user_by_id(user_id)
+      history = user.get_bid_history
+      return history
+   
 def createInstance():
    from .mock.items import items , items_2
    from .mock.bid_items import bid_items
@@ -515,7 +563,7 @@ def createInstance():
    print("---############ bid item #############---")
    start_bid_time = datetime.now()
    start_bid_time = start_bid_time.replace(microsecond=0)
-   increase_time = 5  # Initial increment in minutes
+   increase_time = 30  # Initial increment in minutes
    for bid_item in bid_items:
       end_bid_time = start_bid_time + timedelta(minutes=increase_time)  
       main_system.create_bid_item(
@@ -524,7 +572,7 @@ def createInstance():
          bid_item['top_bidder'], bid_item['status']
       )
     # Update start time for the next bid
-      increase_time += 5
+      increase_time += 30
       # main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', datetime.strptime(bid_item['start_time'], "%Y-%m-%d %H:%M:%S"), datetime.strptime(bid_item['end_time'], "%Y-%m-%d %H:%M:%S"), bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_items()
    for item in bid_items_instance:
@@ -555,10 +603,20 @@ def createInstance():
          print(f"item in order is {item.get_item.get_name}")
          
    print("######## add review to item #########")
-   print(f'{main_system.add_review('1',4,'very good',main_system.get_user_by_id('cust001'))}')
-   print(f'{main_system.add_review('1',5,'very good',main_system.get_user_by_id('cust002'))}')
+   main_system.buy_item('cust001','101',2,shipping_date=now-timedelta(minutes=5),get_item_date=now-timedelta(minutes=4))
+   print(f'{main_system.add_review('101',4,'very good','cust001')}')
+   ## try reviewing item but user not buy it yet
+   try:
+      print(f'{main_system.add_review('1',5,'very good','cust002')}')
+   except Exception as e:
+      print(str(e))
    print(f'get list of review of item 1 {main_system.get_review('1')}')
    print(f'get average score of item 1: {main_system.get_average_score('1')}')
+   ##try comment with the same user
+   try:
+      main_system.add_review('1',4,'very bad','cust001')
+   except Exception as e:
+      print(str(e))
    
    return main_system
 

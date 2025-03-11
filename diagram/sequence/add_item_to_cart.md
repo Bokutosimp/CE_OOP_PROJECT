@@ -1,3 +1,10 @@
+```mermaid
+---
+config:
+  theme: dark
+  look: classic
+---
+
 sequenceDiagram
 autonumber
 
@@ -38,15 +45,19 @@ autonumber
     User ->> Item : check_availability
     activate Item
     Item ->> Cart: get_list_item_in_cart
+    activate Cart
     Cart ->> Cart : check if item already in cart
     alt item already in cart
     Cart ->> ItemInCart : set_amount_in_cart
+    activate ItemInCart
     ItemInCart -->> Cart : success add item to cart
     else item not in cart
     Cart -->> ItemInCart : create item in cart
     ItemInCart -->> Cart : success create item in cart
+    deactivate ItemInCart
     end
     Cart -->> Item: response message
+    deactivate Cart
     Item -->> User: response message
     else
     Item -->> User : item out of stock
@@ -61,3 +72,4 @@ autonumber
     System -->> UI : reponse message
     UI -->> Customer : response message
     deactivate UI
+```

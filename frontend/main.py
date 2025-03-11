@@ -5,7 +5,7 @@ import dotenv
 #import page
 from layout import layout
 from cart import *
-from main_page import main_page
+from main_page import *
 from stylesheet import stylesheet
 from seller import *
 from add_product import *
@@ -27,6 +27,7 @@ from admin import admin_page
 from shipping_status import check_status
 from edit_item import edit_item,edit_bid_item
 from profile_page import profile_page
+from bid_history_page import *
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from backend.system import main_system
@@ -51,6 +52,7 @@ def logout(session):
 @rt('/')
 def get(session):
     return (layout(main_page(),session))
+
 
 @rt('/login')
 @redirect_path
@@ -197,6 +199,10 @@ def get(session):
 @rt('/history')
 def get(session):
     return layout(order_history_page(session),session)
+
+@rt('/bid_history')
+def get(session):
+    return layout(bid_history_page(session),session)
 
 @rt('/purchase')
 def get(session):

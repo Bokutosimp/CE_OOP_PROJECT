@@ -1,3 +1,10 @@
+```mermaid
+---
+config:
+  theme: dark
+  look: classic
+---
+
 sequenceDiagram
 autonumber
 
@@ -15,7 +22,8 @@ autonumber
     activate Category
     Category ->> System : return category
     deactivate Category
-    System ->> UI: return all_categories
+    System ->> UI: return filtered_categories
     deactivate System
-    UI ->> User: return all_categories
+    UI ->> User: return filterd_categories
     deactivate UI
+```
