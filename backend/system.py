@@ -110,7 +110,6 @@ class System:
       for item in self.__list_users:
          if item.get_username == username:
             raise Exception('username already exist')
-      print('test creat user')
       cart = Cart()
       self.__list_users.append(Customer(name, user_id, email, phone_number, username, password, birth_date,gender,address,e_bux,cart))
       return 'Customer created'
