@@ -68,7 +68,10 @@ class System:
    
    def get_bid_item_by_id(self,id:str):
       for item in self.__list_items:
-         if str(item.get_id) == str(id) and isinstance(item, BidItem): return item
+         if str(item.get_id) == str(id) and isinstance(item, BidItem):
+            print(item)
+            return item
+
       raise Exception('bid item not found')
       
    def get_users(self,query:str = ''):

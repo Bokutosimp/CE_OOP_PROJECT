@@ -21,7 +21,7 @@ def nav(session):
                     Div(A('logout', href='/logout', style="color: #e74c3c; text-decoration: none; font-weight: bold;"),
                         A('Product Management', href=f'/seller', style="color: #2ecc71; text-decoration: none; font-weight: bold;") if session['auth'][1] == 'Seller' else None,
                         A('History', href=f'/history', style="color: #2ecc71; text-decoration: none; font-weight: bold;"),
-                        A('BID History', href=f'/bid_history', style="color: #2ecc71; text-decoration: none; font-weight: bold;",cls='verticle_nav'),
+                        A('Bid History', href=f'/bid_history', style="color: #2ecc71; text-decoration: none; font-weight: bold;",cls='verticle_nav'),
                         style="display: flex; gap: 20px; align-items: center;"),
                     A('Admin Panel', href='/admin', style="color: #3498db; text-decoration: none; font-weight: bold;"),
                     style='height: 25px; display: flex; justify-content: space-between; padding: 0 40px; align-items: center;'
