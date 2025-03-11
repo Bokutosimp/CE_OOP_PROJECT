@@ -213,8 +213,6 @@ def get(session,item_id:str,amount:str):
 
 @rt('/purchase')
 def post(session,coupon:str=''):
-    print('working here')
-    print(f"post request get {coupon}")
     return buy_post(session,coupon)
 
 @rt('/purchase/{item_id}/{amount}')

@@ -92,6 +92,7 @@ class ItemInCart:
    
    @property
    def get_item(self) -> Item: return self.__item
+   
    @property
    def get_amount_in_cart(self) -> int: return self.__amount_in_cart
    @get_amount_in_cart.setter
@@ -398,6 +399,10 @@ class Review:
       return f"Score: {self.__score}\nComment: {self.__comment}\nReviewer: {self.__reviewer}"
    @property
    def get_score(self)-> int: return self.__score
+   @property
+   def get_comment(self) -> str: return self.__comment
+   @property
+   def get_reviewer(self) -> Customer: return self.__reviewer
       
 class Code :
    def __init__(self,ID:str,name:str):
