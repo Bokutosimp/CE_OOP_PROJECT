@@ -1,3 +1,9 @@
+```mermaid
+---
+config:
+  theme: dark
+  look: classic
+---
 sequenceDiagram
     actor Seller
     participant UI
@@ -75,11 +81,11 @@ sequenceDiagram
     activate System
     System -->> UI : return item data
     deactivate System
-    
+
     UI ->> System : edit_item(session , name , ... )
     activate System
     System ->> System : get_item_by_id(item_id)
-    
+
     System ->> System : Validate updated data
     alt Validation fails
         System -->> UI : return Exception
@@ -94,7 +100,7 @@ sequenceDiagram
             activate Item
             Item -->> System : Return edited item
             deactivate Item
-            
+
             System ->> System : Save updated item to database
             System -->> UI : return "Item updated successfully"
             UI -->> Seller : Show success message
@@ -109,11 +115,11 @@ sequenceDiagram
     activate System
     System -->> UI : Return bid item data
     deactivate System
-    
+
     UI ->> System : edit_bid_item(session , name , ... )
     activate System
     System ->> System : get_bid_item_by_id(bid_item_id)
-    
+
     System ->> System : validate updated bid item data
     alt Validation fails
         System -->> UI :  return Exception
@@ -128,7 +134,7 @@ sequenceDiagram
             activate bidItem
             bidItem -->> System : return edited bid item
             deactivate bidItem
-            
+
             System ->> System : save updated bid item to database
             System -->> UI :  return "Item updated successfully"
             UI -->> Seller : show success message
@@ -142,7 +148,7 @@ sequenceDiagram
     UI ->> System : add_stock(user_id, item_id, amount)
     activate System
     System ->> System : get_item_by_id(item_id)
-    
+
     System ->> System : validate item
     alt Validation fails
         System -->> UI : return Exception
@@ -169,7 +175,7 @@ sequenceDiagram
     UI ->> System : add_bid_stock(user_id, bid_item_id, amount)
     activate System
     System ->> System : get_bid_item_by_id(bid_item_id)
-    
+
     System ->> System : validate bid item
     alt Validation fails
         System -->> UI : return Exception
@@ -208,8 +214,8 @@ sequenceDiagram
     else
         System ->> Discount : create_discount_code(ID, name, discount_percent, description)
         Discount -->> System : return discount code
-        System ->> System : append discount to list 
-        System -->> UI : return success message 
+        System ->> System : append discount to list
+        System -->> UI : return success message
         deactivate System
         UI -->> Seller : return "Discount code saved successfully"
         deactivate UI
@@ -217,3 +223,4 @@ sequenceDiagram
 
 
 
+```

@@ -1,11 +1,17 @@
+```mermaid
+---
+config:
+  theme: dark
+  look: classic
+---
 sequenceDiagram
     actor Seller
     participant UI
     participant System
     participant BidItem
 
-    
- 
+
+
  System ->> System : validate bid item
     alt Validation fails
         System -->> UI : return Exception
@@ -24,3 +30,4 @@ sequenceDiagram
             UI -->> Seller : Show success message
         end
     end
+```

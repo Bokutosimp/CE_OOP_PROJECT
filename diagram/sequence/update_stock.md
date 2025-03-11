@@ -1,4 +1,9 @@
-    
+```mermaid
+---
+config:
+  theme: dark
+  look: classic
+---
 sequenceDiagram
     actor Seller
     participant UI
@@ -11,7 +16,7 @@ sequenceDiagram
     UI ->> System : add_stock(user_id, item_id, amount)
     activate System
     System ->> System : get_item_by_id(item_id)
-    
+
     System ->> System : validate item
     alt Validation fails
         System -->> UI : return Exception
@@ -33,3 +38,4 @@ sequenceDiagram
         end
     end
     deactivate UI
+```
