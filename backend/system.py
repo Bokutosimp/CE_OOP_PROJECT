@@ -482,12 +482,7 @@ class System:
    def get_history_bids(self,user_id:str):
       user = self.get_user_by_id(user_id)
       history = user.get_bid_history
-      history_list = []
-      now = datetime.now()
-      for his in history:
-         if his.get_shipping_status.get_get_item_date < now:
-            history_list.append(his) 
-      return history_list
+      return history
    
 def createInstance():
    from .mock.items import items , items_2
@@ -547,7 +542,7 @@ def createInstance():
    print("---############ bid item #############---")
    start_bid_time = datetime.now()
    start_bid_time = start_bid_time.replace(microsecond=0)
-   increase_time = 1  # Initial increment in minutes
+   increase_time = 30  # Initial increment in minutes
    for bid_item in bid_items:
       end_bid_time = start_bid_time + timedelta(seconds=increase_time)  
       main_system.create_bid_item(
@@ -556,7 +551,7 @@ def createInstance():
          bid_item['top_bidder'], bid_item['status']
       )
     # Update start time for the next bid
-      increase_time += 1
+      increase_time += 30
       # main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', datetime.strptime(bid_item['start_time'], "%Y-%m-%d %H:%M:%S"), datetime.strptime(bid_item['end_time'], "%Y-%m-%d %H:%M:%S"), bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_items()
    for item in bid_items_instance:

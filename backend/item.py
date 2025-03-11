@@ -379,6 +379,8 @@ class BidHistory:
    def get_shipping_status(self) -> ShippingStatus : return self.__shipping_status
    @property
    def get_order(self) -> Order: return self.__item
+   @property
+   def get_item(self): return self.__item
    def set_status(self , status : ShippingStatus) :
       self.__shipping_status = status
 
