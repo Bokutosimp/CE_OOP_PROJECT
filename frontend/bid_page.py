@@ -5,9 +5,23 @@ from backend.system import main_system
 def bid_page(id, session):
     try:
         bid_item = main_system.get_bid_item_by_id(id)
+        status = main_system.bid_status(bid_item)
+        if status == "Sold":
+            return Div(
+                P("Auction Ended", style="color: red; font-size: 24px; font-weight: bold;"),
+                Button("Back", type='submit', style="font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 25px; cursor: pointer;"),
+                action="/", method="get"
+            )
+        if status == "Ended":
+            main_system.end_bid(bid_item)
+            return Div(
+                P("Auction Ended", style="color: red; font-size: 24px; font-weight: bold;"),
+                Button("Back", type='submit', style="font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 25px; cursor: pointer;"),
+                action="/", method="get"
+            )
         user_id = session['auth'][0]
         user = main_system.get_user_by_id(user_id)
-        print(bid_item)
+        print(f"{bid_item.get_name}\n{bid_item.get_status}\n{bid_item.get_start_time}\n{bid_item.get_end_time}")
         
         return Div(
             # Outer container for the Card layout

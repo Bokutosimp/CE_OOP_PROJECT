@@ -287,6 +287,11 @@ class System:
       except ValueError as e:
          raise ValueError(str(e))
 
+   def bid_status(self, bid_item):
+      for item in self.__list_items:
+         if item == bid_item:
+            return item.get_status
+   
    def get_top_bidder(self, item_id:str):
       for item in self.__list_items:
          if item.get_id == item_id:
@@ -307,9 +312,10 @@ class System:
             item.start_bid()
             return 'Bid started'
          
-   def end_bid(self, item: Item):
+   def end_bid(self, item: BidItem):
       for temp in self.__list_items:
          if temp == item:
+               item.sold()
                winner = temp.top_bidder
                final_price = temp.get_price
                print(f"Customer before: {winner.get_e_bux}")
@@ -317,8 +323,6 @@ class System:
                print(f"{winner.get_username} won the bid and {final_price} e-bux was deducted.")
                print(f"Customer after: {winner.get_e_bux}")
                return 'Bid ended'
-
-
          
    def is_bid_item(self, item) -> bool:
        return isinstance(item, BidItem)

@@ -357,14 +357,18 @@ class BidItem(Item):
    
    @property
    def get_status(self):
+      if self.__status == "Sold":
+         return self.__status
       now = datetime.now()
-
       if now > self.__end_time :
          self.__status = "Ended"
       return self.__status
    
    def is_price_valid(self, price : float):
       return price > self.__price
+   
+   def sold(self):
+      self.__status = "Sold"
    
 
    # def edit_item(self, name:str , category:list[Category] ,desciption:str , price:float , img:str ) :
