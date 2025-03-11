@@ -9,14 +9,6 @@ def auction_end():
                 )
             )
 
-def auction_end():
-    return Div(
-        P("Auction Ended", style="color: red; font-size: 24px; font-weight: bold;"),
-        A(Button("Back", type='button', style="font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 25px; cursor: pointer;"),
-          href="/"
-        )
-    )
-
 def bid_page(id, session):
     try:
         bid_item = main_system.get_bid_item_by_id(id)

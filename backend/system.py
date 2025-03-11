@@ -66,13 +66,24 @@ class System:
          if item.get_id == id: return item
       raise Exception('item not found')
    
-   def get_bid_item_by_id(self,id:str):
+   def get_bid_item_by_id(self, id: str):
       for item in self.__list_items:
          if str(item.get_id) == str(id) and isinstance(item, BidItem):
-            print(item)
-            return item
-      raise Exception('bid item not found')
-      
+               # Auto-update bid status before returning it
+               now = datetime.now()
+               if item.get_status != "Sold":  # Skip if already sold
+                  if now >= item.get_end_time:
+                     item.end()  # Automatically end bid if past end_time
+               return item
+      raise Exception('Bid item not found')
+   
+   def update_all_bid_statuses(self):
+    now = datetime.now()
+    for item in self.__list_items:
+        if isinstance(item, BidItem) and item.get_status != "Sold":
+            if now >= item.get_end_time:
+                item.end()  # Mark as ended if time is up
+
    def get_users(self,query:str = ''):
       if(query == ''):
          return self.__list_users
