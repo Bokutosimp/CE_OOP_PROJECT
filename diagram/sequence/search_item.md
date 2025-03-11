@@ -1,3 +1,10 @@
+```mermaid
+---
+config:
+  theme: dark
+  look: classic
+---
+
 sequenceDiagram
 autonumber
 
@@ -13,3 +20,4 @@ autonumber
     deactivate System
     UI -->> Customer: display search results
     deactivate UI
+```

@@ -24,92 +24,87 @@ def bid_page(id, session):
         print(f"{bid_item.get_name}\n{bid_item.get_status}\n{bid_item.get_start_time}\n{bid_item.get_end_time}")
         
         return Div(
-            Meta(http_equiv="refresh", content="5"), 
-            Div(
+    Meta(http_equiv="refresh", content="5"), 
+    Div(
+        Div(
+            Img(src=bid_item.get_image), 
+            style="width: 450px; height: 450px; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); margin-right: 50px;"
+        ),
+        
+        Div(
+            Form(
                 Div(
-                    Img(src=bid_item.get_image), 
-                    style="width: 450px; height: 450px; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); margin-right: 50px;"
+                    H2(bid_item.get_name, style="color: #3498DB; font-weight: bold; font-size:40px; text-align:left; margin-bottom: 15px;"),
+                    style="border-bottom: 3px solid #85C1E9; padding-bottom:10px; margin-bottom:5px;"
                 ),
                 
                 Div(
-                    Form(
-                              Div(
-                                 H2(bid_item.get_name, style="color:black; font-weight:1000; font-size:40px; text-align:left; margin-bottom: 15px;"),
-                                 style="border-bottom: 3px solid black; padding-bottom:10px; margin-bottom:5px;"),
-                              
-                              Div(
-                                 P("Description:", style="color:black; font-size:24px; font-weight:bold;"),
-                                 P(f"{bid_item.get_description}", style="color:black; font-size:20px;"),
-                                 style="width:100%; border-bottom: 3px solid black; padding-bottom:15px; margin-bottom:5px;"
-                              ),
-                              
-                              Div(
-                                 P(f"Status : {bid_item.get_status}", style="color:black; font-size:24px; font-weight:bold;"),
-                                 style="width:100%; text-align:left; margin-bottom:5px;"
-                              ),
-                              
-                              Div(
-                                 P(f"Current bid price: ${bid_item.get_price}", style="color:black; font-size:24px; font-weight:bold;"),
-                                 style="width:100%; text-align:left; margin-bottom:5px;"
-                              ),
-                              Div(
-                                 P(f"Start-time: ${bid_item.get_start_time.strftime("%Y-%m-%d %H:%M:%S")}", style="color:black; font-size:24px; font-weight:bold;"),
-                                 style="width:100%; text-align:left; margin-bottom:5px;"
-                              ),
-                              Div(
-                                 P(f"End-time: ${bid_item.get_end_time.strftime("%Y-%m-%d %H:%M:%S")}", style="color:black; font-size:24px; font-weight:bold;"),
-                                 style="width:100%; text-align:left;"
-                              ),
-                              
-                              Div(
-                              Div(
-                                 Input(
-                                       id="bid_input",
-                                       type='number',
-                                       min=round(bid_item.get_price + 0.1, 1),
-                                       max=round(user.get_e_bux, 2),
-                                       step=0.01,
-                                       required=True,
-                                       style="width:100%; max-width:300px; text-align:center; border-radius:50px; font-size:20px; padding:15px; border: 2px solid #ccc; transition: border 0.3s ease; margin-bottom: 15px;",
-                                       placeholder='Enter your bid',
-                                       onfocus="this.style.border='2px solid #4CAF50';",  
-                                       onblur="this.style.border='2px solid #ccc';"    
-                                 ),
-                                 Button(
-                                       'Place Bid', 
-                                       style="""
-                                          border-radius:50px;
-                                          font-size:20px;
-                                          width:250px;
-                                          background-color: #4CAF50;
-                                          color: white;
-                                          border: none;
-                                          padding: 15px 30px;
-                                          cursor: pointer;
-                                          transition: background-color 0.3s ease, transform 0.2s ease;
-                                          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-                                       """, 
-                                       type='submit',
-                                       onmouseover="this.style.backgroundColor='#45a049'; this.style.transform='scale(1.05)';",
-                                       onmouseout="this.style.backgroundColor='#4CAF50'; this.style.transform='scale(1)';",
-                                 ),
-                                 style="display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:20px; margin-top:20px; width:100%;"
-                                 ),
-                                 style="display: flex; flex-direction: column; align-items: flex-start; gap: 20px; width: 100%; max-width: 700px; margin: auto;"),
-                              style="display:flex; flex-direction:column; gap:25px; width:100%; max-width:700px; align-items:left;",
-                              action=f"/bid/submit?item_id={id}",
-                              method="post"
-                           )
+                    P("Description:", style="color:#1C1C1C; font-size:24px; font-weight:bold;"),
+                    P(f"{bid_item.get_description}", style="color:#1C1C1C; font-size:20px;"),
+                    style="width:100%; border-bottom: 3px solid #85C1E9; padding-bottom:15px; margin-bottom:5px;"
+                ),
+                
+                Div(
+                    P(f"Status : {bid_item.get_status}", style="color:#1C1C1C; font-size:24px; font-weight:bold;"),
+                    style="width:100%; text-align:left; margin-bottom:5px;"
+                ),
+                
+                Div(
+                    P(f"Current bid price: ${bid_item.get_price}", style="color:#1C1C1C; font-size:24px; font-weight:bold;"),
+                    style="width:100%; text-align:left; margin-bottom:5px;"
+                ),
+                Div(
+                    P(f"Start-time: {bid_item.get_start_time.strftime('%Y-%m-%d %H:%M:%S')}", style="color:#1C1C1C; font-size:24px; font-weight:bold;"),
+                    style="width:100%; text-align:left; margin-bottom:5px;"
+                ),
+                Div(
+                    P(f"End-time: {bid_item.get_end_time.strftime('%Y-%m-%d %H:%M:%S')}", style="color:#1C1C1C; font-size:24px; font-weight:bold;"),
+                    style="width:100%; text-align:left;"
+                ),
+                
+                Div(
+                    Div(
+                        Input(
+                            id="bid_input",
+                            type='number',
+                            min=round(bid_item.get_price + 0.1, 1),
+                            max=round(user.get_e_bux, 2),
+                            step=0.01,
+                            required=True,
+                            style="width:100%; max-width:300px; text-align:center; border-radius:50px; font-size:20px; padding:15px; border: 2px solid #ccc; transition: border 0.3s ease; margin-bottom: 15px;",
+                            placeholder='Enter your bid',
+                            onfocus="this.style.border='2px solid #3498DB';",  
+                            onblur="this.style.border='2px solid #ccc';"
+                        ),
+                        Button(
+                            'Place Bid', 
+                            style="""border-radius:50px; font-size:20px; width:250px; background-color: #3498DB; 
+                                     color: white; border: none; padding: 15px 30px; cursor: pointer;
+                                     transition: background-color 0.3s ease, transform 0.2s ease;
+                                     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);""", 
+                            type='submit',
+                            onmouseover="this.style.backgroundColor='#1E88E5'; this.style.transform='scale(1.05)';",
+                            onmouseout="this.style.backgroundColor='#3498DB'; this.style.transform='scale(1)';"
+                        ),
+                        style="display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:20px; margin-top:20px; width:100%;"
+                    ),
+                    style="display: flex; flex-direction: column; align-items: flex-start; gap: 20px; width: 100%; max-width: 700px; margin: auto;"
+                ),
+                
+                style="display:flex; flex-direction:column; gap:25px; width:100%; max-width:700px; align-items:left;",
+                action=f"/bid/submit?item_id={id}",
+                method="post"
+            )
+        ),
+        
+        style="""display: flex; flex-direction: row; justify-content: center; align-items: center; 
+                 background-color: #ffffff; border-radius: 15px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); 
+                 width: 100%; max-width: 1200px; margin: auto; padding: 25px; gap: 50px;"""
+    ),
+    
+    style="background-color: #D6EAF8; display: flex; justify-content: center; padding: 70px 0; gap: 60px;"
+)
 
-                ),
-                
-                style="""display: flex; flex-direction: row; justify-content: center; align-items: center; 
-                         background-color: #ffffff; border-radius: 15px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); 
-                         width: 100%; max-width: 1200px; margin: auto; padding: 25px; gap: 50px;"""
-            ),
-            
-            style="background-color: #eaf4f4; display: flex; justify-content: center; padding: 70px 0; gap: 60px;"
-        )
     except Exception as e:
         return Div(f"Item not found. Error: {e}", style="text-align:center; color:red; font-size:24px; font-weight:bold;")
 

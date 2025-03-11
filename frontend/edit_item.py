@@ -30,7 +30,7 @@ def edit_item(session,item_id:str):
                         ),
                 Input(type="text", id = "new_detail" , name="new_detail", placeholder="New Detail",value='',
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;"  ),
-                Input(type="number", id= "new_price" , name="new_price", placeholder="New Price",value=current_item.get_price,
+                Input(type="number", id= "new_price" , name="new_price", placeholder="New Price",value=current_item.get_price, min='0'  ,
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , step="0.01", required='true'),
                 Input(type="text", id = "new_image", name="new_image", placeholder="New image",value=current_item.get_image,
                       style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" ),

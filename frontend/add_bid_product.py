@@ -23,7 +23,7 @@ def add_bid_product_page(session):
         ),
         Form( 
             Label("Bid Product Name:", Input(type="text", id="name", placeholder="Enter your product name", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true')),
-            Label("Start Price:", Input(type="number", id="price",  step="0.01" ,placeholder="Enter your price", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true')),
+            Label("Start Price:", Input(type="number", min='0'  , id="price",  step="0.01" ,placeholder="Enter your price", style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 100%;" , required='true')),
             Label("Amount:", Input(id="amount", name="amount", type="number", placeholder="Enter your amount" , required='true')),
             Details(
                 Summary("เลือกหมวดหมู่"), 

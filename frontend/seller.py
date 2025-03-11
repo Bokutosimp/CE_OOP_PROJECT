@@ -108,27 +108,29 @@ def product_management(session):
     ),
 
         Div(
-            Button("Products", 
-                onclick="showProducts()", 
-                style="""background: #6a5acd;  color: white; padding: 8px 20px;   border-radius: 20px;   border: 2px solid #6a5acd;cursor: pointer; font-size: 16px; font-weight: bold;transition: all 0.3s;""",
-                onmouseover="this.style.background='#5a4cbf'; this.style.borderColor='#5a4cbf';",
-                onmouseout="this.style.background='#6a5acd'; this.style.borderColor='#6a5acd';"
-            ),
-                    Button("Bid Products", 
-                onclick="showBidProducts()", 
-                style="""background: #42aaff; color: white; padding: 8px 20px;  border-radius: 20px; border: 2px solid #42aaff; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s; margin-left: 12px;""",
-                onmouseover="this.style.background='#1e8eff'; this.style.borderColor='#1e8eff';",
-                onmouseout="this.style.background='#42aaff'; this.style.borderColor='#42aaff';"
-            )
-            ,
-             Button("Discount code", 
-                onclick="showCode()", 
-                style="""background: #ddc3f7; color: white; padding: 8px 20px;  border-radius: 20px; border: 2px solid #ddc3f7;cursor: pointer; font-size: 16px; font-weight: bold;transition: all 0.3s;margin-left: 12px;""",
-                onmouseover="this.style.background='#cc9dfa'; this.style.borderColor='#cc9dfa';",
-                onmouseout="this.style.background='#ddc3f7'; this.style.borderColor='#ddc3f7';"
-            ),
-            style="""display: flex ; justify-content: center; gap: 15px;margin: 20px ;"""
-        )
+    Button("Products", 
+        onclick="showProducts()", 
+        style="""background: #3498DB; color: white; padding: 10px 24px; border-radius: 20px; 
+                 border: 2px solid #3498DB; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s;""",
+        onmouseover="this.style.background='#1E88E5'; this.style.borderColor='#1E88E5';",
+        onmouseout="this.style.background='#3498DB'; this.style.borderColor='#3498DB';"
+    ),
+    Button("Bid Products", 
+        onclick="showBidProducts()", 
+        style="""background: #2A7FB8; color: white; padding: 10px 24px; border-radius: 20px; 
+                 border: 2px solid #2A7FB8; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s; margin-left: 12px;""",
+        onmouseover="this.style.background='#1E5FA5'; this.style.borderColor='#1E5FA5';",
+        onmouseout="this.style.background='#2A7FB8'; this.style.borderColor='#2A7FB8';"
+    ),
+    Button("Discount Code", 
+        onclick="showCode()", 
+        style="""background: #85C1E9; color: white; padding: 10px 24px; border-radius: 20px; 
+                 border: 2px solid #85C1E9; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s; margin-left: 12px;""",
+        onmouseover="this.style.background='#5DADE2'; this.style.borderColor='#5DADE2';",
+        onmouseout="this.style.background='#85C1E9'; this.style.borderColor='#85C1E9';"
+    ),
+    style="display: flex; justify-content: center; gap: 15px; margin: 20px;"
+)
 
                 ,
 
@@ -194,37 +196,41 @@ def product_management(session):
 
                 Div(
                 Form(
-                    H3("Stock Item", style="text-align: center; color: #333;"),
-                    Input(type="hidden", id="stock_item_id", name="stock_item_id"),  
-                    Input(type="hidden", id="stock_bid_item_id", name="stock_bid_item_id"),  
-                    Input(
-                        type="number", name="stock", id="stock", placeholder="Enter amount",
-                        style="""
-                            padding: 10px; border-radius: 8px; border: 1px solid #ccc;
-                            width: 100%; font-size: 16px; margin-top: 5px; text-align: center;
-                        """,
-                        required="true"
-                    ),
+    Div(
+        H3("Stock Item", style="margin-left : 10 px ; text-align: center; color: #3498DB; flex-grow: 1;"),
+        Button(
+            "❌", type="button", 
+            style="""background: none; border: none; font-size: 24px; color: #E74C3C; cursor: pointer;""",
+            onclick="document.getElementById('popup-stock').style.display='none';"
+        ),
+        style="display: flex; justify-content: space-between; align-items: center; width: 100%;"
+    ),
 
-                    Button(
-                        "Submit", type="submit",
-                        style="""
-                            background: #0074bd; color: white; padding: 12px; border-radius: 8px;
-                            border: none; cursor: pointer; font-size: 16px; font-weight: bold;
-                            margin-top: 15px; width: 100%; transition: background 0.3s;
-                        """,
-                        onmouseover="this.style.background='#005fa3'",
-                        onmouseout="this.style.background='#0074bd'"
-                    ),
+    Input(type="hidden", id="stock_item_id", name="stock_item_id"),  
+    Input(type="hidden", id="stock_bid_item_id", name="stock_bid_item_id"),  
 
-                    action="/update_stock", method="post", id="stock-form",
-                    style="""
-                        display: flex; flex-direction: column; gap: 15px;
-                        background: white; padding: 25px; border-radius: 12px;
-                        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-                        width: 350px;
-                    """
-                ),
+    Input(
+        type="number", name="stock", id="stock", placeholder="Enter amount",
+        style="""padding: 10px; border-radius: 8px; border: 1px solid #3498DB;
+                 width: 100%; font-size: 16px; margin-top: 5px; text-align: center;""",
+        required=True
+    ),
+
+    Button(
+        "Submit", type="submit",
+        style="""background: #3498DB; color: white; padding: 12px; border-radius: 8px;
+                 border: none; cursor: pointer; font-size: 16px; font-weight: bold;
+                 margin-top: 15px; width: 100%; transition: background 0.3s;""",
+        onmouseover="this.style.background='#1E88E5'",
+        onmouseout="this.style.background='#3498DB'"
+    ),
+
+    action="/update_stock", method="post", id="stock-form",
+    style="""display: flex; flex-direction: column; gap: 15px; background: white;
+             padding: 25px; border-radius: 12px; box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+             width: 350px; position: relative;"""
+)
+,
 
                 id="popup-stock",
                 style="""
