@@ -356,18 +356,33 @@ class System:
          raise Exception(str(e))
    
    def is_already_review(self,user_id:str,item_id:str) -> bool:
-      user = self.get_user_by_id(user_id)
-      item = self.get_item_by_id(item_id)
-      for review in item.get_review:
-         if review.get_reviewer == user: return True
-      return False
+      try:
+         user = self.get_user_by_id(user_id)
+         item = self.get_item_by_id(item_id)
+         for review in item.get_review:
+            if review.get_reviewer == user: return True
+         return False
+      except Exception as e:
+         raise Exception(str(e))
    
+   def is_buy_item(self,user_id:str,item_id:str) -> bool:
+      try:
+         user = self.get_user_by_id(user_id)
+         item = self.get_item_by_id(item_id)
+         for history in user.get_order_history:
+            for item_usr in history.get_order.get_list_item_select:
+               if item_usr.get_item == item: return True
+         return False
+      except Exception as e:
+         raise Exception(str(e))
+      
    def add_review(self,item_id:str,rating:int,review:str,user_id:str):
       try:
          user = self.get_user_by_id(user_id)
          if not isinstance(user,Customer): raise Exception('User is not a customer')
          item = self.get_item_by_id(item_id)
          if self.is_already_review(user_id,item_id): raise Exception('user already reviewed')
+         if not self.is_buy_item(user_id,item_id): raise Exception('User not buy this item yet')
          item.add_review(rating,review,user)
          item.show_review()
       except Exception as e:
@@ -568,8 +583,13 @@ def createInstance():
          print(f"item in order is {item.get_item.get_name}")
          
    print("######## add review to item #########")
-   print(f'{main_system.add_review('1',4,'very good','cust001')}')
-   print(f'{main_system.add_review('1',5,'very good','cust002')}')
+   main_system.buy_item('cust001','101',2,shipping_date=now-timedelta(minutes=5),get_item_date=now-timedelta(minutes=4))
+   print(f'{main_system.add_review('101',4,'very good','cust001')}')
+   ## try reviewing item but user not buy it yet
+   try:
+      print(f'{main_system.add_review('1',5,'very good','cust002')}')
+   except Exception as e:
+      print(str(e))
    print(f'get list of review of item 1 {main_system.get_review('1')}')
    print(f'get average score of item 1: {main_system.get_average_score('1')}')
    ##try comment with the same user

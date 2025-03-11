@@ -88,7 +88,7 @@ class ItemInCart:
       self.__is_selected = is_selected
       
    def __str__(self):
-      return f"item:{self.__item}, amount:{self.__amount_in_cart}, isSelected:{self.__isSelected}"
+      return f"item:{self.__item}, amount:{self.__amount_in_cart}, isSelected:{self.__is_selected}"
    
    @property
    def get_item(self) -> Item: return self.__item
