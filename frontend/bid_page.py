@@ -10,35 +10,41 @@ def bid_page(id, session):
         print(bid_item)
         
         return Div(
-            # Outer container for the Card layout
+            Meta(http_equiv="refresh", content="5"), 
             Div(
-                # Image section (left side of the card)
                 Div(
                     Img(src=bid_item.get_image), 
                     style="width: 450px; height: 450px; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); margin-right: 50px;"
                 ),
                 
-                # Form and content section (right side of the card)
                 Div(
                     Form(
                               Div(
                                  H2(bid_item.get_name, style="color:black; font-weight:1000; font-size:40px; text-align:left; margin-bottom: 15px;"),
-                                 style="border-bottom: 3px solid black; padding-bottom:10px; margin-bottom:15px;"),
+                                 style="border-bottom: 3px solid black; padding-bottom:10px; margin-bottom:5px;"),
                               
                               Div(
                                  P("Description:", style="color:black; font-size:24px; font-weight:bold;"),
                                  P(f"{bid_item.get_description}", style="color:black; font-size:20px;"),
-                                 style="width:100%; border-bottom: 3px solid black; padding-bottom:15px; margin-bottom:15px;"
+                                 style="width:100%; border-bottom: 3px solid black; padding-bottom:15px; margin-bottom:5px;"
                               ),
                               
                               Div(
                                  P(f"Status : {bid_item.get_status}", style="color:black; font-size:24px; font-weight:bold;"),
-                                 style="width:100%; text-align:left; margin-bottom:15px;"
+                                 style="width:100%; text-align:left; margin-bottom:5px;"
                               ),
                               
                               Div(
                                  P(f"Current bid price: ${bid_item.get_price}", style="color:black; font-size:24px; font-weight:bold;"),
-                                 style="width:100%; text-align:left; margin-bottom:25px;"
+                                 style="width:100%; text-align:left; margin-bottom:5px;"
+                              ),
+                              Div(
+                                 P(f"Start-time: ${bid_item.get_start_time.strftime("%Y-%m-%d %H:%M:%S")}", style="color:black; font-size:24px; font-weight:bold;"),
+                                 style="width:100%; text-align:left; margin-bottom:5px;"
+                              ),
+                              Div(
+                                 P(f"End-time: ${bid_item.get_end_time.strftime("%Y-%m-%d %H:%M:%S")}", style="color:black; font-size:24px; font-weight:bold;"),
+                                 style="width:100%; text-align:left;"
                               ),
                               
                               Div(
@@ -72,7 +78,6 @@ def bid_page(id, session):
                                        type='submit',
                                        onmouseover="this.style.backgroundColor='#45a049'; this.style.transform='scale(1.05)';",
                                        onmouseout="this.style.backgroundColor='#4CAF50'; this.style.transform='scale(1)';",
-                                       onclick="playClickSound();"
                                  ),
                                  style="display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:20px; margin-top:20px; width:100%;"
                                  ),

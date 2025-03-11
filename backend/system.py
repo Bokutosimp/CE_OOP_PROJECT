@@ -387,7 +387,7 @@ class System:
       except Exception as e:
          raise Exception(str(e))
       
-   def buy_item_with_code(self, user_id: str, code: str,is_selected_list:list,total_price:float,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(minutes=5)):
+   def buy_item_with_code(self, user_id: str, code: str,is_selected_list:list,total_price:float,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=5)):
     try:
       user = self.get_user_by_id(user_id)
       discount = self.apply_code(code)
@@ -517,10 +517,10 @@ def createInstance():
    #create bid item
    print("---############ bid item #############---")
    start_bid_time = datetime.now()
-   start_bid_time = start_bid_time.replace(microsecond=0)
-   increase_time = 5  # Initial increment in minutes
+   # start_bid_time = start_bid_time.replace(seconds=30)
+   increase_time = 10  # Initial increment in minutes
    for bid_item in bid_items:
-      end_bid_time = start_bid_time + timedelta(minutes=increase_time)  
+      end_bid_time = start_bid_time + timedelta(seconds=increase_time)  
       main_system.create_bid_item(
          bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], 
          ['10'], bid_item['image'], 'sell001', start_bid_time, end_bid_time, 
