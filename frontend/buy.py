@@ -134,11 +134,11 @@ def buy(session,item_id=None,amount=None):
 
 def buy_post(session,code_name:str):
     try:
-        user_id = session['auth'][0]
-        if main_system.buy_cart_check_stock(user_id) == 0:
-            return Script("alert('please select atleast one item'); window.location.href='/cart'")
+        user_id = session['auth'][0]            
         print('this is debuging in buy item in cart')
-        main_system.buy_item_in_cart(user_id,code_name)
+        buy = main_system.buy_item_in_cart(user_id,code_name)
+        if buy == False:
+            return Script("alert('please select atleast one item'); window.location.href='/cart'")
         user = main_system.get_user_by_id(user_id)
         print("#### printing user history #####")
         for history in user.get_order_history:
@@ -154,7 +154,7 @@ def buy_one_item(session,item_id:str,amount:str,code_name:str):
         print(f'result of buying {result}')
         print(f'user ebux after buying {main_system.get_user_by_id(user_id).get_e_bux}')
         if result:
-            raise Exception('testing')
+            raise Exception('buy successfull')
         try:
             main_system.remove_from_cart(item_id,user_id)
         except:
