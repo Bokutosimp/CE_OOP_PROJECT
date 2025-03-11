@@ -7,13 +7,74 @@ from backend.system import main_system
 def main_page():
     category_list = main_system.get_categories()
     return Container(
-        Div(Div(P(f'{category_list[0].get_name}',style="""color:rgb(0, 0, 0);"""),
-            H2('Everything you want and more',style="""color:rgb(0, 0, 0);"""),
-            P('Choose from a vast selection of new fresh fruits.',style="""color:rgb(0, 0, 0);"""),
-            A('Shop now fruits',className='button',href=f'/category/{category_list[0].get_id}',style='background:rgb(0,0,0);color: white; border-radius: 50px; padding: 8px 12px;'),
-            style=""""""),
-            Div(style=""" width:400px; height: 250px; background-image:url(https://img.freepik.com/free-photo/colorful-fruits-tasty-fresh-ripe-juicy-white-desk_179666-169.jpg); background-position:center; background-size:cover;"""),
-            style="""background-color:var(--lavender-web-2); border-radius: 10px;padding:40px; display:flex; flex-direction:row; justify-content:space-between;"""),
+        Div(
+    Div(
+        Div(
+            P(f'{category_list[0].get_name}', style="color:rgb(0, 0, 0);"),
+            H2('Everything you want and more', style="color:rgb(0, 0, 0);"),
+            P('Choose from a vast selection of new fresh fruits.', style="color:rgb(0, 0, 0);"),
+            A('Shop now fruits', className='button', href=f'/category/{category_list[0].get_id}', style='background:rgb(0,0,0);color: white; border-radius: 50px; padding: 8px 12px;'),
+            style="flex:1;"
+        ),
+        Div(style="width:400px; height: 250px; background-image:url(https://img.freepik.com/free-photo/colorful-fruits-tasty-fresh-ripe-juicy-white-desk_179666-169.jpg); background-position:center; background-size:cover;"),
+        className="slide"
+    ),
+    Div(
+        Div(
+            P(f'{category_list[1].get_name}', style="color:rgb(0, 0, 0);"),
+            H2('Discover More Freshness', style="color:rgb(0, 0, 0);"),
+            P('Find high-quality and exotic fruits.', style="color:rgb(0, 0, 0);"),
+            A('Explore More', className='button', href=f'/category/{category_list[1].get_id}', style='background:rgb(0,0,0);color: white; border-radius: 50px; padding: 8px 12px;'),
+            style="flex:1;"
+        ),
+        Div(style="width:400px; height: 250px; background-image:url(https://img.freepik.com/free-photo/fresh-tropical-fruits-wooden-table_1150-18449.jpg); background-position:center; background-size:cover;"),
+        className="slide"
+    ),
+    className="slider-container"
+),
+Button("❮", id="prev", className="slider-btn"),
+Button("❯", id="next", className="slider-btn"),
+Script("""
+    let index = 0;
+    function showSlide(step) {
+        let slides = document.querySelectorAll('.slide');
+        index = (index + step + slides.length) % slides.length;
+        document.querySelector('.slider-container').style.transform = `translateX(${-index * 100}%)`;
+    }
+    document.getElementById('prev').addEventListener('click', () => showSlide(-1));
+    document.getElementById('next').addEventListener('click', () => showSlide(1));
+"""),
+Style("""
+    .slider-container {
+        display: flex;
+        width: 100%;
+        overflow: hidden;
+        transition: transform 0.5s ease-in-out;
+    }
+    .slide {
+        min-width: 100%;
+        display: flex;
+        justify-content: space-between;
+        background-color: var(--lavender-web-2);
+        border-radius: 10px;
+        padding: 40px;
+    }
+    .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0,0,0,0.5);
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 24px;
+        padding: 10px;
+        border-radius: 50%;
+    }
+    #prev { left: 10px; }
+    #next { right: 10px; }
+""")
+,
         Div(H4('Trending on eBay',style="""color:black;"""),
             Div(
             *[A(Div(Img(src='https://cdn.pixabay.com/photo/2016/07/07/16/46/dice-1502706_640.jpg',style='width:auto; height:75px; object-fit:cover;'),

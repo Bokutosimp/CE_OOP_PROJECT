@@ -1,43 +1,38 @@
-sequenceDiagram
-    actor Seller
-    participant UI
-    participant System
-    participant BidItem
+from fasthtml.common import *
+from typing import Literal
+import uuid
+import datetime
 
-   Seller ->> UI : edit_bid_item(session , bid_item_id)
-    activate UI
-    UI ->> System : get_bid_item_by_id(bid_item_id)
-    activate System
-    System -->> UI : Return bid item data
-    deactivate System
-    
-    UI ->> System : edit_bid_item(session , name , ... )
-    activate System
-    System ->> System : get_bid_item_by_id(bid_item_id)
-    
-    System ->> System : validate updated bid item data
-    alt Validation fails
-        System -->> UI :  return Exception
-        UI -->> Seller : show error message
-    else
-        System ->> System : validate minimum bid amount
-        alt Invalid bid amount
-            System -->> UI :  return Exception
-            UI -->> Seller : show error message
-        else
-            System --> bidItem : edit_bid_item(name , price , category , description , img , start_time , end_time)
-            activate bidItem
-            bidItem -->> System : return edited bid item
-            deactivate bidItem
-            
-            System ->> System : save updated bid item to database
-            System -->> UI :  return "Item updated successfully"
-                deactivate System
+sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
+from backend.system import main_system
 
-            UI -->> Seller : show success message
-        end
-    end
-    deactivate UI
+def register_form():
+   return Form(
+      Input(type='text',id='name',placeholder='Full Name',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
+      Input(type='email',id='email',placeholder='Email',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
+      Input(type='text',id='phone_number',placeholder='Phone Number',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
+      Input(type='text',id='username',placeholder='Username',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
+      Input(type='password',id='password',placeholder='Password',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
+      Input(type='date',id='birth_date',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
+      Input(type='text',id='address',placeholder='Address',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
+      Select(Option('Select Gender',value=''),Option('Female',value='F'),Option('Male',value='M'),id='gender',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
+      Button('Register',type='submit',style='height: 45px; width: 100%; border-radius: 5px; border: none; color: #fff; font-size: 18px; font-weight: 500; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease, transform 0.2s ease-in-out; background: linear-gradient(135deg, #71b7e6, #9b59b6);', onmouseover="this.style.background='lightblue'; this.style.transform='scale(1.05)';", onmouseout="this.style.background='linear-gradient(135deg, #71b7e6, #9b59b6)'; this.style.transform='scale(1)';"),
+      Span('Already have an account? ',A('Log in',style='text-decoration:underline;',href='/login')),
+      method='POST',
+      action='/register',
+      style='display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px 20%; gap:10px; background-color: #fff; max-width: 700px; width: 100%; padding: 25px 30px; border-radius: 5px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);'
+   )
 
-
-
+def register_post(name:str,email:str,phone_number:str,username:str,password:str,birth_date:str,gender:Literal['M','F'],address,session):
+   try:
+      d,m,y= birth_date.split('-')[2],birth_date.split('-')[1],birth_date.split('-')[0]
+      date = datetime.datetime(int(y),int(m),int(d))
+   except:
+      return Script('alert("Date format is incorrect"); window.location.href="/register"')
+   try:
+      result = main_system.create_customer(name,str(uuid.uuid4()),email,phone_number,username,password,date,gender,address)
+      user = main_system.login(username,password)
+      session['auth'] = user
+      return Redirect('/')
+   except (Exception,ValueError,KeyError) as e:
+      return Script(f'alert("{str(e)}"); window.location.href="/register"')
