@@ -387,11 +387,12 @@ class System:
       except Exception as e:
          raise Exception(str(e))
       
-   def buy_item_with_code(self, user_id: str, code: str,is_selected_list:list,total_price:float,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(minutes=5)):
+   def buy_item_with_code(self, user_id: str, code: str,is_selected_list:list,total_price:float,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=5)):
     try:
       user = self.get_user_by_id(user_id)
       discount = self.apply_code(code)
       discounted_price = total_price * (1 - discount)
+      user.decrease_e_bux(discounted_price)
       order = Order(10.0, discounted_price, is_selected_list)
       shipping_status = ShippingStatus(shipping_date,get_item_date)
       for Dcode in self.__list_codes:
@@ -399,7 +400,6 @@ class System:
             order.set_apply_code = Dcode
             break
       user.add_history(OrderHistory(order,shipping_status))
-      user.decrease_e_bux(discounted_price)
       return discounted_price
     except Exception as e:
         raise Exception(str(e))
@@ -411,12 +411,12 @@ class System:
          total_price = self.buy_cart_check_stock(user_id)
          if code != None and code != '':
             return self.buy_item_with_code(user_id,code,[item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected],total_price,shipping_date,get_item_date)
-         if user.get_e_bux > total_price:
+         if user.get_e_bux < total_price:
             raise Exception('insufficient fund')
+         user.decrease_e_bux(total_price)
          order = Order(10.0, total_price, [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
          shipping_status = ShippingStatus(shipping_date,get_item_date)
          user.add_history(OrderHistory(order,shipping_status))
-         user.decrease_e_bux(total_price)
          return total_price
       except Exception as e:
          raise Exception(str(e))
@@ -517,10 +517,10 @@ def createInstance():
    #create bid item
    print("---############ bid item #############---")
    start_bid_time = datetime.now()
-   start_bid_time = start_bid_time.replace(microsecond=0)
-   increase_time = 5  # Initial increment in minutes
+   # start_bid_time = start_bid_time.replace(seconds=30)
+   increase_time = 10  # Initial increment in minutes
    for bid_item in bid_items:
-      end_bid_time = start_bid_time + timedelta(minutes=increase_time)  
+      end_bid_time = start_bid_time + timedelta(seconds=increase_time)  
       main_system.create_bid_item(
          bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], 
          ['10'], bid_item['image'], 'sell001', start_bid_time, end_bid_time, 

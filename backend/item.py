@@ -92,6 +92,7 @@ class ItemInCart:
    
    @property
    def get_item(self) -> Item: return self.__item
+   
    @property
    def get_amount_in_cart(self) -> int: return self.__amount_in_cart
    @get_amount_in_cart.setter
