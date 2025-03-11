@@ -10,8 +10,6 @@ class Item:
       self.__price = price
       self.__amount = amount
       self.__image = image
-      # if not isinstance(owner, Seller):
-      #       raise ValueError("Owner must be a seller")
       self.__owner = owner
       self.__category = category
       self.__review = []
@@ -35,6 +33,8 @@ class Item:
    @property
    def get_amount(self) -> int:
       return self.__amount
+   @get_amount.setter
+   def set_amount(self,amount:int): self.__amount = amount
    @property
    def get_image(self) -> str:
       return self.__image

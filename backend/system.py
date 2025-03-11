@@ -426,18 +426,17 @@ class System:
    def buy_cart_check_stock(self,user_id:str): # return price of selected product
       try:
          user = self.get_user_by_id(user_id)
-         # check_stock = Order.check_cart_with_stock(self,user)
          total_price = sum((round(item.get_item.get_price * item.get_amount_in_cart, 3) if item.get_is_selected else 0) for item in user.get_cart.get_list_item_in_cart)
-         # Order(10.0, total_price, [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
          return total_price
       except Exception as e:
          raise Exception(str(e))
       
-   def buy_item_with_code(self, user_id: str, code: str,is_selected_list:list,total_price:float,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(minutes=5)):
+   def buy_item_with_code(self, user_id: str, code: str,is_selected_list:list,total_price:float,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
     try:
       user = self.get_user_by_id(user_id)
       discount = self.apply_code(code)
       discounted_price = total_price * (1 - discount)
+      user.decrease_e_bux(discounted_price)
       order = Order(10.0, discounted_price, is_selected_list)
       shipping_status = ShippingStatus(shipping_date,get_item_date)
       for Dcode in self.__list_codes:
@@ -451,7 +450,7 @@ class System:
         raise Exception(str(e))
    
    #buy item in cart
-   def buy_item_in_cart(self,user_id:str,code:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(minutes=1)):
+   def buy_item_in_cart(self,user_id:str,code:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
       try:
          user = self.get_user_by_id(user_id)
          total_price = self.buy_cart_check_stock(user_id)
@@ -461,22 +460,25 @@ class System:
          order = Order(10.0, total_price, [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
          shipping_status = ShippingStatus(shipping_date,get_item_date)
          user.add_history(OrderHistory(order,shipping_status))
-         user.decrease_e_bux(total_price)
+         for item in user.get_cart.get_list_item_in_cart:
+            item.get_item.set_amount = item.get_item.get_amount - item.get_amount
          return total_price
       except Exception as e:
          raise Exception(str(e))
       
-   def buy_item(self,user_id:str,item_id:str,amount:int,code:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(minutes=5)):
+   def buy_item(self,user_id:str,item_id:str,amount:int,code:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
       try:
          item = self.get_item_by_id(item_id)
          total_price = round(item.get_price*int(amount),2)
          if code != None and code != '':
             return self.buy_item_with_code(user_id,code,[ItemInCart(item,amount,True)],total_price,shipping_date,get_item_date)
          user = self.get_user_by_id(user_id)
+         if user.get_e_bux < total_price: raise Exception('insufficient fund')
+         user.decrease_e_bux(total_price)
+         item.set_amount = item.get_amount - amount
          order = Order(10.0, total_price,[ItemInCart(item,amount,True)])
          shipping_status = ShippingStatus(shipping_date,get_item_date)
          user.add_history(OrderHistory(order,shipping_status))
-         user.decrease_e_bux(total_price)
          return total_price
       except Exception as e:
          raise Exception(str(e))
