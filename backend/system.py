@@ -474,6 +474,16 @@ class System:
             history_list.append(his) 
       return history_list
    
+   def get_history_bids(self,user_id:str):
+      user = self.get_user_by_id(user_id)
+      history = user.get_bid_history
+      history_list = []
+      now = datetime.now()
+      for his in history:
+         if his.get_shipping_status.get_get_item_date < now:
+            history_list.append(his) 
+      return history_list
+   
 def createInstance():
    from .mock.items import items , items_2
    from .mock.bid_items import bid_items
