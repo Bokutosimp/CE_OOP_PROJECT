@@ -62,8 +62,11 @@ def review_page(id, session):
         return Div("Item not found", style="color:red; font-size:24px; font-weight:bold; text-align:center;")
 
 def submit_review_page(review: str, rating: int, item_id: str, session):
-    user_id = session['auth'][0]
-    user = main_system.get_user_by_id(user_id)
-    print(f"Review: {review}, Rating: {rating}, Item ID: {item_id}, User ID: {user}")
-    main_system.add_review(item_id, rating, review, user)
-    return Redirect(f"/")
+    try:
+        user_id = session['auth'][0]
+        print(f"Review: {review}, Rating: {rating}, Item ID: {item_id}, User ID: {user_id}")
+        main_system.add_review(item_id, rating, review, user_id)
+        return Redirect(f"/")
+    except Exception as e:
+        print(str(e))
+        return Script(f'alert("{str(e)}"); window.location.href="/"')

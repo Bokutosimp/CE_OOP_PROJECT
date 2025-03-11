@@ -5,7 +5,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from backend.system import main_system
 
-def generate_order_card(order):
+def generate_order_card(order,user_id):
     return Div(
         Div(
             Span(f'Order Date: {order.get_shipping_status.get_shipping_date.strftime("%y-%m-%d")}', 
@@ -31,7 +31,7 @@ def generate_order_card(order):
                             ),style="display:flex; align-items:center; gap:15px;"
                         ),
                         Div(
-                            A(Button('review'),href=f'/review/{item.get_item.get_id}'),
+                            None if main_system.is_already_review(user_id,item.get_item.get_id) else A(Button('review'),href=f'/review/{item.get_item.get_id}'),
                         ),
                         style="display:flex; align-items:center; justify-content:space-between; padding: 10px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);"
                     ),
@@ -54,6 +54,6 @@ def order_history_page(session):
     return Div(
         H1("Order History", 
            style="text-align: center; margin-bottom: 20px; color: #222; font-size: 24px; font-weight: bold;"),
-        *[generate_order_card(order) for order in order_list],
+        *[generate_order_card(order,user_id) for order in order_list],
         style="display: flex; flex-direction: column; gap: 30px; padding: 20px; background: #e9ecef; border-radius: 10px;"
     )
