@@ -196,37 +196,41 @@ def product_management(session):
 
                 Div(
                 Form(
-                    H3("Stock Item", style="text-align: center; color: #333;"),
-                    Input(type="hidden", id="stock_item_id", name="stock_item_id"),  
-                    Input(type="hidden", id="stock_bid_item_id", name="stock_bid_item_id"),  
-                    Input(
-                        type="number", name="stock", id="stock", placeholder="Enter amount",
-                        style="""
-                            padding: 10px; border-radius: 8px; border: 1px solid #ccc;
-                            width: 100%; font-size: 16px; margin-top: 5px; text-align: center;
-                        """,
-                        required="true"
-                    ),
+    Div(
+        H3("Stock Item", style="margin-left : 10 px ; text-align: center; color: #3498DB; flex-grow: 1;"),
+        Button(
+            "❌", type="button", 
+            style="""background: none; border: none; font-size: 24px; color: #E74C3C; cursor: pointer;""",
+            onclick="document.getElementById('popup-stock').style.display='none';"
+        ),
+        style="display: flex; justify-content: space-between; align-items: center; width: 100%;"
+    ),
 
-                    Button(
-                        "Submit", type="submit",
-                        style="""
-                            background: #0074bd; color: white; padding: 12px; border-radius: 8px;
-                            border: none; cursor: pointer; font-size: 16px; font-weight: bold;
-                            margin-top: 15px; width: 100%; transition: background 0.3s;
-                        """,
-                        onmouseover="this.style.background='#005fa3'",
-                        onmouseout="this.style.background='#0074bd'"
-                    ),
+    Input(type="hidden", id="stock_item_id", name="stock_item_id"),  
+    Input(type="hidden", id="stock_bid_item_id", name="stock_bid_item_id"),  
 
-                    action="/update_stock", method="post", id="stock-form",
-                    style="""
-                        display: flex; flex-direction: column; gap: 15px;
-                        background: white; padding: 25px; border-radius: 12px;
-                        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-                        width: 350px;
-                    """
-                ),
+    Input(
+        type="number", name="stock", id="stock", placeholder="Enter amount",
+        style="""padding: 10px; border-radius: 8px; border: 1px solid #3498DB;
+                 width: 100%; font-size: 16px; margin-top: 5px; text-align: center;""",
+        required=True
+    ),
+
+    Button(
+        "Submit", type="submit",
+        style="""background: #3498DB; color: white; padding: 12px; border-radius: 8px;
+                 border: none; cursor: pointer; font-size: 16px; font-weight: bold;
+                 margin-top: 15px; width: 100%; transition: background 0.3s;""",
+        onmouseover="this.style.background='#1E88E5'",
+        onmouseout="this.style.background='#3498DB'"
+    ),
+
+    action="/update_stock", method="post", id="stock-form",
+    style="""display: flex; flex-direction: column; gap: 15px; background: white;
+             padding: 25px; border-radius: 12px; box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+             width: 350px; position: relative;"""
+)
+,
 
                 id="popup-stock",
                 style="""
