@@ -97,6 +97,7 @@ def bid_page(id, session):
 def submit_bid_page(bid_input: float, item_id: str, session):
     bid_item = main_system.get_bid_item_by_id(item_id)
     if bid_item.get_status != "Started":
+        main_system.end_bid(bid_item)
         return Redirect(f"/bid/{item_id}")
     user_id = session['auth'][0]
     user = main_system.get_user_by_id(user_id)

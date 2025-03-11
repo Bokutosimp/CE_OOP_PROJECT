@@ -307,11 +307,18 @@ class System:
             item.start_bid()
             return 'Bid started'
          
-   def end_bid(self, item_id:str):
-      for item in self.__list_items:
-         if item.get_id == item_id:
-            item.end_bid()
-            return 'Bid ended'
+   def end_bid(self, item: Item):
+      for temp in self.__list_items:
+         if temp == item:
+               winner = temp.top_bidder
+               final_price = temp.get_price
+               print(f"Customer before: {winner.get_e_bux}")
+               winner.decrease_e_bux(final_price)
+               print(f"{winner.get_username} won the bid and {final_price} e-bux was deducted.")
+               print(f"Customer after: {winner.get_e_bux}")
+               return 'Bid ended'
+
+
          
    def is_bid_item(self, item) -> bool:
        return isinstance(item, BidItem)
@@ -514,7 +521,7 @@ def createInstance():
    print("---############ bid item #############---")
    start_bid_time = datetime.now()
    start_bid_time = start_bid_time.replace(microsecond=0)
-   increase_time = 5  # Initial increment in minutes
+   increase_time = 1  # Initial increment in minutes
    for bid_item in bid_items:
       end_bid_time = start_bid_time + timedelta(minutes=increase_time)  
       main_system.create_bid_item(
@@ -523,7 +530,7 @@ def createInstance():
          bid_item['top_bidder'], bid_item['status']
       )
     # Update start time for the next bid
-      increase_time += 5
+      increase_time += 1
       # main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', datetime.strptime(bid_item['start_time'], "%Y-%m-%d %H:%M:%S"), datetime.strptime(bid_item['end_time'], "%Y-%m-%d %H:%M:%S"), bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_items()
    for item in bid_items_instance:
