@@ -114,6 +114,14 @@ def get(id:str,session):
 def post(bid_input:float,item_id:str,session):
     return submit_bid_page(bid_input,item_id,session)
 
+@rt('/bid_status/{item_id}')
+def get(item_id: str):
+    try:
+        bid_item = main_system.get_bid_item_by_id(item_id)
+        return bid_item.get_status  # Returns "Not Started", "Started", "Ended", or "Sold"
+    except Exception:
+        return "Error"
+
 @rt('/review/{id}')
 def get(id:str,session):
     return (layout(review_page(id,session),session))
