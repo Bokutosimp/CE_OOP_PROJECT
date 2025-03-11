@@ -151,10 +151,6 @@ def buy_one_item(session,item_id:str,amount:str,code_name:str):
     try:
         user_id = session['auth'][0]
         result = main_system.buy_item(user_id,item_id,int(amount),code_name)
-        print(f'result of buying {result}')
-        print(f'user ebux after buying {main_system.get_user_by_id(user_id).get_e_bux}')
-        if result:
-            raise Exception('buy successfull')
         try:
             main_system.remove_from_cart(item_id,user_id)
         except:
