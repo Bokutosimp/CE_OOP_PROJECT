@@ -131,6 +131,7 @@ class System:
             discount = Dcode.get_discount / 100
             return discount
       raise Exception('Invalid discount code')
+   
    def create_item(self,current_user_id:str,id:str,name:str, price:float, amount:int,category_id:list[str],img='',description:str=''):
       try:
          result = self.__validate_name(name,self.__list_items)
@@ -273,12 +274,13 @@ class System:
 
       
 
-   def save_discount_code(self,name , discount_percent,description):
+   def save_discount_code(self,name , discount_percent, user_id):
       try:
             ID = str(uuid.uuid1)
             if not isinstance(discount_percent, (int, float)) or discount_percent <= 0 or discount_percent > 100:
                 raise ValueError("Discount percent must be a number between 1 and 100")
-            new_discount_code = Discount(ID, name, discount_percent, description)
+            current_user = main_system.get_user_by_id(user_id)
+            new_discount_code = main_system.create_discount_code(ID , name , discount_percent , current_user )
             self.__list_codes.append(new_discount_code)
             return "Discount code saved successfully"
       except Exception as e:
