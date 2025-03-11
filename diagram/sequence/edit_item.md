@@ -1,3 +1,10 @@
+```mermaid
+---
+config:
+  theme: dark
+  look: classic
+---
+
 sequenceDiagram
     actor Seller
     participant UI
@@ -11,11 +18,11 @@ sequenceDiagram
     activate System
     System -->> UI : return item data
     deactivate System
-    
+
     UI ->> System : edit_item(session , name , ... )
     activate System
     System ->> System : get_item_by_id(item_id)
-    
+
     System ->> System : Validate updated data
     alt Validation fails
         System -->> UI : return Exception
@@ -30,7 +37,7 @@ sequenceDiagram
             activate Item
             Item -->> System : Return edited item
             deactivate Item
-            
+
             System ->> System : Save updated item to database
             System -->> UI : return "Item updated successfully"
                 deactivate System
@@ -39,3 +46,4 @@ sequenceDiagram
         end
     end
     deactivate UI
+```
