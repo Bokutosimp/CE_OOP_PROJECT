@@ -13,7 +13,14 @@ def generate_cart_summary(items_in_cart):
                 Span(f'US ${delivery}'),
                 style=f"{'display:none;' if delivery == 0 else 'display:flex;'}width:100%; display:flex; flex-direction:row; justify-content:space-between; border-bottom:1px solid black; color:black; padding-bottom:10px;"),
              Div(Span("Subtotal"),Span(f"US ${sum_price(items_in_cart.get_list_item_in_cart) + delivery}"),style="width:100%; display:flex; flex-direction:row; justify-content:space-between; font-size:25px; color:black; "),
-             A(Button("Go to checkout"),href='/purchase'),
+             A(Button("Go to checkout", 
+                      style="""
+                    background-color: #3498DB; color: white; padding: 12px 20px; border-radius: 25px; 
+                    font-size: 16px; cursor: pointer; transition: all 0.3s; width: 100%;
+                """,
+                onmouseover="this.style.backgroundColor='#1E88E5'; this.style.transform='scale(1.05)';",
+                onmouseout="this.style.backgroundColor='#3498DB'; this.style.transform='scale(1)';") 
+                ,href='/purchase'),
              Span("Purchase protected by",A(" eBay Money Back Guarantee",href="#"),style="font-size:15px;"),)
 
 
