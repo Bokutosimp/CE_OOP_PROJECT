@@ -23,22 +23,30 @@ def bid_page(id, session):
                     Form(
                               Div(
                                  H2(bid_item.get_name, style="color:black; font-weight:1000; font-size:40px; text-align:left; margin-bottom: 15px;"),
-                                 style="border-bottom: 3px solid black; padding-bottom:10px; margin-bottom:15px;"),
+                                 style="border-bottom: 3px solid black; padding-bottom:10px; margin-bottom:5px;"),
                               
                               Div(
                                  P("Description:", style="color:black; font-size:24px; font-weight:bold;"),
                                  P(f"{bid_item.get_description}", style="color:black; font-size:20px;"),
-                                 style="width:100%; border-bottom: 3px solid black; padding-bottom:15px; margin-bottom:15px;"
+                                 style="width:100%; border-bottom: 3px solid black; padding-bottom:15px; margin-bottom:5px;"
                               ),
                               
                               Div(
                                  P(f"Status : {bid_item.get_status}", style="color:black; font-size:24px; font-weight:bold;"),
-                                 style="width:100%; text-align:left; margin-bottom:15px;"
+                                 style="width:100%; text-align:left; margin-bottom:5px;"
                               ),
                               
                               Div(
                                  P(f"Current bid price: ${bid_item.get_price}", style="color:black; font-size:24px; font-weight:bold;"),
-                                 style="width:100%; text-align:left; margin-bottom:25px;"
+                                 style="width:100%; text-align:left; margin-bottom:5px;"
+                              ),
+                              Div(
+                                 P(f"Start-time: ${bid_item.get_start_time}", style="color:black; font-size:24px; font-weight:bold;"),
+                                 style="width:100%; text-align:left; margin-bottom:5px;"
+                              ),
+                              Div(
+                                 P(f"End-time: ${bid_item.get_end_time}", style="color:black; font-size:24px; font-weight:bold;"),
+                                 style="width:100%; text-align:left;"
                               ),
                               
                               Div(

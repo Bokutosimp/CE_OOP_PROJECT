@@ -16,8 +16,9 @@ def profile_page(session):
         *[
             Div(
           Div(f'Total Price: {order.get_order.get_total_price}', style='color: black;'),
-      Div(f'Shipping Date: {order.get_shipping_status.get_shipping_date}', style='color: black;'),
-                     Div(f'Item Received Date: {order.get_shipping_status.get_get_item_date}', style='color: black;'),
+           Div(f'Total Price: {order.get_order.get_total_price}', style='color: black;'),
+          Div(f'Shipping Date: {order.get_shipping_status.get_shipping_date.strftime("%Y-%m-%d %H:%M:%S")}', style='color: black;'),
+            Div(f'Item Received Date: {order.get_shipping_status.get_get_item_date.strftime("%Y-%m-%d %H:%M:%S")}', style='color: black;'),
          Div(
                     *[
              Div(
