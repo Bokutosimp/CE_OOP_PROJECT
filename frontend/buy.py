@@ -52,16 +52,27 @@ def buy(session,item_id=None,amount=None):
                 ),
                 Div(style="border-bottom: 2px solid #333333; width: 100%; margin-top: 10px;"),
                 Div(
+                    Form(
                     Button(
                             "Confirm Purchases", 
-                            type="button", 
-                            onclick=f"""
-                                fetch('/purchase{'' if redirect_id == None else '/'+redirect_id+'/'+str(amount)}',{{method:"POST",body:'bla'}}).then(data =>{{alert('buy successfull'); window.location.href='/profile'}})""", 
+                            type="submit",
                             style="""background-color: #6fc276; color: white; padding: 12px 25px; border: none; border-radius: 25px; cursor: pointer; 
                                     width: auto; margin: 10px; font-size: 16px; transition: all 0.3s;""",
                             onmouseover="this.style.backgroundColor='#5ba563'; this.style.transform='scale(1.05)';",
                             onmouseout="this.style.backgroundColor='#6fc276'; this.style.transform='scale(1)';"
-                        )
+                        ),
+                        method='post',
+                        action=f'/purchase{'' if redirect_id == None else '/'+redirect_id+'/'+str(amount)}',
+                        style='display:inline-block;',
+                        onsubmit="""
+                                const selectedPayment = document.querySelector('input[name="payment"]:checked');
+
+                                if (!selectedPayment || selectedPayment.value !== 'E-bux') {
+                                    event.preventDefault(); 
+                                    alert("Please select E-bux as the payment method to proceed.");
+                                }
+                        """
+                    )
                         ,
                     Button(
                             "Buy with Code", 
@@ -119,13 +130,14 @@ def buy(session,item_id=None,amount=None):
         
         style="background-color: #eaf4f4ff; min-height: 100vh; margin: 0;",)
     except (Exception,ValueError,KeyError) as e:
-        return Script(f'alert("{str(e)}"); window.locatio.href="/"')
+        return Response(str(e),status_code=400)
 
 def buy_post(session,code_name:str):
     try:
         user_id = session['auth'][0]
         if main_system.buy_cart_check_stock(user_id) == 0:
             return Script("alert('please select atleast one item'); window.location.href='/cart'")
+        print('this is debuging in buy item in cart')
         main_system.buy_item_in_cart(user_id,code_name)
         user = main_system.get_user_by_id(user_id)
         print("#### printing user history #####")
@@ -139,10 +151,14 @@ def buy_one_item(session,item_id:str,amount:str,code_name:str):
     try:
         user_id = session['auth'][0]
         result = main_system.buy_item(user_id,item_id,int(amount),code_name)
+        print(f'result of buying {result}')
+        print(f'user ebux after buying {main_system.get_user_by_id(user_id).get_e_bux}')
+        if result:
+            raise Exception('testing')
         try:
             main_system.remove_from_cart(item_id,user_id)
         except:
             pass
         return Script("alert('buy successfull'); window.location.href='/profile'")
     except (Exception,ValueError,KeyError) as e:
-        return Script(f"alert('{str(e)}'); window.location.href='/purchase'")
+        return Script(f"alert('{str(e)}'); window.location.href='/item/{item_id}'")
