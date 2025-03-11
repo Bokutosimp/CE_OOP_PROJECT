@@ -71,7 +71,6 @@ class System:
          if str(item.get_id) == str(id) and isinstance(item, BidItem):
             print(item)
             return item
-
       raise Exception('bid item not found')
       
    def get_users(self,query:str = ''):
@@ -155,7 +154,7 @@ class System:
       except Exception as e:
          raise Exception((str(e)))
    
-   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner_id:str,start_time:str,end_time:str,status:str,top_bidder:str,description:str=''):
+   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner_id:str,start_time:str,end_time:str,status:str,top_bidder:Customer,description:str=''):
       try:
          if not self.__validate_name(name,self.__list_bid_items): raise Exception('Item already exist')
          current_user = self.get_user_by_id(owner_id)
@@ -570,13 +569,21 @@ def createInstance():
    start_bid_time = datetime.now()
    start_bid_time = start_bid_time.replace(microsecond=0)
    increase_time = 30  # Initial increment in minutes
+   user1 = main_system.get_user_by_id("cust001")
+   user2 = main_system.get_user_by_id("cust002")
+   co = 0
    for bid_item in bid_items:
+      if co % 2 != 1:
+         temp_user = user1
+      else:
+         temp_user = user2
       end_bid_time = start_bid_time + timedelta(seconds=increase_time)  
       main_system.create_bid_item(
          bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], 
          ['10'], bid_item['image'], 'sell001', start_bid_time, end_bid_time, 
-         bid_item['top_bidder'], bid_item['status']
+         temp_user, bid_item['status']
       )
+      co += 1
     # Update start time for the next bid
       increase_time += 30
       # main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', datetime.strptime(bid_item['start_time'], "%Y-%m-%d %H:%M:%S"), datetime.strptime(bid_item['end_time'], "%Y-%m-%d %H:%M:%S"), bid_item['status'], bid_item['top_bidder'])

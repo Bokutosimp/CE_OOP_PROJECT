@@ -2,27 +2,25 @@ from fasthtml.common import *
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from backend.system import main_system
 
+def auction_end():
+    return Div(
+                P("Auction Ended", style="color: red; font-size: 24px; font-weight: bold;"),
+                A(Button("Back", type='button', style="font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 25px; cursor: pointer;"),href="/"
+                )
+            )
+
 def bid_page(id, session):
     try:
         bid_item = main_system.get_bid_item_by_id(id)
         status = main_system.bid_status(bid_item)
         if status == "Sold":
-            return Div(
-                P("Auction Ended", style="color: red; font-size: 24px; font-weight: bold;"),
-                A(Button("Back", type='button', style="font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 25px; cursor: pointer;"),href="/"
-                )
-            )
+            return auction_end()
         if status == "Ended":
             main_system.end_bid(bid_item)
-            return Div(
-                P("Auction Ended", style="color: red; font-size: 24px; font-weight: bold;"),
-                A(Button("Back", type='button', style="font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 25px; cursor: pointer;"),href="/"
-                )
-            )
+            return auction_end()
         user_id = session['auth'][0]
         user = main_system.get_user_by_id(user_id)
         print(f"{bid_item.get_name}\n{bid_item.get_status}\n{bid_item.get_start_time}\n{bid_item.get_end_time}")
-        
         return Div(
     Meta(http_equiv="refresh", content="5"), 
     Div(
@@ -109,12 +107,18 @@ def bid_page(id, session):
         return Div(f"Item not found. Error: {e}", style="text-align:center; color:red; font-size:24px; font-weight:bold;")
 
 def submit_bid_page(bid_input: float, item_id: str, session):
-    bid_item = main_system.get_bid_item_by_id(item_id)
-    if bid_item.get_status != "Started":
-        main_system.end_bid(bid_item)
-        return Redirect(f"/bid/{item_id}")
+    item = main_system.get_bid_item_by_id(item_id)
     user_id = session['auth'][0]
     user = main_system.get_user_by_id(user_id)
-    print(f"Bid: {bid_input}, Item ID: {item_id}, User ID: {user_id}")
-    main_system.set_top_bidder(item_id, bid_input, user)
-    return Redirect(f"/bid/{item_id}")
+    
+    if item.get_status in ["Ended", "Sold"]:
+        return Script(f"alert(\"Bidding has ended\"); window.location.href='/bid/{item_id}'")
+    
+    if bid_input <= item.get_price:
+        return Script(f"alert(\"Bid must be higher than current price\"); window.location.href='/bid/{item_id}'")
+    
+    if user != item.top_bidder:
+        main_system.set_top_bidder(item_id, bid_input, user)
+        return Redirect(f"/bid/{item_id}")
+    else:
+        return Script(f"alert(\"You are already the highest bidder\"); window.location.href='/bid/{item_id}'")
