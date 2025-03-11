@@ -386,6 +386,8 @@ class Review:
       
    def __str__(self):
       return f"Score: {self.__score}\nComment: {self.__comment}\nReviewer: {self.__reviewer}"
+   @property
+   def get_score(self)-> int: return self.__score
       
 class Code :
    def __init__(self,ID:str,name:str):

@@ -5,3 +5,5 @@ class Review:
       self.__score = score
       self.__comment = comment
       self.__reviewer = reviewer
+   @property
+   def get_score(self)-> int: return self.__score
