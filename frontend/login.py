@@ -33,7 +33,7 @@ def login_form():
 def login_method(session,username:str,password:str):
    try:
       result = main_system.login(username,password)
-      session['auth'] = resulta
+      session['auth'] = result
       return Script(""" 
         alert('Login Successful');  
         window.location.href = '/';  
