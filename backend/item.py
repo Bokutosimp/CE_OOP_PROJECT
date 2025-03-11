@@ -350,11 +350,7 @@ class BidItem(Item):
    
    def add_history(self, user_id : str, bidAmount : float, bidTime : datetime):
       self.__bids_history.append(BiddingHistory(user_id, bidAmount, bidTime))
-
-   @property
-   def is_started(self):
-      return self.__status == "Started"
-   
+      
    @property
    def is_ended(self):
       return self.__status == "Ended"
