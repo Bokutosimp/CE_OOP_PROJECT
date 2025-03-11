@@ -9,15 +9,15 @@ def bid_page(id, session):
         if status == "Sold":
             return Div(
                 P("Auction Ended", style="color: red; font-size: 24px; font-weight: bold;"),
-                Button("Back", type='submit', style="font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 25px; cursor: pointer;"),
-                action="/", method="get"
+                A(Button("Back", type='button', style="font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 25px; cursor: pointer;"),href="/"
+                )
             )
         if status == "Ended":
             main_system.end_bid(bid_item)
             return Div(
                 P("Auction Ended", style="color: red; font-size: 24px; font-weight: bold;"),
-                Button("Back", type='submit', style="font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 25px; cursor: pointer;"),
-                action="/", method="get"
+                A(Button("Back", type='button', style="font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 25px; cursor: pointer;"),href="/"
+                )
             )
         user_id = session['auth'][0]
         user = main_system.get_user_by_id(user_id)

@@ -1,7 +1,7 @@
 from .category import Category
 from typing import Literal
 from datetime import datetime
-from .order import Order,OrderHistory
+from .order import Order,OrderHistory,ShippingStatus
 
 class Item:
    def __init__(self,id:str,name :str , price:float,amount:int, owner:object,image:str,category:list[Category],description:str):
@@ -180,6 +180,7 @@ class Customer(User):
       self.__e_bux = e_bux
       self.__cart = cart
       self.__order_history = []
+      self.__bid_history = []
       
    def __str__(self): return f"Role:customer Username:{self.get_username}"
    @property
@@ -190,12 +191,16 @@ class Customer(User):
    def get_cart(self) -> Cart: return self.__cart
    @property
    def get_order_history(self) -> list[OrderHistory]: return self.__order_history
+   @property
+   def get_bid_history(self): return self.__bid_history
    
    def add_history(self,order_history):
       not_selected_items = [item for item in self.__cart.get_list_item_in_cart if not item.get_is_selected]
-      print(f"not selected item is {not_selected_items}")
       self.__cart.set_list_item_in_cart = not_selected_items
       self.__order_history.append(order_history)
+      
+   def add_bid_history(self,item, ship_time, get_date):
+      self.__bid_history.append(BidHistory(item, ShippingStatus(ship_time, get_date)))
    
    def add_to_cart(self,item:Item,quantity:int):
       if quantity < 0: raise Exception('quantity can not be less than or equal to zero')
@@ -261,15 +266,6 @@ class Seller(Customer):
    @property
    def get_store_address(self) -> str:
       return self.__store_address 
-
-
-class BidHistory:
-    def __init__(self,item:Item):
-        self.__item = item
-        self.__status = None
-        
-    def set_status(self,status:str):
-        self.__status = status
 
 class BiddingHistory:
    def __init__(self, user: User, bidAmount : float, bidTime : datetime):
@@ -370,6 +366,20 @@ class BidItem(Item):
    def sold(self):
       self.__status = "Sold"
    
+class BidHistory:
+   def __init__(self,item:BidItem, shipping_status:ShippingStatus):
+      self.__item = item
+      self.__shipping_status = shipping_status
+        
+   def __str__(self):
+      return f"{self.__item.get_name}\n{self.__shipping_status}"
+        
+   @property
+   def get_shipping_status(self) -> ShippingStatus : return self.__shipping_status
+   @property
+   def get_order(self) -> Order: return self.__order
+   def set_status(self , status : ShippingStatus) :
+      self.__shipping_status = status
 
    # def edit_item(self, name:str , category:list[Category] ,desciption:str , price:float , img:str ) :
    #    self.__name = name 

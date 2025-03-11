@@ -313,16 +313,23 @@ class System:
             return 'Bid started'
          
    def end_bid(self, item: BidItem):
+      now = datetime.now()
       for temp in self.__list_items:
          if temp == item:
-               item.sold()
-               winner = temp.top_bidder
-               final_price = temp.get_price
-               print(f"Customer before: {winner.get_e_bux}")
-               winner.decrease_e_bux(final_price)
-               print(f"{winner.get_username} won the bid and {final_price} e-bux was deducted.")
-               print(f"Customer after: {winner.get_e_bux}")
-               return 'Bid ended'
+            item.sold()
+            winner = temp.top_bidder
+            winner.add_bid_history(temp, now, now+timedelta(minutes=1))
+            self.show_bid_history(winner)
+            final_price = temp.get_price
+            print(f"Customer before: {winner.get_e_bux}")
+            winner.decrease_e_bux(final_price)
+            print(f"{winner.get_username} won the bid and {final_price} e-bux was deducted.")
+            print(f"Customer after: {winner.get_e_bux}")
+            return 'Bid ended'
+         
+   def show_bid_history(self, user:Customer):
+      for item in user.get_bid_history:
+         print(item)
          
    def is_bid_item(self, item) -> bool:
        return isinstance(item, BidItem)
