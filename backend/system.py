@@ -411,6 +411,8 @@ class System:
          total_price = self.buy_cart_check_stock(user_id)
          if code != None and code != '':
             return self.buy_item_with_code(user_id,code,[item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected],total_price,shipping_date,get_item_date)
+         if user.get_e_bux > total_price:
+            raise Exception('insufficient fund')
          order = Order(10.0, total_price, [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
          shipping_status = ShippingStatus(shipping_date,get_item_date)
          user.add_history(OrderHistory(order,shipping_status))
@@ -426,6 +428,8 @@ class System:
          if code != None and code != '':
             return self.buy_item_with_code(user_id,code,[ItemInCart(item,amount,True)],total_price,shipping_date,get_item_date)
          user = self.get_user_by_id(user_id)
+         print(f'compare user ebux and input {user.get_e_bux} and {total_price}')
+         if user.get_e_bux < total_price: raise Exception('insufficient fund')
          order = Order(10.0, total_price,[ItemInCart(item,amount,True)])
          shipping_status = ShippingStatus(shipping_date,get_item_date)
          user.add_history(OrderHistory(order,shipping_status))
