@@ -69,7 +69,6 @@ def submit_product_page( product: Product, session):
         print(f"🏷️ Category: {product.category.split(',')}")    
         print(f"🖼️ Image: {product.image}")    
 
-        # บันทึกสินค้าที่เลือกหมวดหมู่
         result = main_system.save_item(user_id, product.name, product.price, product.amount, product.category.split(','), product.description , product.image)
         
         return Script(""" 
