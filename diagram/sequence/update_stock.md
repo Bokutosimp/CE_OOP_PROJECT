@@ -1,3 +1,11 @@
+    
+sequenceDiagram
+    actor Seller
+    participant UI
+    participant System
+    participant BidItem
+
+
     Seller ->> UI : update_stock(stock_product , session)
     activate UI
     UI ->> System : add_stock(user_id, item_id, amount)
@@ -20,7 +28,8 @@
             deactivate Item
             System -->> UI : return 'Success'
             UI -->> Seller : Show success message
+                deactivate System
+
         end
     end
-    deactivate System
     deactivate UI

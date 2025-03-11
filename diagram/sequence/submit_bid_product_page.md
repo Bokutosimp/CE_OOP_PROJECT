@@ -32,7 +32,11 @@
                 deactivate bidItem
                 System ->> System : list_item.append(Item)
                 System -->> UI : return 'Bid Item saved successfully'
+                 deactivate System
                 UI -->> Seller : Show success message
             end
         end
+        
     end
+    deactivate UI
+

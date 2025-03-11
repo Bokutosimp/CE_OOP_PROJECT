@@ -3,7 +3,6 @@ sequenceDiagram
     participant UI
     participant System
     participant Item
-    participant bidItem
 
      Seller ->> UI : submit_product_page (product , session)
     activate UI
@@ -31,10 +30,11 @@ sequenceDiagram
                 System ->> System : list_item.append(Item)
                 System -->> UI : return 'Item saved successfully'
                 UI -->> Seller : Show success message
+                deactivate System
             end
         end
     end
-    deactivate System
+
     deactivate UI
 
 
