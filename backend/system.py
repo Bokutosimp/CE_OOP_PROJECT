@@ -355,10 +355,19 @@ class System:
       except Exception as e:
          raise Exception(str(e))
    
-   def add_review(self,item_id:str,rating:int,review:str,user:User):
+   def is_already_review(self,user_id:str,item_id:str) -> bool:
+      user = self.get_user_by_id(user_id)
+      item = self.get_item_by_id(item_id)
+      for review in item.get_review:
+         if review.get_reviewer == user: return True
+      return False
+   
+   def add_review(self,item_id:str,rating:int,review:str,user_id:str):
       try:
+         user = self.get_user_by_id(user_id)
          if not isinstance(user,Customer): raise Exception('User is not a customer')
          item = self.get_item_by_id(item_id)
+         if self.is_already_review(user_id,item_id): raise Exception('user already reviewed')
          item.add_review(rating,review,user)
          item.show_review()
       except Exception as e:
@@ -559,10 +568,15 @@ def createInstance():
          print(f"item in order is {item.get_item.get_name}")
          
    print("######## add review to item #########")
-   print(f'{main_system.add_review('1',4,'very good',main_system.get_user_by_id('cust001'))}')
-   print(f'{main_system.add_review('1',5,'very good',main_system.get_user_by_id('cust002'))}')
+   print(f'{main_system.add_review('1',4,'very good','cust001')}')
+   print(f'{main_system.add_review('1',5,'very good','cust002')}')
    print(f'get list of review of item 1 {main_system.get_review('1')}')
    print(f'get average score of item 1: {main_system.get_average_score('1')}')
+   ##try comment with the same user
+   try:
+      main_system.add_review('1',4,'very bad','cust001')
+   except Exception as e:
+      print(str(e))
    
    return main_system
 
