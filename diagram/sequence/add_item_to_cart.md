@@ -1,3 +1,10 @@
+```mermaid
+---
+config:
+  theme: dark
+  look: classic
+---
+
 sequenceDiagram
 autonumber
 
@@ -65,3 +72,4 @@ autonumber
     System -->> UI : reponse message
     UI -->> Customer : response message
     deactivate UI
+```

@@ -1,10 +1,16 @@
+```mermaid
+---
+config:
+  theme: dark
+  look: classic
+---
 sequenceDiagram
     actor Seller
     participant UI
     participant System
     participant Discount
 
- 
+
      Seller ->> UI : submit_discount_page(discount_code, session)
     activate UI
 
@@ -21,9 +27,10 @@ sequenceDiagram
     else
         System ->> Discount : create_discount_code(ID, name, discount_percent, description)
         Discount -->> System : return discount code
-        System ->> System : append discount to list 
-        System -->> UI : return success message 
+        System ->> System : append discount to list
+        System -->> UI : return success message
         deactivate System
         UI -->> Seller : return "Discount code saved successfully"
         deactivate UI
     end
+```

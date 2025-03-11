@@ -1,3 +1,10 @@
+```mermaid
+---
+config:
+  theme: dark
+  look: classic
+---
+
 sequenceDiagram
 actor Visitor
 participant UI
@@ -28,3 +35,4 @@ participant Customer
     deactivate System
     UI -->> Visitor: reponse message
     deactivate UI
+```
