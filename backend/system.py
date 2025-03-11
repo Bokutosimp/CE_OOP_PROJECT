@@ -288,6 +288,11 @@ class System:
       except ValueError as e:
          raise ValueError(str(e))
 
+   def bid_status(self, bid_item):
+      for item in self.__list_items:
+         if item == bid_item:
+            return item.get_status
+   
    def get_top_bidder(self, item_id:str):
       for item in self.__list_items:
          if item.get_id == item_id:
@@ -308,11 +313,24 @@ class System:
             item.start_bid()
             return 'Bid started'
          
-   def end_bid(self, item_id:str):
-      for item in self.__list_items:
-         if item.get_id == item_id:
-            item.end_bid()
+   def end_bid(self, item: BidItem):
+      now = datetime.now()
+      for temp in self.__list_items:
+         if temp == item:
+            item.sold()
+            winner = temp.top_bidder
+            winner.add_bid_history(temp, now, now+timedelta(minutes=1))
+            self.show_bid_history(winner)
+            final_price = temp.get_price
+            print(f"Customer before: {winner.get_e_bux}")
+            winner.decrease_e_bux(final_price)
+            print(f"{winner.get_username} won the bid and {final_price} e-bux was deducted.")
+            print(f"Customer after: {winner.get_e_bux}")
             return 'Bid ended'
+         
+   def show_bid_history(self, user:Customer):
+      for item in user.get_bid_history:
+         print(item)
          
    def is_bid_item(self, item) -> bool:
        return isinstance(item, BidItem)
@@ -461,6 +479,11 @@ class System:
             history_list.append(his) 
       return history_list
    
+   def get_history_bids(self,user_id:str):
+      user = self.get_user_by_id(user_id)
+      history = user.get_bid_history
+      return history
+   
 def createInstance():
    from .mock.items import items , items_2
    from .mock.bid_items import bid_items
@@ -518,8 +541,8 @@ def createInstance():
    #create bid item
    print("---############ bid item #############---")
    start_bid_time = datetime.now()
-   # start_bid_time = start_bid_time.replace(seconds=30)
-   increase_time = 10  # Initial increment in minutes
+   start_bid_time = start_bid_time.replace(microsecond=0)
+   increase_time = 30  # Initial increment in minutes
    for bid_item in bid_items:
       end_bid_time = start_bid_time + timedelta(seconds=increase_time)  
       main_system.create_bid_item(
@@ -528,7 +551,7 @@ def createInstance():
          bid_item['top_bidder'], bid_item['status']
       )
     # Update start time for the next bid
-      increase_time += 5
+      increase_time += 30
       # main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', datetime.strptime(bid_item['start_time'], "%Y-%m-%d %H:%M:%S"), datetime.strptime(bid_item['end_time'], "%Y-%m-%d %H:%M:%S"), bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_items()
    for item in bid_items_instance:

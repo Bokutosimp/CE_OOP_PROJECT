@@ -5,9 +5,23 @@ from backend.system import main_system
 def bid_page(id, session):
     try:
         bid_item = main_system.get_bid_item_by_id(id)
+        status = main_system.bid_status(bid_item)
+        if status == "Sold":
+            return Div(
+                P("Auction Ended", style="color: red; font-size: 24px; font-weight: bold;"),
+                A(Button("Back", type='button', style="font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 25px; cursor: pointer;"),href="/"
+                )
+            )
+        if status == "Ended":
+            main_system.end_bid(bid_item)
+            return Div(
+                P("Auction Ended", style="color: red; font-size: 24px; font-weight: bold;"),
+                A(Button("Back", type='button', style="font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 25px; cursor: pointer;"),href="/"
+                )
+            )
         user_id = session['auth'][0]
         user = main_system.get_user_by_id(user_id)
-        print(bid_item)
+        print(f"{bid_item.get_name}\n{bid_item.get_status}\n{bid_item.get_start_time}\n{bid_item.get_end_time}")
         
         return Div(
             Meta(http_equiv="refresh", content="5"), 
@@ -102,6 +116,7 @@ def bid_page(id, session):
 def submit_bid_page(bid_input: float, item_id: str, session):
     bid_item = main_system.get_bid_item_by_id(item_id)
     if bid_item.get_status != "Started":
+        main_system.end_bid(bid_item)
         return Redirect(f"/bid/{item_id}")
     user_id = session['auth'][0]
     user = main_system.get_user_by_id(user_id)

@@ -60,4 +60,4 @@ class OrderHistory :
     def get_order(self) -> Order: return self.__order
     def set_status(self , status : ShippingStatus) :
         self.__shipping_status = status
-    
+        
