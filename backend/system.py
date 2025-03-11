@@ -448,7 +448,7 @@ class System:
         raise Exception(str(e))
    
    #buy item in cart
-   def buy_item_in_cart(self,user_id:str,code:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(minutes=5)):
+   def buy_item_in_cart(self,user_id:str,code:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(minutes=1)):
       try:
          user = self.get_user_by_id(user_id)  # Assign user variable here
          total_price = self.buy_cart_check_stock(user_id)
@@ -607,6 +607,10 @@ def createInstance():
          
    print("######## add review to item #########")
    main_system.buy_item('cust001','101',2,shipping_date=now-timedelta(minutes=5),get_item_date=now-timedelta(minutes=4))
+   main_system.buy_item('cust002','101',2,shipping_date=now-timedelta(minutes=5),get_item_date=now-timedelta(minutes=4))
+   main_system.add_review('101',5,'very good','cust002')
+   main_system.buy_item('cust003','101',2,shipping_date=now-timedelta(minutes=5),get_item_date=now-timedelta(minutes=4))
+   main_system.add_review('101',5,'very good','cust003')
    print(f'{main_system.add_review('101',4,'very good','cust001')}')
    ## try reviewing item but user not buy it yet
    try:
@@ -615,9 +619,9 @@ def createInstance():
       print(str(e))
    print(f'get list of review of item 1 {main_system.get_review('1')}')
    print(f'get average score of item 1: {main_system.get_average_score('1')}')
-   ##try comment with the same user
+   ##try comment with the same user##
    try:
-      main_system.add_review('1',4,'very bad','cust001')
+      main_system.add_review('101',4,'very bad','cust001')
    except Exception as e:
       print(str(e))
    
