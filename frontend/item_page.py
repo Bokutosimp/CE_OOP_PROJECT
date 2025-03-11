@@ -5,8 +5,10 @@ from backend.system import main_system
 def item_page(id):
     try:
         item = main_system.get_item_by_id(id)
-
-        render_review = reviews_section = (
+        amount = item.get_amount
+        disable = False
+        if amount < 1: disable = True
+        reviews_section = (
             Div(
                 H4("Reviews from Other Users", style="color:#3498DB; text-align:center; margin-bottom:10px;"),
                 P(f'Average Score: {round(main_system.get_average_score(item.get_id),2)}', 
@@ -56,7 +58,7 @@ def item_page(id):
 
                     Div(
                         Span('Quantity:', style="color:#3498DB; font-size:15px;"),
-                        Input(type='number', value=1, min=1, max=item.get_amount, id='amount',
+                        Input(type='number', value=1, min=1, max=amount, id='amount',disabled='true'if disable else None,
                               style="width:70px; padding:5px; text-align:center; border:1px solid #ccc; border-radius:5px;"),
                         style="display:flex; flex-direction:row; gap:10px; width:100%; align-items:center; margin-bottom:10px;"
                     ),
@@ -68,7 +70,8 @@ def item_page(id):
                                     event.preventDefault();
                                     const input = document.getElementById("amount");
                                     window.location.href=`/purchase/{item.get_id}/${{input.value}}`;
-                               """
+                               """,
+                               disabled='true'if disable else None
                         ),
                         href='#',
                         style="width:100%; text-decoration:none;"
@@ -76,8 +79,10 @@ def item_page(id):
 
                     Button('Add to Cart',
                            style="width:100%; padding:12px; border-radius:50px; background-color:#21618C; color:white; border:none; font-size:16px; cursor:pointer;",
-                           type='submit'
+                           type='submit',
+                           disabled='true'if disable else None
                     ),
+                    Span('item out of stock',style='color:red;') if disable else None,
 
                     method='post',
                     action=f'/cart/{item.get_id}',
