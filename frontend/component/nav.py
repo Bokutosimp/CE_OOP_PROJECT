@@ -21,6 +21,7 @@ def nav(session):
                     Div(A('logout', href='/logout', style="color: #e74c3c; text-decoration: none; font-weight: bold;"),
                         A('Product Management', href=f'/seller', style="color: #2ecc71; text-decoration: none; font-weight: bold;") if session['auth'][1] == 'Seller' else None,
                         A('History', href=f'/history', style="color: #2ecc71; text-decoration: none; font-weight: bold;"),
+                        A('BID History', href=f'/bid_history', style="color: #2ecc71; text-decoration: none; font-weight: bold;",cls='verticle_nav'),
                         style="display: flex; gap: 20px; align-items: center;"),
                     A('Admin Panel', href='/admin', style="color: #3498db; text-decoration: none; font-weight: bold;"),
                     style='height: 25px; display: flex; justify-content: space-between; padding: 0 40px; align-items: center;'
@@ -31,6 +32,7 @@ def nav(session):
                     Div(A('logout', href='/logout', style="color: #e74c3c; text-decoration: none; font-weight: bold;"),
                         A('Product Management', href=f'/seller', cls='verticle_nav', style="color: #2ecc71; text-decoration: none; font-weight: bold;") if session['auth'][1] == 'Seller' else None,
                         A('History', href=f'/history', cls='verticle_nav', style="color: #2ecc71; text-decoration: none; font-weight: bold;"),
+                        A('BID History', href=f'/bid_history', style="color: #2ecc71; text-decoration: none; font-weight: bold;",cls='verticle_nav'),
                         A('Profile', Svg(Path(d='M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0'),
                             Path(fill_rule='evenodd',d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1'),
                             xmlns="http://www.w3.org/2000/svg", width="16", height="16", fill="currentColor", cls="bi bi-person-circle", viewBox="0 0 16 16"), href='/profile', style="color: #3498db; text-decoration: none; font-weight: bold;"),
