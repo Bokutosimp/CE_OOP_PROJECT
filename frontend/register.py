@@ -8,23 +8,50 @@ from backend.system import main_system
 
 def register_form():
    return Div(
-      Form(
-         Input(type='text',id='name',placeholder='Full Name',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
-         Input(type='email',id='email',placeholder='Email',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
-         Input(type='text',id='phone_number',placeholder='Phone Number',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
-         Input(type='text',id='username',placeholder='Username',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
-         Input(type='password',id='password',placeholder='Password',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
-         Input(type='date',id='birth_date',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
-         Input(type='text',id='address',placeholder='Address',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
-         Select(Option('Select Gender',value=''),Option('Female',value='F'),Option('Male',value='M'),id='gender',required='true',style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #ccc; border-bottom-width: 2px; transition: all 0.3s ease;'),
-         Button('Register',type='submit',style='height: 45px; width: 100%; border-radius: 5px; border: none; background: lightblue; color: #000; font-size: 18px; font-weight: 500; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease, transform 0.2s ease-in-out;', onmouseover="this.style.transform='scale(1.05)';", onmouseout="this.style.transform='scale(1)';"),
-         Span('Already have an account? ',A('Log in',style='text-decoration:underline;',href='/login')),
-         method='POST',
-         action='/register',
-         style='display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; gap:10px; background-color: #fff; max-width: 700px; width: 100%; border-radius: 5px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);'
-      ),
-      style='display:flex; justify-content:center; align-items:center; height:100vh;'
-   )
+    Form(
+        Input(type='text', id='name', placeholder='Full Name', required=True, 
+              style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #3498DB; transition: all 0.3s ease;'),
+
+        Input(type='email', id='email', placeholder='Email', required=True, 
+              style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #3498DB; transition: all 0.3s ease;'),
+
+        Input(type='text', id='phone_number', placeholder='Phone Number', required=True, 
+              style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #3498DB; transition: all 0.3s ease;'),
+
+        Input(type='text', id='username', placeholder='Username', required=True, 
+              style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #3498DB; transition: all 0.3s ease;'),
+
+        Input(type='password', id='password', placeholder='Password', required=True, 
+              style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #3498DB; transition: all 0.3s ease;'),
+
+        Input(type='date', id='birth_date', required=True, 
+              style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #3498DB; transition: all 0.3s ease;'),
+
+        Input(type='text', id='address', placeholder='Address', required=True, 
+              style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #3498DB; transition: all 0.3s ease;'),
+
+        Select(
+            Option('Select Gender', value=''),
+            Option('Female', value='F'),
+            Option('Male', value='M'),
+            id='gender', required=True, 
+            style='height: 45px; width: 100%; outline: none; font-size: 16px; border-radius: 5px; padding-left: 15px; border: 1px solid #3498DB; transition: all 0.3s ease;'
+        ),
+
+        Button('Register', type='submit', 
+               style='height: 45px; width: 100%; border-radius: 5px; border: none; background: #3498DB; color: white; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.3s ease, transform 0.2s ease-in-out;', 
+               onmouseover="this.style.backgroundColor='#1E88E5'; this.style.transform='scale(1.05)';", 
+               onmouseout="this.style.backgroundColor='#3498DB'; this.style.transform='scale(1)';"),
+
+        Span('Already have an account? ', A('Log in', style='text-decoration:underline; color: #3498DB;', href='/login')),
+
+        method='POST',
+        action='/register',
+        style='display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; gap:10px; background-color: #fff; max-width: 700px; width: 100%; border-radius: 5px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);'
+    ),
+    style='display:flex; justify-content:center; align-items:center; height:100vh; background-color: #D6EAF8;'
+)
+
 
 def register_post(name:str,email:str,phone_number:str,username:str,password:str,birth_date:str,gender:Literal['M','F'],address,session):
    try:

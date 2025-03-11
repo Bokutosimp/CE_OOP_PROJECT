@@ -24,109 +24,106 @@ def buy(session,item_id=None,amount=None):
         grand_total = total_amount + shipping_amount
         
         return Body(
+    Card(
+        H4(Label("Buy with E-bux only for now!", style="color: white; text-align: left;"), 
+            style="background-color: #3498DB; padding: 20px; border-radius: 10px; height: 20%;"),
+        style="background-color: #D6EAF8; margin: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"
+    ),
+    
+    Div(
+        Div(
+            H2("Pay with", style="color: #333333; font-size: 24px; font-weight: bold;"),
+            Div(
+                Label(Input(type="radio", name="payment", value="E-bux"), "E-bux", style="color: #333; margin-right: 15px;"),
+                Label(Input(type="radio", name="payment", value="NULL"), "NULL", style="color: #333; margin-right: 15px;"),
+                Label(Input(type="radio", name="payment", value="null"), "null", style="color: #333;"),
+                style="text-align: left; margin-bottom: 20px;",
+            ),
+            style="background-color: #ffffff; flex: 1; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"
+        ),
+
         Card(
-            H4(Label("Buy with E-bux only for now!", style="color: #ffffff; text-align: left;"), 
-                style="background-color: #6a5acd; padding: 20px; border-radius: 10px; height: 20%;"),
-            style="background-color: #eae4f1ff; margin: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"
-        ),
-        
-        Div(
             Div(
-                H2("Pay with", style="color: #333333; font-size: 24px; font-weight: bold;"),
-                Div(
-                    Label(Input(type="radio", name="payment", value="E-bux"), "E-bux", style="color: #333; margin-right: 15px;"),
-                    Label(Input(type="radio", name="payment", value="NULL"), "NULL", style="color: #333; margin-right: 15px;"),
-                    Label(Input(type="radio", name="payment", value="null"), "null", style="color: #333;"),
-                    style="text-align: left; margin-bottom: 20px;",
-                ),
-                style="background-color: #ffffff; flex: 1; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"
+                H2("Order Summary", style="color: #333333; font-size: 22px;"),
+                Label(f"Total: {round(total_amount,2)} E", style="color: #333333; font-size: 18px;"),
+                Label(f"Shipping: {shipping_amount} E", style="color: #333333; font-size: 18px;"),
+                Label(B(f"Grand Total: {grand_total} E"), style="color: #333333; font-size: 20px; font-weight: bold;"),
+                style="text-align: left;",
             ),
-
-            Card(
-                Div(
-                    H2("Order Summary", style="color: #333333; font-size: 22px;"),
-                    Label(f"Total: {round(total_amount,2)} E", style="color: #333333; font-size: 18px;"),
-                    Label(f"Shipping: {shipping_amount} E", style="color: #333333; font-size: 18px;"),
-                    Label(B(f"Grand Total: {grand_total} E"), style="color: #333333; font-size: 20px; font-weight: bold;"),
-                    style="text-align: left;",
-                ),
-                Div(style="border-bottom: 2px solid #333333; width: 100%; margin-top: 10px;"),
-                Div(
-                    Form(
-                    Button(
-                            "Confirm Purchases", 
-                            type="submit",
-                            style="""background-color: #6fc276; color: white; padding: 12px 25px; border: none; border-radius: 25px; cursor: pointer; 
-                                    width: auto; margin: 10px; font-size: 16px; transition: all 0.3s;""",
-                            onmouseover="this.style.backgroundColor='#5ba563'; this.style.transform='scale(1.05)';",
-                            onmouseout="this.style.backgroundColor='#6fc276'; this.style.transform='scale(1)';"
-                        ),
-                        method='post',
-                        action=f'/purchase{'' if redirect_id == None else '/'+redirect_id+'/'+str(amount)}',
-                        style='display:inline-block;',
-                        onsubmit="""
-                                const selectedPayment = document.querySelector('input[name="payment"]:checked');
-
-                                if (!selectedPayment || selectedPayment.value !== 'E-bux') {
-                                    event.preventDefault(); 
-                                    alert("Please select E-bux as the payment method to proceed.");
-                                }
-                        """
-                    )
-                        ,
-                    Button(
-                            "Buy with Code", 
-                            type="button", 
-                            onclick="""openDialog()""", 
-                            style="""background-color: #ff872b; color: white; padding: 12px 25px; border: none; border-radius: 25px; cursor: pointer; 
-                                    width: auto; font-size: 16px; transition: all 0.3s;""",
-                            onmouseover="this.style.backgroundColor='#e37622'; this.style.transform='scale(1.05)';",
-                            onmouseout="this.style.backgroundColor='#ff872b'; this.style.transform='scale(1)';"
-                        ),
-
-                ),
-                style="background-color: #ffffff; flex: 1; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 30px;",
-            ),
-            style="display: flex; justify-content: space-between; gap: 30px; background-color: #eae4f1ff; min-height: 100vh; padding: 40px;",
-        ),
-
-        Div(
+            Div(style="border-bottom: 2px solid #85C1E9; width: 100%; margin-top: 10px;"),
             Div(
-                H2("Enter Code or Coupon", style="color: #333333; font-size: 24px; font-weight: bold;"),
                 Form(
-                    Input(type="text", id="coupon", placeholder="Enter code or coupon here!", 
-                        style="padding: 15px; border-radius: 10px; border: 1px solid #ccc; width: 100%; font-size: 16px; margin-bottom: 20px;"),
-                    Div(
-                        Button("Submit", type="submit", 
-                            style="background-color: #28a745; color: white; padding: 12px 25px; border: none; border-radius: 25px; cursor: pointer; width: 100%; font-size: 18px;"),
-                        Button("Cancel", type="button", onclick="closeDialog()", 
-                            style="background-color: #C30F16; color: white; padding: 12px 25px; border: none; border-radius: 25px; cursor: pointer; width: 100%; font-size: 18px; margin-top: 10px;"),
-                        style="display: flex; gap: 15px; margin-top: 20px;",
+                    Button(
+                        "Confirm Purchase", 
+                        type="submit",
+                        style="""background-color: #3498DB; color: white; padding: 12px 25px; border: none; border-radius: 25px; 
+                                 cursor: pointer; width: auto; margin: 10px; font-size: 16px; transition: all 0.3s;""",
+                        onmouseover="this.style.backgroundColor='#1E88E5'; this.style.transform='scale(1.05)';",
+                        onmouseout="this.style.backgroundColor='#3498DB'; this.style.transform='scale(1)';"
                     ),
-                    method="post",
-                    action=f"/purchase{'' if redirect_id == None else '/'+redirect_id+'/'+str(amount)}"
+                    method='post',
+                    action=f'/purchase{"" if redirect_id == None else "/"+redirect_id+"/"+str(amount)}',
+                    style='display:inline-block;',
+                    onsubmit="""
+                        const selectedPayment = document.querySelector('input[name="payment"]:checked');
+                        if (!selectedPayment || selectedPayment.value !== 'E-bux') {
+                            event.preventDefault(); 
+                            alert("Please select E-bux as the payment method to proceed.");
+                        }
+                    """
                 ),
-                style="background-color: #ffffff; padding: 30px; border-radius: 12px; width: 600px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);",
+                Button(
+                    "Buy with Code", 
+                    type="button", 
+                    onclick="openDialog()", 
+                    style="""background-color: #FF9800; color: white; padding: 12px 25px; border: none; border-radius: 25px; 
+                             cursor: pointer; width: auto; font-size: 16px; transition: all 0.3s;""",
+                    onmouseover="this.style.backgroundColor='#F57C00'; this.style.transform='scale(1.05)';",
+                    onmouseout="this.style.backgroundColor='#FF9800'; this.style.transform='scale(1)';"
+                ),
             ),
-            id="dialog",
-            style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 100%; justify-content: center; align-items: center;",
+            style="background-color: #ffffff; flex: 1; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 30px;",
         ),
+        style="display: flex; justify-content: space-between; gap: 30px; background-color: #D6EAF8; min-height: 100vh; padding: 40px;",
+    ),
 
-        Script(
-            """
-            function openDialog() {
-                const selectedPayment = document.querySelector('input[name="payment"]:checked');
-                if (selectedPayment && selectedPayment.value === 'E-bux') {
-                    document.getElementById('dialog').style.display = 'flex';
-                } else {
-                    alert('Please select E-bux as the payment method to proceed.');
-                }
-            }
-            function closeDialog() {
-                document.getElementById('dialog').style.display = 'none';
-            }
-            """
+    Div(
+        Div(
+            H2("Enter Code or Coupon", style="color: #333333; font-size: 24px; font-weight: bold;"),
+            Form(
+                Input(type="text", id="coupon", placeholder="Enter code or coupon here!", 
+                    style="padding: 15px; border-radius: 10px; border: 1px solid #ccc; width: 100%; font-size: 16px; margin-bottom: 20px;"),
+                Div(
+                    Button("Submit", type="submit", 
+                        style="background-color: #28a745; color: white; padding: 12px 25px; border: none; border-radius: 25px; cursor: pointer; width: 100%; font-size: 18px;"),
+                    Button("Cancel", type="button", onclick="closeDialog()", 
+                        style="background-color: #C30F16; color: white; padding: 12px 25px; border: none; border-radius: 25px; cursor: pointer; width: 100%; font-size: 18px; margin-top: 10px;"),
+                    style="display: flex; gap: 15px; margin-top: 20px;",
+                ),
+                method="post",
+                action=f"/purchase{'' if redirect_id == None else '/'+redirect_id+'/'+str(amount)}"
+            ),
+            style="background-color: #ffffff; padding: 30px; border-radius: 12px; width: 600px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);",
         ),
+        id="dialog",
+        style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 100%; justify-content: center; align-items: center;",
+    ),
+
+    Script(
+        """
+        function openDialog() {
+            const selectedPayment = document.querySelector('input[name="payment"]:checked');
+            if (selectedPayment && selectedPayment.value === 'E-bux') {
+                document.getElementById('dialog').style.display = 'flex';
+            } else {
+                alert('Please select E-bux as the payment method to proceed.');
+            }
+        }
+        function closeDialog() {
+            document.getElementById('dialog').style.display = 'none';
+        }
+        """
+    ),
         
         style="background-color: #eaf4f4ff; min-height: 100vh; margin: 0;",)
     except (Exception,ValueError,KeyError) as e:
