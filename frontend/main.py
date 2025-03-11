@@ -5,7 +5,7 @@ import dotenv
 #import page
 from layout import layout
 from cart import *
-from main_page import main_page
+from main_page import *
 from stylesheet import stylesheet
 from seller import *
 from add_product import *
@@ -51,6 +51,7 @@ def logout(session):
 @rt('/')
 def get(session):
     return (layout(main_page(),session))
+
 
 @rt('/login')
 @redirect_path
