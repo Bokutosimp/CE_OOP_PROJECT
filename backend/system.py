@@ -393,33 +393,29 @@ class System:
    
    def is_already_review(self,user_id:str,item_id:str) -> bool:
       try:
-         user = self.get_user_by_id(user_id)
          item = self.get_item_by_id(item_id)
-         for review in item.get_review:
-            if review.get_reviewer == user: return True
-         return False
+         user:Customer = self.get_user_by_id(user_id)
+         return user.is_already_review(item)
       except Exception as e:
          raise Exception(str(e))
+      except:
+         raise Exception('user in not customer')
    
    def is_buy_item(self,user_id:str,item_id:str) -> bool:
       try:
-         user = self.get_user_by_id(user_id)
+         user:Customer = self.get_user_by_id(user_id)
          item = self.get_item_by_id(item_id)
-         for history in user.get_order_history:
-            for item_usr in history.get_order.get_list_item_select:
-               if item_usr.get_item == item: return True
-         return False
+         return user.is_buy_item(item)
       except Exception as e:
          raise Exception(str(e))
+      except:
+         raise Exception('user in  not costumer')
       
    def add_review(self,item_id:str,rating:int,review:str,user_id:str):
       try:
-         user = self.get_user_by_id(user_id)
-         if not isinstance(user,Customer): raise Exception('User is not a customer')
+         user:Customer = self.get_user_by_id(user_id)
          item = self.get_item_by_id(item_id)
-         if self.is_already_review(user_id,item_id): raise Exception('user already reviewed')
-         if not self.is_buy_item(user_id,item_id): raise Exception('User not buy this item yet')
-         item.add_review(rating,review,user)
+         user.add_review(item,review,rating)
          item.show_review()
       except Exception as e:
          raise Exception(str(e))

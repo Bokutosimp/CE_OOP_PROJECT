@@ -251,8 +251,22 @@ class Customer(User):
         if amount > self.__e_bux:
             raise Exception("Insufficient e-bux")
         self.__e_bux -= amount
-      
    
+   def is_already_review(self,item:Item):
+         for review in item.get_review:
+            if review.get_reviewer == self: return True
+         return False
+   
+   def is_buy_item(self,item:Item):
+         for history in self.get_order_history:
+            for item_usr in history.get_order.get_list_item_select:
+               if item_usr.get_item == item: return True
+         return False
+      
+   def add_review(self,item:Item,review:str,rating:int):
+         if self.is_already_review(item): raise Exception('user already reviewed')
+         if not self.is_buy_item(item): raise Exception('User not buy this item yet')
+         item.add_review(rating,review,self)
    # def SeaTung(self,amount):
    #    if amount > self.__e_bux :
    #       return "Nah bro, you're broke af"
