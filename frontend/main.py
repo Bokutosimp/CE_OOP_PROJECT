@@ -197,7 +197,7 @@ def get(session):
 @rt('/admin/create_category')
 @auth(['Admin'])
 def post(session,category_name:str,category_description:str):
-    return post_create_category(category_name,category_description)
+    return post_create_category(category_name,category_description,session)
 
 @rt('/admin')
 @auth(['Admin'])

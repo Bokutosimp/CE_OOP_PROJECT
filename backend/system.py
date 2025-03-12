@@ -105,10 +105,16 @@ class System:
       raise Exception('user not found')
    
    #function to create instace
-   def create_category(self, id:str,name:str, description:str):
-      if not self.__validate_name(name,self.__list_categories): raise Exception('Name already exist')
-      self.__list_categories.append(Category(id,name,description))
-      return 'Category created'
+   def create_category(self, id:str,name:str, description:str,admin_id:str):
+      try:
+         if not self.__validate_name(name,self.__list_categories): raise Exception('Name already exist')
+         admin = self.get_user_by_id(admin_id)
+         self.__list_categories.append(admin.create_category(id,name,description))
+         return 'Category created'
+      except Exception as e:
+         raise Exception(str(e))
+      except:
+         raise Exception('user not admin')
    
    def create_admin(self,name, user_id, email, phone_number, username, password, birth_date, gender):
       if not self.__validate_name(username,self.__list_users): raise Exception('Name already exist') 
@@ -538,11 +544,8 @@ def createInstance():
    from .mock.users import users
    from .mock.discount_codes import discount_codes
    main_system = System()
-   #create category
-   [main_system.create_category(category['id'],category['name'],category['description']) for category in categories]
-   categories_instane = main_system.get_categories()
-   # [print(category) for category in categories_instane]
    #create user
+   print("----##### create user #####----")
    for user in users:
       if user['role'] == 'admin':
          main_system.create_admin(user['name'],user['user_id'],user['email'],user['phone_number'],user['username'],user['password'],user['birth_date'],user['gender'])
@@ -550,7 +553,11 @@ def createInstance():
          main_system.create_customer(user['name'],user['user_id'],user['email'],user['phone_number'],user['username'],user['password'],user['birth_date'],user['gender'],user['address'],user['e_bux'])
          if user['role'] == 'seller':
             main_system.create_seller(main_system.get_user_by_id(user['user_id']),user['store_name'],user['store_address'])
-   [print(user) for user in main_system.get_users()]
+   for user in main_system.get_users(): print(user)
+   #create category
+   print("----##### create categories #####----")
+   [main_system.create_category(category['id'],category['name'],category['description'],'admin001') for category in categories]
+   for cat in main_system.get_categories(): print(cat)
    #create item
    print("---############### create item ############---")
    for item in items:
