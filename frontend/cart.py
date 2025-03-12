@@ -7,7 +7,7 @@ def sum_price(items_in_cart):
 
 def generate_cart_summary(items_in_cart):
     delivery = 10
-    return (Div(Span(f"Items ({len(items_in_cart.get_list_item_in_cart)})"),Span(f'US ${sum_price(items_in_cart.get_list_item_in_cart)}'),style="width:100%; display:flex; flex-direction:row; justify-content:space-between; color:black;"),
+    return (Div(Span(f"Items ({len([item for item in items_in_cart.get_list_item_in_cart if item.get_is_selected])})"),Span(f'US ${sum_price(items_in_cart.get_list_item_in_cart)}'),style="width:100%; display:flex; flex-direction:row; justify-content:space-between; color:black;"),
              Div(
                 Span('Shipping to ?'),
                 Span(f'US ${delivery}'),
@@ -90,7 +90,7 @@ def cart(session):
         # Cart Summary
         Div(
             Div(
-                Span(f"Items ({len(items_in_cart.get_list_item_in_cart)})"),
+                Span(f"Items ({len([item for item in items_in_cart.get_list_item_in_cart if item.get_is_selected])})"),
                 Span(f'US ${sum_price(items_in_cart.get_list_item_in_cart)}'),
                 style="width:100%; display:flex; flex-direction:row; justify-content:space-between; color:#1C1C1C;"
             ),
@@ -125,7 +125,7 @@ def cart(session):
 )
 
    except Exception as e:
-      return Script(f"alert('{str(e)}'); window.location.href='/'")
+      return Script(f"""alert("{str(e)}"); window.location.href='/'""")
    
 def add_to_cart(id:str,amount:str,session):
    try:
