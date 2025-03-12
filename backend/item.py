@@ -477,6 +477,9 @@ class Discount(Code):
       self.__percentage = percentage
       self.__owner = owner
    
+   def __str__(self):
+      return f's{self.__name}'
+   
    @property   
    def get_discount(self):
          return self.__percentage

@@ -133,7 +133,6 @@ def add_to_cart(id:str,amount:str,session):
       if not result['success']: raise Exception(result['error'])
       return Script(f'window.location.href = "/cart";alert("cart has been updated");')
    except Exception as e:
-      print(str(e))
       return Script(f'window.location.href = "/cart";alert("/item/{id}?error={str(e)}");')
 
 def remove_from_cart(item_id:str,session):

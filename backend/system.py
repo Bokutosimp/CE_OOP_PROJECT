@@ -1,8 +1,8 @@
 from .category import Category
 from datetime import datetime
-from .order import Order,ShippingStatus,OrderHistory
+from .order import OrderHistory
 from datetime import datetime,timedelta
-from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review , Discount , FreeDelivery,ItemInCart
+from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Discount,ItemInCart
 import uuid
 
 class System:
@@ -144,7 +144,6 @@ class System:
       return 'Code created'
    def apply_code(self, code: str):
       for Dcode in self.__list_codes:
-         print(f"Checking code: {Dcode.get_name} against provided code: {code}")
          if Dcode.get_name == code:
             discount = Dcode.get_discount / 100
             return discount
@@ -159,8 +158,6 @@ class System:
          category_list:list[Category] = []
          for cat_id in category_id:
             for category in self.__list_categories:
-
-               print(f"{category.get_id} and {cat_id}" , str(category.get_id) == str(cat_id))
                if str(category.get_id) == str(cat_id):
                   category_list.append(category)
          
@@ -178,7 +175,6 @@ class System:
          category_list:list[Category] = []
          for cat_id in category_id:
             for category in self.__list_categories:
-               print(f"{category.get_id} and {cat_id}" , str(category.get_id) == str(cat_id))
                if str(category.get_id) == str(cat_id):
                   category_list.append(category)
          if len(category_list) == 0: raise Exception('Category not found')
@@ -207,13 +203,7 @@ class System:
       try:
          if amount <= 0:
                raise ValueError('Amount should be positive')
-         
-
          item_current = main_system.get_item_by_id(id)
-         
-         print(f"wow : {user_id}")
-         print(f"wow : {id}")
-         print(f"wow : {amount}")
          if not item_current:
                return "Item not found"
 
@@ -229,11 +219,6 @@ class System:
          if amount <= 0:
                raise ValueError('Amount should be positive')
          item_current = main_system.get_bid_item_by_id(id)
-         print(item_current)
-
-         print(f"bid : {user_id}")
-         print(f"bid : {id}")
-         print(f"bid : {amount}")
          if not item_current:
                return "Item not found"
 
@@ -267,7 +252,6 @@ class System:
          item_id = str(uuid.uuid4())
          
          main_system.create_bid_item(item_id, name, price, amount, category_id, img, user_id, start_time, end_time, status=None, top_bidder=None , description=new_description )
-         print(main_system.get_bid_item_by_id(item_id)) 
          return "Save Bid item success"
       except Exception as e:
          raise Exception(str(e))
@@ -340,10 +324,7 @@ class System:
             winner.add_bid_history(temp, now, now+timedelta(minutes=1))
             self.show_bid_history(winner)
             final_price = temp.get_price
-            print(f"Customer before: {winner.get_e_bux}")
             winner.decrease_e_bux(final_price)
-            print(f"{winner.get_username} won the bid and {final_price} e-bux was deducted.")
-            print(f"Customer after: {winner.get_e_bux}")
             return 'Bid ended'
          
    def show_bid_history(self, user:Customer):
@@ -440,12 +421,10 @@ class System:
          raise Exception(str(e))
       
    def add_e_bux_to_seller(self,is_selected_list:list,discount:int=0):
-      print(f'working in add e bux to seller selected list is {is_selected_list}')
       for item in is_selected_list:
          for seller in self.__list_users:
             if isinstance(seller,Seller):
                if item.get_item.get_owner == seller:
-                  print(f'money added to seller {seller.get_e_bux + (item.get_item.get_price*item.get_amount_in_cart)*(1 - discount)}')
                   seller.set_e_bux = seller.get_e_bux + (item.get_item.get_price*item.get_amount_in_cart)*(1 - discount)
    
    #buy item in cart
@@ -457,9 +436,7 @@ class System:
          except:
             code = None
          discount = 0 if code == None else code.get_discount
-         #[item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected]
          selected_list = [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected]
-         print(selected_list)
          total_price = user.buy_item(selected_list,code,10,shipping_date,get_item_date)
          self.add_e_bux_to_seller(selected_list,discount)
          return total_price
@@ -476,7 +453,6 @@ class System:
          discount = 0 if code == None else code.get_discount
          user:Customer = self.get_user_by_id(user_id)
          total_price = user.buy_item([ItemInCart(item,amount,True)],code,10,shipping_date,get_item_date)
-         print(f'this is debug in buy_item total price is {total_price}')
          item.get_owner.set_e_bux = (item.get_owner.get_e_bux + total_price)*(1-discount)
          return total_price
       except Exception as e:
