@@ -188,6 +188,8 @@ class Customer(User):
    def get_address(self) -> str: return self.__address
    @property
    def get_e_bux(self) -> float: return self.__e_bux
+   @get_e_bux.setter
+   def set_e_bux(self,e_bux): self.__e_bux = e_bux
    @property
    def get_cart(self) -> Cart: return self.__cart
    @property
