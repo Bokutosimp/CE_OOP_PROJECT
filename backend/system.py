@@ -94,7 +94,6 @@ class System:
       filtered_items:list[Item] = []
       for item in self.__list_items:
          for category in item.get_category:
-            print(category.get_id,category_id)
             if str(category.get_id) == str(category_id):
                filtered_items.append(item)
       return filtered_items
@@ -421,16 +420,13 @@ class System:
       
    def get_review(self,item_id:str):
       try:
-         item = self.get_item_by_id(item_id)
-         return item.get_review
+         return self.get_item_by_id(item_id).get_review
       except (Exception) as e:
          raise Exception(str(e))
       
    def get_average_score(self,item_id:str):
       try:
-         item = self.get_item_by_id(item_id)
-         if len(item.get_review) == 0: return None
-         return sum(review.get_score for review in item.get_review)/len(item.get_review)
+         return self.get_item_by_id(item_id).get_average_score
       except (Exception) as e:
          raise Exception(str(e))
    def buy_cart_check_stock(self,user_id:str): # return price of selected product

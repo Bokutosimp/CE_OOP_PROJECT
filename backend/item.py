@@ -81,6 +81,11 @@ class Item:
    def add_review(self, rating:int,review:str,user:object):
       self.__review.append(Review(rating,review,user))
       
+   @property
+   def get_average_score(self):
+      if len(self.__review) == 0: return None
+      return sum(review.get_score for review in self.__review)
+      
 class ItemInCart:
    def __init__(self,item:Item,amount_in_cart:int,is_selected:bool):
       self.__item = item
@@ -246,12 +251,12 @@ class Customer(User):
         self.__e_bux -= amount
       
    
-   def SeaTung(self,amount):
-      if amount > self.__e_bux :
-         return "Nah bro, you're broke af"
-      else :
-         self.__e_bux -= amount
-         return "Buying successfully"
+   # def SeaTung(self,amount):
+   #    if amount > self.__e_bux :
+   #       return "Nah bro, you're broke af"
+   #    else :
+   #       self.__e_bux -= amount
+   #       return "Buying successfully"
       
 class Seller(Customer):
    def __init__(self,customer:Customer,store_name:str,store_address:str):
