@@ -651,8 +651,8 @@ def createInstance():
       print(f'{main_system.add_review('1',5,'very good','cust002')}')
    except Exception as e:
       print(str(e))
-   print(f'get list of review of item 1 {main_system.get_review('1')}')
-   print(f'get average score of item 1: {main_system.get_average_score('1')}')
+   print(f'get list of review of item 101 {main_system.get_review('101')}')
+   print(f'get average score of item 101: {main_system.get_average_score('101')}')
    ##try comment with the same user##
    try:
       main_system.add_review('101',4,'very bad','cust001')

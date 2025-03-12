@@ -84,7 +84,7 @@ class Item:
    @property
    def get_average_score(self):
       if len(self.__review) == 0: return None
-      return sum(review.get_score for review in self.__review)
+      return sum(review.get_score for review in self.__review)/len(self.__review)
       
 class ItemInCart:
    def __init__(self,item:Item,amount_in_cart:int,is_selected:bool):
