@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram
   autonumber
   actor Customer
@@ -69,3 +70,5 @@ sequenceDiagram
       end
   end
   UI ->>- Customer: redirect to profile
+
+```
