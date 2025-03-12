@@ -2,6 +2,7 @@ from .category import Category
 from typing import Literal
 from datetime import datetime
 from .order import Order,OrderHistory,ShippingStatus
+from datetime import datetime,timedelta
 
 class Item:
    def __init__(self,id:str,name :str , price:float,amount:int, owner:object,image:str,category:list[Category],description:str):
@@ -10,6 +11,7 @@ class Item:
       self.__price = price
       self.__amount = amount
       self.__image = image
+      if not isinstance(owner,Seller): raise Exception('owner should be seller')
       self.__owner = owner
       self.__category = category
       self.__review = []
@@ -247,6 +249,20 @@ class Customer(User):
       order_history = OrderHistory(orderClass)
       return order_history
    
+   def buy_item(self,buy_list:list[ItemInCart],code:object=None,shipping_fee:float=10.0,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
+      total_price = 0
+      discount = 0
+      if code != None: discount = code.get_discount / 100
+      for cart_item in buy_list:
+         total_price += round(cart_item.get_item.get_price*cart_item.get_amount_in_cart*(1 - discount),2)
+      self.decrease_e_bux(total_price)
+      order = Order(10.0, total_price,buy_list)
+      shipping_status = ShippingStatus(shipping_date,get_item_date)
+      self.add_history(OrderHistory(order,shipping_status))
+      for item in buy_list:
+         item.get_item.set_amount = item.get_item.get_amount - item.get_amount_in_cart
+      return total_price
+      
    def decrease_e_bux(self, amount: float):
         if amount > self.__e_bux:
             raise Exception("Insufficient e-bux")

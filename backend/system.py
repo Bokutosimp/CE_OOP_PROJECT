@@ -440,68 +440,44 @@ class System:
          raise Exception(str(e))
       
    def add_e_bux_to_seller(self,is_selected_list:list,discount:int=0):
+      print(f'working in add e bux to seller selected list is {is_selected_list}')
       for item in is_selected_list:
          for seller in self.__list_users:
             if isinstance(seller,Seller):
                if item.get_item.get_owner == seller:
+                  print(f'money added to seller {seller.get_e_bux + (item.get_item.get_price*item.get_amount_in_cart)*(1 - discount)}')
                   seller.set_e_bux = seller.get_e_bux + (item.get_item.get_price*item.get_amount_in_cart)*(1 - discount)
-                  
-   
-   def buy_item_with_code(self, user_id: str, code: str,is_selected_list:list,total_price:float,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
-    try:
-      user = self.get_user_by_id(user_id)
-      discount = self.apply_code(code)
-      discounted_price = total_price * (1 - discount)
-      user.decrease_e_bux(discounted_price)
-      self.add_e_bux_to_seller(is_selected_list,discount)
-      order = Order(10.0, discounted_price, is_selected_list)
-      shipping_status = ShippingStatus(shipping_date,get_item_date)
-      for Dcode in self.__list_codes:
-         if Dcode.get_name == code:
-            order.set_apply_code = Dcode
-            break
-      user.add_history(OrderHistory(order,shipping_status))
-      user.decrease_e_bux(discounted_price)
-      return discounted_price
-    except Exception as e:
-        raise Exception(str(e))
    
    #buy item in cart
-   def buy_item_in_cart(self,user_id:str,code:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
+   def buy_item_in_cart(self,user_id:str,code_id:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
       try:
-         user = self.get_user_by_id(user_id)
-         total_price = self.buy_cart_check_stock(user_id)
-         if total_price == 0: return False
-         if code != None and code != '':
-            return self.buy_item_with_code(user_id,code,[item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected],total_price,shipping_date,get_item_date)
-         if user.get_e_bux < total_price:
-            raise Exception('insufficient fund')
-         user.decrease_e_bux(total_price)
-         self.add_e_bux_to_seller([item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
-         order = Order(10.0, total_price, [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
-         shipping_status = ShippingStatus(shipping_date,get_item_date)
-         user.add_history(OrderHistory(order,shipping_status))
-         for item in user.get_cart.get_list_item_in_cart:
-            item.get_item.set_amount = item.get_item.get_amount - item.get_amount
+         user:Customer = self.get_user_by_id(user_id)
+         try:
+            code = self.get_code_by_id(code_id)
+         except:
+            code = None
+         discount = 0 if code == None else code.get_discount
+         #[item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected]
+         selected_list = [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected]
+         print(selected_list)
+         total_price = user.buy_item(selected_list,code,10,shipping_date,get_item_date)
+         self.add_e_bux_to_seller(selected_list,discount)
          return total_price
       except Exception as e:
          raise Exception(str(e))
       
-   def buy_item(self,user_id:str,item_id:str,amount:int,code:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
+   def buy_item(self,user_id:str,item_id:str,amount:int,code_id:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
       try:
          item = self.get_item_by_id(item_id)
-         total_price = round(item.get_price*int(amount),2)
-         if code != None and code != '':
-            return self.buy_item_with_code(user_id,code,[ItemInCart(item,amount,True)],total_price,shipping_date,get_item_date)
-         user = self.get_user_by_id(user_id)
-         if user.get_e_bux < total_price: raise Exception('insufficient fund')
-         user.decrease_e_bux(total_price)
-         item.set_amount = item.get_amount - amount
-         #add e bux to seller
-         item.get_owner.set_e_bux = item.get_owner.get_e_bux + total_price 
-         order = Order(10.0, total_price,[ItemInCart(item,amount,True)])
-         shipping_status = ShippingStatus(shipping_date,get_item_date)
-         user.add_history(OrderHistory(order,shipping_status))
+         try:
+            code = self.get_code_by_id(code_id)
+         except:
+            code = None
+         discount = 0 if code == None else code.get_discount
+         user:Customer = self.get_user_by_id(user_id)
+         total_price = user.buy_item([ItemInCart(item,amount,True)],code,10,shipping_date,get_item_date)
+         print(f'this is debug in buy_item total price is {total_price}')
+         item.get_owner.set_e_bux = (item.get_owner.get_e_bux + total_price)*(1-discount)
          return total_price
       except Exception as e:
          raise Exception(str(e))
