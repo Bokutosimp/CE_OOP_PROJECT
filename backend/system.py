@@ -441,6 +441,14 @@ class System:
       except Exception as e:
          raise Exception(str(e))
       
+   def add_e_bux_to_seller(self,is_selected_list:list,discount:int=0):
+      for item in is_selected_list:
+         for seller in self.__list_users:
+            if isinstance(seller,Seller):
+               if item.get_item.get_owner == seller:
+                  seller.set_e_bux = seller.get_e_bux + (item.get_item.get_price*item.get_amount_in_cart)*(1 - discount)
+                  
+   
    def buy_item_with_code(self, user_id: str, code: str,is_selected_list:list,total_price:float,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
     try:
       user = self.get_user_by_id(user_id)
@@ -449,6 +457,7 @@ class System:
       if user.get_e_bux < total_price:
          raise Exception('insufficient fund')
       user.decrease_e_bux(discounted_price)
+      self.add_e_bux_to_seller(is_selected_list,discount)
       order = Order(10.0, discounted_price, is_selected_list)
       shipping_status = ShippingStatus(shipping_date,get_item_date)
       for Dcode in self.__list_codes:
@@ -470,6 +479,7 @@ class System:
          if user.get_e_bux < total_price:
             raise Exception('insufficient fund')
          user.decrease_e_bux(total_price)
+         self.add_e_bux_to_seller([item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
          order = Order(10.0, total_price, [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
          shipping_status = ShippingStatus(shipping_date,get_item_date)
          user.add_history(OrderHistory(order,shipping_status))
@@ -489,6 +499,8 @@ class System:
          if user.get_e_bux < total_price: raise Exception('insufficient fund')
          user.decrease_e_bux(total_price)
          item.set_amount = item.get_amount - amount
+         #add e bux to seller
+         item.get_owner.set_e_bux = item.get_owner.get_e_bux + total_price 
          order = Order(10.0, total_price,[ItemInCart(item,amount,True)])
          shipping_status = ShippingStatus(shipping_date,get_item_date)
          user.add_history(OrderHistory(order,shipping_status))
@@ -607,12 +619,15 @@ def createInstance():
    #test buy item in cart
    print("---###### buy item in cart of user cust001 #####---")
    user = main_system.get_user_by_id('cust001')
+   seller = main_system.get_user_by_id('sell001')
    print(f"User money before purchase: {user.get_e_bux}")
+   print(f"seller money before purchase: {seller.get_e_bux}")
    check_stock = main_system.buy_cart_check_stock('cust001')
    print("return price :", check_stock, "E")
    confirm_purchase = main_system.buy_item_in_cart('cust001', 'SUMMER_SALE')
    print("Discounted price:", confirm_purchase)
    print(f"User money after purchase: {user.get_e_bux}")
+   print(f"Seller money after purchase: {seller.get_e_bux}")
    now = datetime.now()
    main_system.add_to_cart('5','cust001',2)
    main_system.set_select_item('5','cust001',True)
