@@ -9,6 +9,7 @@ sequenceDiagram
   participant Item
   participant Order
   participant ShippingStatus
+  participant Seller
 
   Customer ->>+ UI: Checkout
   UI ->>+ System: buy_item_in_cart(user_id, code)
@@ -49,7 +50,10 @@ sequenceDiagram
           User ->>+ System: add order success
           System -> User: Deduct e-Bux
           User ->>- System: deduct e-bux success
-          System -->> UI: return total_price
+          System ->>+ Seller: add e-bux to Seller
+          Seller ->>- System: add e-bux success
+          System -->> UI: redirect to profile
+          
       else no discount code
           System ->>+ Order: Create Order(10.0, total_price, selected_items)
           Order -->>- System: return order instance
@@ -59,7 +63,9 @@ sequenceDiagram
           User ->>+ System: add order success
           System -> User: Deduct e-Bux
           User ->>- System: deduct e-bux success
-          System -->> UI: return total_price
+          System ->>+ Seller: add e-bux to Seller
+          Seller ->>- System: add e-bux success
+          System -->> UI: redirect to profile
       end
   end
-  UI ->>- Customer: return total_price
+  UI ->>- Customer: redirect to profile
