@@ -66,14 +66,24 @@ class System:
          if item.get_id == id: return item
       raise Exception('item not found')
    
-   def get_bid_item_by_id(self,id:str):
+   def get_bid_item_by_id(self, id: str):
       for item in self.__list_items:
          if str(item.get_id) == str(id) and isinstance(item, BidItem):
-            print(item)
-            return item
+               # Auto-update bid status before returning it
+               now = datetime.now()
+               if item.get_status != "Sold":  # Skip if already sold
+                  if now >= item.get_end_time:
+                     item.end()  # Automatically end bid if past end_time
+               return item
+      raise Exception('Bid item not found')
+   
+   def update_all_bid_statuses(self):
+    now = datetime.now()
+    for item in self.__list_items:
+        if isinstance(item, BidItem) and item.get_status != "Sold":
+            if now >= item.get_end_time:
+                item.end()  # Mark as ended if time is up
 
-      raise Exception('bid item not found')
-      
    def get_users(self,query:str = ''):
       if(query == ''):
          return self.__list_users
@@ -155,7 +165,7 @@ class System:
       except Exception as e:
          raise Exception((str(e)))
    
-   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner_id:str,start_time:str,end_time:str,status:str,top_bidder:str,description:str=''):
+   def create_bid_item(self,id:str,name:str, price:float, amount:int,category_id:list[str],img:str,owner_id:str,start_time:str,end_time:str,status:str,top_bidder:Customer,description:str=''):
       try:
          if not self.__validate_name(name,self.__list_bid_items): raise Exception('Item already exist')
          current_user = self.get_user_by_id(owner_id)
@@ -431,12 +441,21 @@ class System:
       except Exception as e:
          raise Exception(str(e))
       
+   def add_e_bux_to_seller(self,is_selected_list:list,discount:int=0):
+      for item in is_selected_list:
+         for seller in self.__list_users:
+            if isinstance(seller,Seller):
+               if item.get_item.get_owner == seller:
+                  seller.set_e_bux = seller.get_e_bux + (item.get_item.get_price*item.get_amount_in_cart)*(1 - discount)
+                  
+   
    def buy_item_with_code(self, user_id: str, code: str,is_selected_list:list,total_price:float,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
     try:
       user = self.get_user_by_id(user_id)
       discount = self.apply_code(code)
       discounted_price = total_price * (1 - discount)
       user.decrease_e_bux(discounted_price)
+      self.add_e_bux_to_seller(is_selected_list,discount)
       order = Order(10.0, discounted_price, is_selected_list)
       shipping_status = ShippingStatus(shipping_date,get_item_date)
       for Dcode in self.__list_codes:
@@ -457,6 +476,10 @@ class System:
          if total_price == 0: return False
          if code != None and code != '':
             return self.buy_item_with_code(user_id,code,[item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected],total_price,shipping_date,get_item_date)
+         if user.get_e_bux < total_price:
+            raise Exception('insufficient fund')
+         user.decrease_e_bux(total_price)
+         self.add_e_bux_to_seller([item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
          order = Order(10.0, total_price, [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
          shipping_status = ShippingStatus(shipping_date,get_item_date)
          user.add_history(OrderHistory(order,shipping_status))
@@ -476,6 +499,8 @@ class System:
          if user.get_e_bux < total_price: raise Exception('insufficient fund')
          user.decrease_e_bux(total_price)
          item.set_amount = item.get_amount - amount
+         #add e bux to seller
+         item.get_owner.set_e_bux = item.get_owner.get_e_bux + total_price 
          order = Order(10.0, total_price,[ItemInCart(item,amount,True)])
          shipping_status = ShippingStatus(shipping_date,get_item_date)
          user.add_history(OrderHistory(order,shipping_status))
@@ -569,13 +594,21 @@ def createInstance():
    start_bid_time = datetime.now()
    start_bid_time = start_bid_time.replace(microsecond=0)
    increase_time = 30  # Initial increment in minutes
+   user1 = main_system.get_user_by_id("cust001")
+   user2 = main_system.get_user_by_id("cust002")
+   co = 0
    for bid_item in bid_items:
-      end_bid_time = start_bid_time + timedelta(minutes=increase_time)  
+      if co % 2 != 1:
+         temp_user = user1
+      else:
+         temp_user = user2
+      end_bid_time = start_bid_time + timedelta(seconds=increase_time)  
       main_system.create_bid_item(
          bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], 
          ['10'], bid_item['image'], 'sell001', start_bid_time, end_bid_time, 
-         bid_item['top_bidder'], bid_item['status']
+         temp_user, bid_item['status']
       )
+      co += 1
     # Update start time for the next bid
       increase_time += 30
       # main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', datetime.strptime(bid_item['start_time'], "%Y-%m-%d %H:%M:%S"), datetime.strptime(bid_item['end_time'], "%Y-%m-%d %H:%M:%S"), bid_item['status'], bid_item['top_bidder'])
@@ -586,12 +619,15 @@ def createInstance():
    #test buy item in cart
    print("---###### buy item in cart of user cust001 #####---")
    user = main_system.get_user_by_id('cust001')
+   seller = main_system.get_user_by_id('sell001')
    print(f"User money before purchase: {user.get_e_bux}")
+   print(f"seller money before purchase: {seller.get_e_bux}")
    check_stock = main_system.buy_cart_check_stock('cust001')
    print("return price :", check_stock, "E")
    confirm_purchase = main_system.buy_item_in_cart('cust001', 'SUMMER_SALE')
    print("Discounted price:", confirm_purchase)
    print(f"User money after purchase: {user.get_e_bux}")
+   print(f"Seller money after purchase: {seller.get_e_bux}")
    now = datetime.now()
    main_system.add_to_cart('5','cust001',2)
    main_system.set_select_item('5','cust001',True)
