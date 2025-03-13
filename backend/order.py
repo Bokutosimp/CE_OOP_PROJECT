@@ -56,6 +56,7 @@ class OrderHistory :
         
     @property
     def get_shipping_status(self) -> ShippingStatus: return self.__shipping_status
+    
     @property
     def get_order(self) -> Order: return self.__order
     def set_status(self , status : ShippingStatus) :

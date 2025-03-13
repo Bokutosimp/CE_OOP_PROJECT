@@ -1,9 +1,4 @@
 ```mermaid
----
-config:
-  theme: dark
-  look: classic
----
 sequenceDiagram
     actor Seller
     participant UI
