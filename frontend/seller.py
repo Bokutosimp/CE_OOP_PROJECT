@@ -51,7 +51,6 @@ def product_management(session):
          else: products.append(i)
 
     for j in list_codes :
-         print(j)
          if main_system.is_discount_code(j): load_discount_code.append(j)
 
     print(load_discount_code)
