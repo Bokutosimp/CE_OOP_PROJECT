@@ -8,16 +8,33 @@ config:
 sequenceDiagram
 autonumber
 
-    actor Customer
+    actor User
     participant UI
     participant System
+    participant Item
 
-    Customer ->> UI: search_item(query)
+    User ->> UI: get_items(query)
     activate UI
-    UI ->> System: search_item(query)
+    UI ->> System: get_items(query)
     activate System
-    System -->> UI: show results
+
+    alt query is empty
+        System -->> UI: return all items
+    else query is not empty
+        loop Filter items by query
+            System ->> Item: find query in name
+            activate Item
+            alt match found
+                Item -->> System: return Item
+            else no match
+                Item -->> System: return none
+            end
+            deactivate Item
+        end
+        System -->> UI: return filtered items
+    end
+
     deactivate System
-    UI -->> Customer: display search results
+    UI -->> User: return response message
     deactivate UI
 ```

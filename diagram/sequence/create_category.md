@@ -13,14 +13,14 @@ autonumber
     participant System
     participant Category
 
-    Admin ->> UI: create_category
+    Admin ->> UI: create_category(category_name,category_description,session)
     activate UI
-    UI ->> System: category_content
+    UI ->> System: category_category(id,name, description,admin_id)
     activate System
 
     System ->> System: validate_name()
     alt Successfully create category
-        System -->> Category: create_category()
+        System -->> Category: create_category(id,name, description)
         activate Category
         Category -->> System: return success message
         deactivate Category
