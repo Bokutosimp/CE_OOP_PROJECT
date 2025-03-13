@@ -23,7 +23,7 @@ def bid_page(id, session):
 
         # Check if user is authenticated
         if 'auth' not in session or not session['auth']:
-            return Redirect("/login")
+            return Script('window.location.href="/login"')
 
         user_id = session['auth'][0]
         user = main_system.get_user_by_id(user_id)
