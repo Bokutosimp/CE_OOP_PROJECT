@@ -10,6 +10,7 @@ actor Visitor
 participant UI
 participant System
 participant Customer
+participant Cart
 
     Visitor ->> UI: register_form(name, email, username, ...)
     activate UI
@@ -27,8 +28,14 @@ participant Customer
             System -->> UI: error - "username already exists"
         else username not duplicate
             %% Create new customer instance
-            System ->> Customer: create new customer instance
+            System -->> Customer: create new customer instance
+            activate Customer
+            Customer -->> Cart: craete Cart for customer
+            activate Cart
+            Cart -->> Customer: success
+            deactivate Cart
             Customer -->> System: success
+            deactivate Customer
             System -->> UI: "Customer created successfully"
         end
     end

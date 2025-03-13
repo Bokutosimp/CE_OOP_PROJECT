@@ -21,7 +21,7 @@ autonumber
     UI ->> System: add_to_cart(ite_id,user_id, quantity)
     activate System
     System ->> System : get_user_by_id(user_id)
-    System ->> User: get_id
+    System ->> User: list_users
     activate User
     alt find user
     User -->> System: user instance
@@ -30,7 +30,7 @@ autonumber
     System -->> UI : not found
     end
     System ->> System :get_item_by_id(item_id)
-    System ->> Item: get_item
+    System ->> Item: list_categories
     activate Item
     alt find item
     Item -->> System:item instance
@@ -41,7 +41,7 @@ autonumber
     alt quantity > 0
     System ->> User: add_to_cart(item,quantity)
     activate User
-    User ->> Item : check_availability
+    User ->> Item : check_availability(quantity)
     activate Item
     alt item isn't enough
     Item ->> Cart: get_list_item_in_cart

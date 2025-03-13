@@ -459,15 +459,9 @@ class Code :
    def get_name(self):
       return self.__name
 
-      
    @property
    def get_name(self):
       return self.__name
-
-class FreeDelivery(Code):
-   def __init__(self,ID:str,name:str,minimum:float):
-      super().__init__(ID,name)
-      self.__minimum = minimum
 
 class Discount(Code):
    def __init__(self,ID:str,name:str,percentage:float,owner:Seller):

@@ -11,19 +11,16 @@ autonumber
     actor User
     participant UI
     participant System
-    participant Category
 
-    User ->> UI: get_categories(query)
+    User ->> UI: get_categories()
     activate UI
-    UI ->> System: get_categories(query)
+    UI ->> System: get_categories()
     activate System
-    System ->> System : find categories by query
-    System ->> Category : get_category
-    activate Category
-    Category ->> System : return category
-    deactivate Category
-    System ->> UI: return filtered_categories
+
+    System -->> UI: return all categories
+
+
     deactivate System
-    UI ->> User: return filterd_categories
+    UI -->> User: return filtered_categories
     deactivate UI
 ```

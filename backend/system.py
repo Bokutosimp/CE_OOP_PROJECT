@@ -27,9 +27,8 @@ class System:
       return True
       
    #function to get list of instace
-   def get_categories(self,query:str = '') -> list[Category]:
-      if(query == ''): return self.__list_categories
-      else: return [category for category in self.__list_categories if query in category.get_name]
+   def get_categories(self) -> list[Category]:
+      return self.__list_categories
       
    def get_category_by_id(self,id:str):
       for cat in self.__list_categories:
@@ -129,8 +128,7 @@ class System:
       for item in self.__list_users:
          if item.get_username == username:
             raise Exception('username already exist')
-      cart = Cart()
-      self.__list_users.append(Customer(name, user_id, email, phone_number, username, password, birth_date,gender,address,e_bux,cart))
+      self.__list_users.append(Customer(name, user_id, email, phone_number, username, password, birth_date,gender,address,e_bux,Cart()))
       return 'Customer created'
    
    def create_seller(self,customer:Customer,store_name:str,store_address:str):
@@ -183,12 +181,6 @@ class System:
          return 'Bid item created'
       except Exception as e:
          raise Exception((str(e)))
-   
-   # def view_item(self,itemId:str):
-   #    for item in self.__list_items :
-   #       if item.get_id == itemId  :
-   #         return item 
-   #    raise Exception('item not ')
    
    def save_item(self, user_id, name: str, price: float, amount: int, category_id: str, description : str, img: str):
       if (user_id == '' or name == '' or price == '' or amount == '' or category_id == ''):
@@ -526,7 +518,6 @@ def createInstance():
    
    items_instance = main_system.get_items()
    [print(f'item is {item}') for item in items_instance]
-   # print('result of search by category',main_system.get_items_by_category(main_system.get_categories()[0].get_id))
    print('result of search item by id',main_system.get_item_by_id(items_instance[0].get_id))
    #create item in cart
    print("---############ item in cart #############---")
@@ -566,7 +557,6 @@ def createInstance():
       co += 1
     # Update start time for the next bid
       increase_time += 30
-      # main_system.create_bid_item(bid_item['id'], bid_item['name'], bid_item['price'], bid_item['amount'], ['10'], bid_item['image'] ,'sell001', datetime.strptime(bid_item['start_time'], "%Y-%m-%d %H:%M:%S"), datetime.strptime(bid_item['end_time'], "%Y-%m-%d %H:%M:%S"), bid_item['status'], bid_item['top_bidder'])
    bid_items_instance = main_system.get_items()
    for item in bid_items_instance:
       if isinstance(item,BidItem): print(item)
