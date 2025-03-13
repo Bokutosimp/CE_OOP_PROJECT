@@ -180,8 +180,6 @@ class Admin(User):
    def __str__(self):
       return f"Role:Admin Username:{self.get_username}"
    
-   def create_category(self,id:str,name:str,description:str):
-      return Category(id,name,description)
       
 class Customer(User):
    def __init__(self, name, user_id, email, phone_number, username, password, birth_date, gender,address:str,e_bux:float=0,cart:Cart=Cart()):

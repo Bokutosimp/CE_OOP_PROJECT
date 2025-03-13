@@ -109,7 +109,8 @@ class System:
       try:
          if not self.__validate_name(name,self.__list_categories): raise Exception('Name already exist')
          admin = self.get_user_by_id(admin_id)
-         self.__list_categories.append(admin.create_category(id,name,description))
+         if not isinstance(admin,Admin): raise Exception("user in not admin")
+         self.__list_categories.append(Category(id,name,description))
          return 'Category created'
       except Exception as e:
          raise Exception(str(e))
