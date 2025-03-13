@@ -5,6 +5,12 @@ sequenceDiagram
     participant System
     participant BidItem
 
+ Seller ->> UI : update_bid_stock(stock_product , session)
+    activate UI
+    UI ->> System : add_bid_stock(user_id, item_id, amount)
+    activate System
+    System ->> System : get_bid_item_by_id(item_id)
+
 
 
  System ->> System : validate bid item
