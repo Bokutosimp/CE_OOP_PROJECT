@@ -63,13 +63,7 @@ def add_product_page(session):
 def submit_product_page( product: Product, session):
     try:
         user_id = session['auth'][0]
-        print(f"User ID: {user_id}")
-        print(f"📦 Product Name: {product.name}")
-        print(f"💰 Price: {product.price}")
-        print(f"🏷️ Category: {product.category.split(',')}")    
-        print(f"🖼️ Image: {product.image}")    
-
-        result = main_system.save_item(user_id, product.name, product.price, product.amount, product.category.split(','), product.description , product.image)
+        main_system.save_item(user_id, product.name, product.price, product.amount, product.category.split(','), product.description , product.image)
         
         return Script(""" 
                 alert('Add Product Successfully');  

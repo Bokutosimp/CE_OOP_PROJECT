@@ -69,6 +69,10 @@ def item_page(id):
                                onclick=f"""
                                     event.preventDefault();
                                     const input = document.getElementById("amount");
+                                    if(input.value > {amount}){{
+                                        alert("invalid amount (amount should less than {amount})");
+                                        return;
+                                    }}
                                     window.location.href=`/purchase/{item.get_id}/${{input.value}}`;
                                """,
                                disabled='true'if disable else None

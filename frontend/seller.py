@@ -251,7 +251,7 @@ def product_management(session):
 
 @rt("/update_stock", methods=["post"])
 def update_stock(add_stock: Stock_product, session):
-    # try:
+    try:
         user_id = session['auth'][0]
         amount = add_stock.stock
         item_id = add_stock.stock_item_id
@@ -259,38 +259,32 @@ def update_stock(add_stock: Stock_product, session):
         main_system.add_stock(user_id, item_id, amount) 
     
         return Script(""" alert('Add stock successfully'); setTimeout(function(){ window.location.href = '/seller ';  });""")
-    # except Exception as e:
-    #     print(f"Error: {str(e)}")
-    #     return Script(""" alert('Invalid stock update'); setTimeout(function(){ window.location.href = '/seller ';  });""")
+    except Exception as e:
+        return Script(""" alert('Invalid stock update'); setTimeout(function(){ window.location.href = '/seller ';  });""")
 
 @rt("/update_bid_stock", methods=["post"])
 def update_bid_stock(add_bid_stock: Stock_bid_product, session):
-    # try:
+    try:
         user_id = session['auth'][0]
         amount = add_bid_stock.stock
         item_id = add_bid_stock.stock_bid_item_id
         print(amount)
         print(item_id)
         
-        result = main_system.add_bid_stock(user_id, item_id, amount) 
+        main_system.add_bid_stock(user_id, item_id, amount) 
         return Script(""" alert('Add stock successfully'); setTimeout(function(){ window.location.href = '/seller ';  });""")
 
-    # except Exception as e:
-    #     print(f"Error: {str(e)}")
-    #     return Script(""" alert('Invalid stock update'); setTimeout(function(){ window.location.href = '/seller ';  });""")
+    except:
+        return Script(""" alert('Invalid stock update'); setTimeout(function(){ window.location.href = '/seller ';  });""")
 
 
 
 def edit_product(session ,edit_item_id:str,new_name:str,new_price:float,new_category:str,new_detail:str,new_image:str):
     user_id = session['auth'][0]
-    print('trying in seller.py editing id = ',edit_item_id+"cat = "+str(type(new_category))+f"({new_category.split(',')})")
     main_system.edit_item(edit_item_id ,new_name , new_category.split(',') , new_detail ,new_price , new_image)  
 
 def edit_bid_product(session ,edit_bid_item_id:str,new_name:str,new_price:float,new_category:str,new_detail:str,new_image:str , new_start_time : str , new_end_time : str):
     user_id = session['auth'][0]
-    print(f'{new_category} , {new_price}')
-    print(f"{new_image}")
-    print('trying in seller.py editing id = ',edit_bid_item_id+"cat = "+str(type(new_category))+f"({new_category.split(',')})")
     main_system.edit_bid_item(edit_bid_item_id ,new_name , new_category.split(',') , new_detail ,new_price , new_image , new_start_time , new_end_time)  
 
 

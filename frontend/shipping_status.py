@@ -9,7 +9,6 @@ from backend.system import main_system
 def check_status(id):
     try:
         item = main_system.get_item_by_id(id)
-        print(f"C mon : {item}")
         return Div(
             H1("Shipping Status"),
             Div(

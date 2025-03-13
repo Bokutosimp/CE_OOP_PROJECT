@@ -6,8 +6,6 @@ from stylesheet import *
 def review_page(id, session):
     try:
         review = main_system.get_item_by_id(id)
-        print(review)
-        print(session['auth'])
 
         return Div(
             Script(f"<style>{stylesheet}</style>"),
@@ -64,9 +62,7 @@ def review_page(id, session):
 def submit_review_page(review: str, rating: int, item_id: str, session):
     try:
         user_id = session['auth'][0]
-        print(f"Review: {review}, Rating: {rating}, Item ID: {item_id}, User ID: {user_id}")
         main_system.add_review(item_id, rating, review, user_id)
         return Redirect(f"/")
     except Exception as e:
-        print(str(e))
         return Script(f'alert("{str(e)}"); window.location.href="/"')

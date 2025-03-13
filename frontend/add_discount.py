@@ -35,9 +35,6 @@ def add_discount_page(session):
 def submit_discount_page( discount_code : Discount_code , session):
     try:
         user_id = session['auth'][0]
-        print(f"User ID: {user_id}")
-        print(f'{discount_code.name} , {discount_code.discount_percentage}')
-
         main_system.save_discount_code(discount_code.name , discount_code.discount_percentage , user_id )
         
         return Script(""" 
