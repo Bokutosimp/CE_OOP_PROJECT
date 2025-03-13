@@ -370,10 +370,6 @@ class BidItem(Item):
    def get_history(self):
       return self.__bids_history
    
-   def show_history(self):
-      for history in self.__bids_history:
-         print(history)
-   
    def set_top_bidder(self, user : User):
       self.__top_bidder = user
       
