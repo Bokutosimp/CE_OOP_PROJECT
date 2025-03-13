@@ -234,4 +234,7 @@ def get(id:str,session):
 def get(session):
     return layout(profile_page(session),session)
 
-serve(port=int(os.getenv("PORT")))
+try:
+    serve(port=int(os.getenv("PORT")))
+except:
+    serve(port=1111)
