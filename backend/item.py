@@ -478,7 +478,7 @@ class Discount(Code):
       self.__owner = owner
    
    def __str__(self):
-      return f's{self.__name}'
+      return f'{self.__name}'
    
    @property   
    def get_discount(self):
