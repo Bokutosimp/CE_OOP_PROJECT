@@ -326,6 +326,7 @@ class System:
             self.show_bid_history(winner)
             final_price = temp.get_price
             winner.decrease_e_bux(final_price)
+            main_system.add_e_bux_to_seller([item], 0)
             return 'Bid ended'
          
    def show_bid_history(self, user:Customer):
@@ -425,6 +426,8 @@ class System:
       for item in is_selected_list:
          for seller in self.__list_users:
             if isinstance(seller,Seller):
+               if isinstance(item,BidItem):
+                  seller.set_e_bux = seller.get_e_bux + item.get_price
                if item.get_item.get_owner == seller:
                   seller.set_e_bux = seller.get_e_bux + (item.get_item.get_price*item.get_amount_in_cart)*(1 - discount)
    
