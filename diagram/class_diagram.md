@@ -3,6 +3,7 @@
 config:
   theme: dark
   look: classic
+  layout: elk
 ---
 classDiagram
     class System{
@@ -11,14 +12,14 @@ classDiagram
         - list_users:list[User]
         - list_codes:list[Code]
         - list_categories:list[Category]
-        + login(user, pass)bool
-        - validate_name(name, list)bool
-        + get_category_by_id(id)category
-        + get_code_by_id(id)code
-        + get_item_by_id(id)item
-        + get_bid_item_by_id(id)BidItem
-        + get_items_by_category(category_id)item
-        + get_user_by_id(id)user
+        + login(user, pass)
+        - validate_name(name, list)
+        + get_category_by_id(id)
+        + get_code_by_id(id)
+        + get_item_by_id(id)
+        + get_bid_item_by_id(id)
+        + get_items_by_category(category_id)
+        + get_user_by_id(id)
         + create_category(...)
         + create_admin(...)
         + create_customer(...)
@@ -68,6 +69,7 @@ classDiagram
         + edit_item()
         + check_availability(quantity)
         + add_review(rating, review, user)
+        + get_average_score()
     }
     class ItemInCart{
         - item
@@ -76,6 +78,9 @@ classDiagram
     }
     class Cart{
         - list_item_in_cart
+        + add_cart()
+        + remove_from_cart()
+        + set_select_item()
     }
     class User{
         - name
@@ -89,26 +94,26 @@ classDiagram
     }
     class Admin{
     }
-    User <|-- Admin
     class Customer{
         - address
         - e_bux
         - cart
         - order_history
         + add_history(order_history)
+        + add_bid_history(item,ship_item,get_date)
         + add_to_cart(item, quantity)
         + remove_from_cart(item)
         + set_select_item(item, select)
         + buy_item_in_cart()
         + decrease_e_bux()
-        + SeaTung()
+        + is_already_review(item)
+        + is_buy_item(item)
+        + add_review(item,review,rating)
     }
-    User <|-- Customer
     class Seller{
         - store_name
         - store_address
     }
-    User <|-- Seller
     class BidHistory{
         - item
         - status
@@ -131,8 +136,8 @@ classDiagram
         + set_new_top_bidder(...)
         + add_history(user_id, amount, time)
         + is_price_valid(price)
+        + sold()
     }
-    Item <|-- BidItem
     class Review{
         - score
         - comment
@@ -143,15 +148,10 @@ classDiagram
         - name
         + verify_code(input)
     }
-    class FreeDelivery{
-        - minimum
-    }
-    Code <|-- FreeDelivery
     class Discount{
         - percentage
         - owner
     }
-    Code <|-- Discount
     class Category{
         - ID
         - name
@@ -162,7 +162,7 @@ classDiagram
         - total_price
         - list_items
         - apply_code
-        + check_cart_with_stock
+        + check_cart_with_stock(user)
     }
     class ShippingStatus{
         - shipping_date
@@ -173,13 +173,27 @@ classDiagram
         - order
         - shipping_status
     }
-
-    System o-- Item
     System o-- User
-    System o-- Code
+    System o-- Item
     System o-- Category
-
-    BidItem <-- BiddingHistory
-
-
+    System o-- Code
+    Admin --|> User
+    Customer --|> User
+    Seller --|> Customer
+    Customer "1" *-- "*" OrderHistory
+    Category "*" <-- "*" Item
+    Code <|-- Discount
+    Cart --* Customer
+    ItemInCart --* Cart
+    ItemInCart <-- Order
+    Order <-- OrderHistory
+    ShippingStatus <-- OrderHistory
+    Review "1" --* "*" Item
+    BidItem --|> Item
+    BidHistory --> BidItem
+    BidHistory "1" --o "*" Customer
+    ItemInCart --> Item
+    Review --> Customer
+    ShippingStatus <-- BidHistory
+    BidItem *-- BiddingHistory
 ```
