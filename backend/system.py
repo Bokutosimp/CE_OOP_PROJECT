@@ -27,9 +27,8 @@ class System:
       return True
       
    #function to get list of instace
-   def get_categories(self,query:str = '') -> list[Category]:
-      if(query == ''): return self.__list_categories
-      else: return [category for category in self.__list_categories if query in category.get_name]
+   def get_categories(self) -> list[Category]:
+      return self.__list_categories
       
    def get_category_by_id(self,id:str):
       for cat in self.__list_categories:

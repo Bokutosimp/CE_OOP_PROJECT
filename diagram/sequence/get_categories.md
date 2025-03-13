@@ -12,19 +12,13 @@ autonumber
     participant UI
     participant System
 
-    User ->> UI: get_categories(query)
+    User ->> UI: get_categories()
     activate UI
-    UI ->> System: get_categories(query)
+    UI ->> System: get_categories()
     activate System
 
-    alt query is empty
-        System -->> UI: return all categories
-    else query is not empty
-        loop Filter categories by query
-            System ->> System: filter categories by query
-        end
-        System -->> UI: return filtered categories
-    end
+    System -->> UI: return all categories
+
 
     deactivate System
     UI -->> User: return filtered_categories
