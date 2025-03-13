@@ -68,7 +68,6 @@ def edit_item(session,item_id:str):
 
 def edit_bid_item(session, item_id: str):
     current_item = main_system.get_bid_item_by_id(item_id)
-    print(f"{(current_item.get_end_time)} ,,,, {current_item.get_start_time}")
     return Div(
         Form(
             H3("Edit Bid Product"),

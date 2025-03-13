@@ -71,24 +71,9 @@ def add_bid_product_page(session):
 
 @rt("/seller/add_bid/submit", methods=["post"])
 def submit_bid_product_page(product: Bid_Product, session):
-        user_id = session['auth'][0]
-        print("🔥 /submit received a request!")
-        print(f"👤 User ID: {user_id}")
-        print(f"📦 Product Name: {product.name}")
-        print(f"💰 Price: {product.price}")
-        print(f"🏷️ Category: {product.category.split(',')}")    
-        print(f"🖼️ Image: {product.image}")    
+        user_id = session['auth'][0] 
         start_time = datetime.strptime(product.start_time, "%Y-%m-%dT%H:%M")
         end_time = datetime.strptime(product.end_time, "%Y-%m-%dT%H:%M")
-        print(f"⏳ Start Time: {start_time}")    
-        print(f"⏳ End Time: {end_time}")
-        
-
-        # if not product.name or not product.category or not product.image or not product.start_time or not product.end_time:
-        #     return Script(""" alert('Please fill in all required fields'); setTimeout(function(){ window.location.href = '/seller '; });""")
-        
-        # if not product.price or not product.amount:  
-        #     return Script(""" alert('Price and amount must not be empty'); setTimeout(function(){ window.location.href = '/seller '; });""")
         
         main_system.save_bid_item(user_id, product.name, product.price, product.amount, product.category.split(','), product.image, start_time, end_time , product.description)
 

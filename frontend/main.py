@@ -179,12 +179,10 @@ def post(session , add_stock : Stock_product):
 
 @rt("/edit_product", methods=["patch"])
 def patch(session ,edit_item_id:str,new_name:str, new_price:float ,new_category:str,new_detail:str,new_image:str):
-    print(f"item {edit_item_id},new name = {new_name}")
     return edit_product(session,edit_item_id,new_name,new_price,new_category,new_detail,new_image)
 
 @rt("/edit_bid_product", methods=["patch"])
 def patch(session ,edit_bid_item_id:str,new_name:str,new_start_price:float,new_category:str,new_detail:str,new_image:str , new_start_time : str , new_end_time : str):
-    print(f"bid item {edit_bid_item_id},new name = {new_name}")
     return edit_bid_product(session,edit_bid_item_id,new_name,new_start_price,new_category,new_detail,new_image , new_start_time , new_end_time)
 
 
@@ -197,7 +195,7 @@ def get(session):
 @rt('/admin/create_category')
 @auth(['Admin'])
 def post(session,category_name:str,category_description:str):
-    return post_create_category(category_name,category_description)
+    return post_create_category(category_name,category_description,session)
 
 @rt('/admin')
 @auth(['Admin'])

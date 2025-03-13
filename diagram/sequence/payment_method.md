@@ -48,7 +48,7 @@ sequenceDiagram
           System ->>+ ShippingStatus: Create ShippingStatus(shipping_date, get_item_date)
           ShippingStatus -->>- System: return shipping instance
           System ->>+ User: Add order to history
-          User ->>+ System: add order success
+          User ->> System: add order success
           System -> User: Deduct e-Bux
           User ->>- System: deduct e-bux success
           System ->>+ Seller: add e-bux to Seller
@@ -61,14 +61,15 @@ sequenceDiagram
           System ->>+ ShippingStatus: Create ShippingStatus(shipping_date, get_item_date)
           ShippingStatus -->>- System: return shipping instance
           System ->>+ User: Add order to history
-          User ->>+ System: add order success
+          User ->> System: add order success
           System -> User: Deduct e-Bux
           User ->>- System: deduct e-bux success
           System ->>+ Seller: add e-bux to Seller
           Seller ->>- System: add e-bux success
-          System -->> UI: redirect to profile
+          System -->>- UI: redirect to profile
       end
   end
   UI ->>- Customer: redirect to profile
+
 
 ```

@@ -2,6 +2,7 @@ from .category import Category
 from typing import Literal
 from datetime import datetime
 from .order import Order,OrderHistory,ShippingStatus
+from datetime import datetime,timedelta
 
 class Item:
    def __init__(self,id:str,name :str , price:float,amount:int, owner:object,image:str,category:list[Category],description:str):
@@ -10,6 +11,7 @@ class Item:
       self.__price = price
       self.__amount = amount
       self.__image = image
+      if not isinstance(owner,Seller): raise Exception('owner should be seller')
       self.__owner = owner
       self.__category = category
       self.__review = []
@@ -81,6 +83,11 @@ class Item:
    def add_review(self, rating:int,review:str,user:object):
       self.__review.append(Review(rating,review,user))
       
+   @property
+   def get_average_score(self):
+      if len(self.__review) == 0: return None
+      return sum(review.get_score for review in self.__review)/len(self.__review)
+      
 class ItemInCart:
    def __init__(self,item:Item,amount_in_cart:int,is_selected:bool):
       self.__item = item
@@ -138,7 +145,7 @@ class User:
       self.__gender = gender
       
    def __str__(self):
-      return f"Name: {self.__name}\nUser ID: {self.__user_id}\nEmail: {self.__email}\nPhone Number: {self.__phone_number}\nUsername: {self.__username}\nPassword: {self.__password}\nBirth Date: {self.__birth_date}\nGender:"
+      return f"Name: {self.__name}\nUser ID: {self.__user_id}\nEmail: {self.__email}\nPhone Number: {self.__phone_number}\nUsername: {self.__username}\nPassword: {self.__password}\nBirth Date: {self.__birth_date}\nGender:{self.__gender}"
    
    @property
    def get_name(self) -> str:
@@ -172,7 +179,9 @@ class Admin(User):
       
    def __str__(self):
       return f"Role:Admin Username:{self.get_username}"
-
+   
+   def create_category(self,id:str,name:str,description:str):
+      return Category(id,name,description)
       
 class Customer(User):
    def __init__(self, name, user_id, email, phone_number, username, password, birth_date, gender,address:str,e_bux:float=0,cart:Cart=Cart()):
@@ -240,18 +249,46 @@ class Customer(User):
       order_history = OrderHistory(orderClass)
       return order_history
    
+   def buy_item(self,buy_list:list[ItemInCart],code:object=None,shipping_fee:float=10.0,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
+      total_price = 0
+      discount = 0
+      if code != None: discount = code.get_discount / 100
+      for cart_item in buy_list:
+         total_price += round(cart_item.get_item.get_price*cart_item.get_amount_in_cart*(1 - discount),2)
+      self.decrease_e_bux(total_price)
+      order = Order(10.0, total_price,buy_list)
+      shipping_status = ShippingStatus(shipping_date,get_item_date)
+      self.add_history(OrderHistory(order,shipping_status))
+      for item in buy_list:
+         item.get_item.set_amount = item.get_item.get_amount - item.get_amount_in_cart
+      return total_price
+      
    def decrease_e_bux(self, amount: float):
         if amount > self.__e_bux:
             raise Exception("Insufficient e-bux")
         self.__e_bux -= amount
-      
    
-   def SeaTung(self,amount):
-      if amount > self.__e_bux :
-         return "Nah bro, you're broke af"
-      else :
-         self.__e_bux -= amount
-         return "Buying successfully"
+   def is_already_review(self,item:Item):
+         for review in item.get_review:
+            if review.get_reviewer == self: return True
+         return False
+   
+   def is_buy_item(self,item:Item):
+         for history in self.get_order_history:
+            for item_usr in history.get_order.get_list_item_select:
+               if item_usr.get_item == item: return True
+         return False
+      
+   def add_review(self,item:Item,review:str,rating:int):
+         if self.is_already_review(item): raise Exception('user already reviewed')
+         if not self.is_buy_item(item): raise Exception('User not buy this item yet')
+         item.add_review(rating,review,self)
+   # def SeaTung(self,amount):
+   #    if amount > self.__e_bux :
+   #       return "Nah bro, you're broke af"
+   #    else :
+   #       self.__e_bux -= amount
+   #       return "Buying successfully"
       
 class Seller(Customer):
    def __init__(self,customer:Customer,store_name:str,store_address:str):
@@ -439,6 +476,9 @@ class Discount(Code):
       super().__init__(ID,name)
       self.__percentage = percentage
       self.__owner = owner
+   
+   def __str__(self):
+      return f's{self.__name}'
    
    @property   
    def get_discount(self):

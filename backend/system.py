@@ -1,8 +1,8 @@
 from .category import Category
 from datetime import datetime
-from .order import Order,ShippingStatus,OrderHistory
+from .order import OrderHistory
 from datetime import datetime,timedelta
-from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Review , Discount , FreeDelivery,ItemInCart
+from .item import Item,BidItem,User,Code,Customer,Seller,Admin,Cart,Discount,ItemInCart
 import uuid
 
 class System:
@@ -94,7 +94,6 @@ class System:
       filtered_items:list[Item] = []
       for item in self.__list_items:
          for category in item.get_category:
-            print(category.get_id,category_id)
             if str(category.get_id) == str(category_id):
                filtered_items.append(item)
       return filtered_items
@@ -106,10 +105,16 @@ class System:
       raise Exception('user not found')
    
    #function to create instace
-   def create_category(self, id:str,name:str, description:str):
-      if not self.__validate_name(name,self.__list_categories): raise Exception('Name already exist')
-      self.__list_categories.append(Category(id,name,description))
-      return 'Category created'
+   def create_category(self, id:str,name:str, description:str,admin_id:str):
+      try:
+         if not self.__validate_name(name,self.__list_categories): raise Exception('Name already exist')
+         admin = self.get_user_by_id(admin_id)
+         self.__list_categories.append(admin.create_category(id,name,description))
+         return 'Category created'
+      except Exception as e:
+         raise Exception(str(e))
+      except:
+         raise Exception('user not admin')
    
    def create_admin(self,name, user_id, email, phone_number, username, password, birth_date, gender):
       if not self.__validate_name(username,self.__list_users): raise Exception('Name already exist') 
@@ -139,7 +144,6 @@ class System:
       return 'Code created'
    def apply_code(self, code: str):
       for Dcode in self.__list_codes:
-         print(f"Checking code: {Dcode.get_name} against provided code: {code}")
          if Dcode.get_name == code:
             discount = Dcode.get_discount / 100
             return discount
@@ -154,8 +158,6 @@ class System:
          category_list:list[Category] = []
          for cat_id in category_id:
             for category in self.__list_categories:
-
-               print(f"{category.get_id} and {cat_id}" , str(category.get_id) == str(cat_id))
                if str(category.get_id) == str(cat_id):
                   category_list.append(category)
          
@@ -173,7 +175,6 @@ class System:
          category_list:list[Category] = []
          for cat_id in category_id:
             for category in self.__list_categories:
-               print(f"{category.get_id} and {cat_id}" , str(category.get_id) == str(cat_id))
                if str(category.get_id) == str(cat_id):
                   category_list.append(category)
          if len(category_list) == 0: raise Exception('Category not found')
@@ -202,13 +203,7 @@ class System:
       try:
          if amount <= 0:
                raise ValueError('Amount should be positive')
-         
-
          item_current = main_system.get_item_by_id(id)
-         
-         print(f"wow : {user_id}")
-         print(f"wow : {id}")
-         print(f"wow : {amount}")
          if not item_current:
                return "Item not found"
 
@@ -224,11 +219,6 @@ class System:
          if amount <= 0:
                raise ValueError('Amount should be positive')
          item_current = main_system.get_bid_item_by_id(id)
-         print(item_current)
-
-         print(f"bid : {user_id}")
-         print(f"bid : {id}")
-         print(f"bid : {amount}")
          if not item_current:
                return "Item not found"
 
@@ -262,7 +252,6 @@ class System:
          item_id = str(uuid.uuid4())
          
          main_system.create_bid_item(item_id, name, price, amount, category_id, img, user_id, start_time, end_time, status=None, top_bidder=None , description=new_description )
-         print(main_system.get_bid_item_by_id(item_id)) 
          return "Save Bid item success"
       except Exception as e:
          raise Exception(str(e))
@@ -335,10 +324,7 @@ class System:
             winner.add_bid_history(temp, now, now+timedelta(minutes=1))
             self.show_bid_history(winner)
             final_price = temp.get_price
-            print(f"Customer before: {winner.get_e_bux}")
             winner.decrease_e_bux(final_price)
-            print(f"{winner.get_username} won the bid and {final_price} e-bux was deducted.")
-            print(f"Customer after: {winner.get_e_bux}")
             return 'Bid ended'
          
    def show_bid_history(self, user:Customer):
@@ -388,49 +374,42 @@ class System:
    
    def is_already_review(self,user_id:str,item_id:str) -> bool:
       try:
-         user = self.get_user_by_id(user_id)
          item = self.get_item_by_id(item_id)
-         for review in item.get_review:
-            if review.get_reviewer == user: return True
-         return False
+         user:Customer = self.get_user_by_id(user_id)
+         return user.is_already_review(item)
       except Exception as e:
          raise Exception(str(e))
+      except:
+         raise Exception('user in not customer')
    
    def is_buy_item(self,user_id:str,item_id:str) -> bool:
       try:
-         user = self.get_user_by_id(user_id)
+         user:Customer = self.get_user_by_id(user_id)
          item = self.get_item_by_id(item_id)
-         for history in user.get_order_history:
-            for item_usr in history.get_order.get_list_item_select:
-               if item_usr.get_item == item: return True
-         return False
+         return user.is_buy_item(item)
       except Exception as e:
          raise Exception(str(e))
+      except:
+         raise Exception('user in  not costumer')
       
    def add_review(self,item_id:str,rating:int,review:str,user_id:str):
       try:
-         user = self.get_user_by_id(user_id)
-         if not isinstance(user,Customer): raise Exception('User is not a customer')
+         user:Customer = self.get_user_by_id(user_id)
          item = self.get_item_by_id(item_id)
-         if self.is_already_review(user_id,item_id): raise Exception('user already reviewed')
-         if not self.is_buy_item(user_id,item_id): raise Exception('User not buy this item yet')
-         item.add_review(rating,review,user)
+         user.add_review(item,review,rating)
          item.show_review()
       except Exception as e:
          raise Exception(str(e))
       
    def get_review(self,item_id:str):
       try:
-         item = self.get_item_by_id(item_id)
-         return item.get_review
+         return self.get_item_by_id(item_id).get_review
       except (Exception) as e:
          raise Exception(str(e))
       
    def get_average_score(self,item_id:str):
       try:
-         item = self.get_item_by_id(item_id)
-         if len(item.get_review) == 0: return None
-         return sum(review.get_score for review in item.get_review)/len(item.get_review)
+         return self.get_item_by_id(item_id).get_average_score
       except (Exception) as e:
          raise Exception(str(e))
    def buy_cart_check_stock(self,user_id:str): # return price of selected product
@@ -447,63 +426,34 @@ class System:
             if isinstance(seller,Seller):
                if item.get_item.get_owner == seller:
                   seller.set_e_bux = seller.get_e_bux + (item.get_item.get_price*item.get_amount_in_cart)*(1 - discount)
-                  
-   
-   def buy_item_with_code(self, user_id: str, code: str,is_selected_list:list,total_price:float,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
-    try:
-      user = self.get_user_by_id(user_id)
-      discount = self.apply_code(code)
-      discounted_price = total_price * (1 - discount)
-      user.decrease_e_bux(discounted_price)
-      self.add_e_bux_to_seller(is_selected_list,discount)
-      order = Order(10.0, discounted_price, is_selected_list)
-      shipping_status = ShippingStatus(shipping_date,get_item_date)
-      for Dcode in self.__list_codes:
-         if Dcode.get_name == code:
-            order.set_apply_code = Dcode
-            break
-      user.add_history(OrderHistory(order,shipping_status))
-      user.decrease_e_bux(discounted_price)
-      return discounted_price
-    except Exception as e:
-        raise Exception(str(e))
    
    #buy item in cart
-   def buy_item_in_cart(self,user_id:str,code:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
+   def buy_item_in_cart(self,user_id:str,code_id:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
       try:
-         user = self.get_user_by_id(user_id)
-         total_price = self.buy_cart_check_stock(user_id)
-         if total_price == 0: return False
-         if code != None and code != '':
-            return self.buy_item_with_code(user_id,code,[item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected],total_price,shipping_date,get_item_date)
-         if user.get_e_bux < total_price:
-            raise Exception('insufficient fund')
-         user.decrease_e_bux(total_price)
-         self.add_e_bux_to_seller([item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
-         order = Order(10.0, total_price, [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected])
-         shipping_status = ShippingStatus(shipping_date,get_item_date)
-         user.add_history(OrderHistory(order,shipping_status))
-         for item in user.get_cart.get_list_item_in_cart:
-            item.get_item.set_amount = item.get_item.get_amount - item.get_amount
+         user:Customer = self.get_user_by_id(user_id)
+         try:
+            code = self.get_code_by_id(code_id)
+         except:
+            code = None
+         discount = 0 if code == None else code.get_discount
+         selected_list = [item for item in user.get_cart.get_list_item_in_cart if item.get_is_selected]
+         total_price = user.buy_item(selected_list,code,10,shipping_date,get_item_date)
+         self.add_e_bux_to_seller(selected_list,discount)
          return total_price
       except Exception as e:
          raise Exception(str(e))
       
-   def buy_item(self,user_id:str,item_id:str,amount:int,code:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
+   def buy_item(self,user_id:str,item_id:str,amount:int,code_id:str=None,shipping_date=datetime.now(),get_item_date=datetime.now()+timedelta(seconds=30)):
       try:
          item = self.get_item_by_id(item_id)
-         total_price = round(item.get_price*int(amount),2)
-         if code != None and code != '':
-            return self.buy_item_with_code(user_id,code,[ItemInCart(item,amount,True)],total_price,shipping_date,get_item_date)
-         user = self.get_user_by_id(user_id)
-         if user.get_e_bux < total_price: raise Exception('insufficient fund')
-         user.decrease_e_bux(total_price)
-         item.set_amount = item.get_amount - amount
-         #add e bux to seller
-         item.get_owner.set_e_bux = item.get_owner.get_e_bux + total_price 
-         order = Order(10.0, total_price,[ItemInCart(item,amount,True)])
-         shipping_status = ShippingStatus(shipping_date,get_item_date)
-         user.add_history(OrderHistory(order,shipping_status))
+         try:
+            code = self.get_code_by_id(code_id)
+         except:
+            code = None
+         discount = 0 if code == None else code.get_discount
+         user:Customer = self.get_user_by_id(user_id)
+         total_price = user.buy_item([ItemInCart(item,amount,True)],code,10,shipping_date,get_item_date)
+         item.get_owner.set_e_bux = (item.get_owner.get_e_bux + total_price)*(1-discount)
          return total_price
       except Exception as e:
          raise Exception(str(e))
@@ -542,11 +492,8 @@ def createInstance():
    from .mock.users import users
    from .mock.discount_codes import discount_codes
    main_system = System()
-   #create category
-   [main_system.create_category(category['id'],category['name'],category['description']) for category in categories]
-   categories_instane = main_system.get_categories()
-   # [print(category) for category in categories_instane]
    #create user
+   print("----##### create user #####----")
    for user in users:
       if user['role'] == 'admin':
          main_system.create_admin(user['name'],user['user_id'],user['email'],user['phone_number'],user['username'],user['password'],user['birth_date'],user['gender'])
@@ -554,7 +501,11 @@ def createInstance():
          main_system.create_customer(user['name'],user['user_id'],user['email'],user['phone_number'],user['username'],user['password'],user['birth_date'],user['gender'],user['address'],user['e_bux'])
          if user['role'] == 'seller':
             main_system.create_seller(main_system.get_user_by_id(user['user_id']),user['store_name'],user['store_address'])
-   [print(user) for user in main_system.get_users()]
+   for user in main_system.get_users(): print(user)
+   #create category
+   print("----##### create categories #####----")
+   [main_system.create_category(category['id'],category['name'],category['description'],'admin001') for category in categories]
+   for cat in main_system.get_categories(): print(cat)
    #create item
    print("---############### create item ############---")
    for item in items:
@@ -655,8 +606,8 @@ def createInstance():
       print(f'{main_system.add_review('1',5,'very good','cust002')}')
    except Exception as e:
       print(str(e))
-   print(f'get list of review of item 1 {main_system.get_review('1')}')
-   print(f'get average score of item 1: {main_system.get_average_score('1')}')
+   print(f'get list of review of item 101 {main_system.get_review('101')}')
+   print(f'get average score of item 101: {main_system.get_average_score('101')}')
    ##try comment with the same user##
    try:
       main_system.add_review('101',4,'very bad','cust001')
