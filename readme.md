@@ -15,8 +15,16 @@ This project is a simplified clone of the eBay website, developed by KMITL stude
 
 To run this project locally, ensure you have Python installed. Then, follow these steps:
 
-1. **Clone the Repository**:
+1. **Download Fast Html**:
+   ```bash
+   pip install python-fasthtml
+   ```
+2. **Clone the Repository**:
    ```bash
    git clone https://github.com/Bokutosimp/CE_OOP_PROJECT.git
    cd CE_OOP_PROJECT
+   ```
+3. **Run File**:
+   ```bash
+   python start.py
    ```
