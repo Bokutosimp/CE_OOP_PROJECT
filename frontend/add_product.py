@@ -14,7 +14,6 @@ class Product:
 
 def add_product_page(session):
     load_category = main_system.get_categories()
-    # แสดงค่า ID ของแต่ละหมวดหมู่ที่โหลดมา
     for cate in load_category:
         print(cate.get_id)  
     return Container(
