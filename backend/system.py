@@ -315,15 +315,10 @@ class System:
             item.sold()
             winner = temp.top_bidder
             winner.add_bid_history(temp, now, now+timedelta(minutes=1))
-            self.show_bid_history(winner)
             final_price = temp.get_price
             winner.decrease_e_bux(final_price)
             main_system.add_e_bux_to_seller([item], 0)
             return 'Bid ended'
-         
-   def show_bid_history(self, user:Customer):
-      for item in user.get_bid_history:
-         print(item)
          
    def is_bid_item(self, item) -> bool:
        return isinstance(item, BidItem)
@@ -539,7 +534,7 @@ def createInstance():
    print("---############ bid item #############---")
    start_bid_time = datetime.now()
    start_bid_time = start_bid_time.replace(microsecond=0)
-   increase_time = 30  # Initial increment in minutes
+   increase_time = 180  # Initial increment in minutes
    user1 = main_system.get_user_by_id("cust001")
    user2 = main_system.get_user_by_id("cust002")
    co = 0

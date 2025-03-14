@@ -1,9 +1,4 @@
 ```mermaid
----
-config:
-  theme: dark
-  look: classic
----
 sequenceDiagram
     actor Seller
     participant UI
@@ -11,7 +6,7 @@ sequenceDiagram
     participant Discount
 
 
-     Seller ->> UI : submit_discount_page(discount_code, session)
+    Seller ->> UI : submit_discount_page(discount_code, session)
     activate UI
 
     UI ->> System : save_discount_code(discount_code.name, discount_code.discount_percentage, discount_code.detail)
@@ -23,7 +18,6 @@ sequenceDiagram
     alt Discount percent is invalid
         System -->> UI : return Exception
         UI -->> Seller : Show error message
-        deactivate UI
     else
         System ->> Discount : create_discount_code(ID, name, discount_percent, description)
         Discount -->> System : return discount code
