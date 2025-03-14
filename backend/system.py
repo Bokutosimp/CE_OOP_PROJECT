@@ -534,7 +534,7 @@ def createInstance():
    print("---############ bid item #############---")
    start_bid_time = datetime.now()
    start_bid_time = start_bid_time.replace(microsecond=0)
-   increase_time = 30  # Initial increment in minutes
+   increase_time = 180  # Initial increment in minutes
    user1 = main_system.get_user_by_id("cust001")
    user2 = main_system.get_user_by_id("cust002")
    co = 0
