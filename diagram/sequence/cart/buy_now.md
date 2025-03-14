@@ -1,3 +1,5 @@
+```mermaid
+
 ---
 config:
   look: classic
@@ -34,3 +36,5 @@ sequenceDiagram
         System ->>- UI: return total_price
     end
     UI ->> User: Display purchase confirmation
+
+```
