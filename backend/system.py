@@ -27,9 +27,8 @@ class System:
       return True
       
    #function to get list of instace
-   def get_categories(self,query:str = '') -> list[Category]:
-      if(query == ''): return self.__list_categories
-      else: return [category for category in self.__list_categories if query in category.get_name]
+   def get_categories(self) -> list[Category]:
+      return self.__list_categories
       
    def get_category_by_id(self,id:str):
       for cat in self.__list_categories:
@@ -316,15 +315,10 @@ class System:
             item.sold()
             winner = temp.top_bidder
             winner.add_bid_history(temp, now, now+timedelta(minutes=1))
-            self.show_bid_history(winner)
             final_price = temp.get_price
             winner.decrease_e_bux(final_price)
             main_system.add_e_bux_to_seller([item], 0)
             return 'Bid ended'
-         
-   def show_bid_history(self, user:Customer):
-      for item in user.get_bid_history:
-         print(item)
          
    def is_bid_item(self, item) -> bool:
        return isinstance(item, BidItem)

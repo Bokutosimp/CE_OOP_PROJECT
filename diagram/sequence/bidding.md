@@ -5,7 +5,6 @@ sequenceDiagram
   participant UI as UI
   participant System as System
   participant BidItem as BidItem
-  participant BiddingHistory as BiddingHistory
 
   Customer->>UI: Visit /bid/{id}
   activate UI
@@ -35,12 +34,17 @@ sequenceDiagram
   end
 
   Customer->>UI: Enter bid amount & submit
+  activate UI
+  activate UI
+  activate UI
   UI->>System: submit_bid_page(bid_input, item_id, session)
+  activate System
+  activate System
+  activate System
   System->>BidItem: Validate bid (higher than current price?)
+  activate BidItem
+  activate BidItem
   alt If bid is invalid
-    activate UI
-    activate System
-    activate BidItem
     BidItem-->>System: bid invalid
     deactivate BidItem
     System-->>UI: Alert "Bid must be higher than current price"
@@ -48,13 +52,9 @@ sequenceDiagram
     UI-->>Customer: Show error message
     deactivate UI
   else If bid is valid
-    activate UI
-    activate System
-    activate BidItem
     BidItem-->>System: bid valid
     System->>BidItem: Update price & top bidder
     deactivate BidItem
-    System->>BiddingHistory: Record bid in history
     System-->>UI: Redirect to /bid/{id}
     deactivate System
     UI-->>Customer: Show updated bid status
@@ -62,13 +62,10 @@ sequenceDiagram
   end
 
   alt If auction ends
-    activate UI
-    activate System
-    activate BidItem
     System->>BidItem: Mark item as "Sold"
-    deactivate BidItem
-    System->>BiddingHistory: Record final bid result
+    activate BidItem
     System->>Customer: Deduct final price from winner's e-bux
+    deactivate BidItem
     System-->>UI: Notify auction end
     deactivate System
     UI-->>Customer: Show "Auction Ended"
@@ -100,9 +97,4 @@ sequenceDiagram
   deactivate System
   UI-->>Customer: Show auction end confirmation
   deactivate UI
-
-  System->>BiddingHistory: Record bidding history
-  activate BiddingHistory
-  BiddingHistory-->>System: Confirm history record
-  deactivate BiddingHistory
 ```
