@@ -1,7 +1,6 @@
 ```mermaid
 ---
 config:
-  theme: dark
   look: classic
 ---
 
@@ -28,14 +27,15 @@ sequenceDiagram
         alt code exists
             System ->>+ Code: get_discount()
             Code -->>- System: return discount
-        else code is None
+        else code is None or code is not entered
             System ->> System: discount = 0
         end
-
+        
         System ->>+ Cart: get_list_item_in_cart()
         Cart ->>+ ItemInCart: filter selected items
         ItemInCart -->>- Cart: return selected_list
         Cart ->>- System: return selected_list
+        
         
         System ->>+ Customer: buy_item(selected_list, code, 10, shipping_date, get_item_date)
         Customer -->>- System: return total_price
@@ -46,7 +46,5 @@ sequenceDiagram
         System ->>- UI: return total_price
         UI ->>- User: return total_price
     end
-
-
 
 ```
