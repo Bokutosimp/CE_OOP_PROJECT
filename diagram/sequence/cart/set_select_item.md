@@ -14,6 +14,8 @@ sequenceDiagram
     participant ItemInCart
     participant Item
     User ->>  UI: set_selected(item_id,select,session)
+    activate UI
+    activate System
     loop Find user by ID
         alt User found
             System->>Customer: get_user_by_id(user_id)
@@ -54,4 +56,5 @@ sequenceDiagram
     deactivate System
     UI --> User: response message
     deactivate UI
+
 ```
