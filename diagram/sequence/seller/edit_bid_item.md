@@ -1,16 +1,16 @@
-  sequenceDiagram
-    actor Seller
-    participant UI
-    participant System
+```mermaid
+sequenceDiagram 
+    actor Seller 
+    participant UI 
+    participant System 
     participant BidItem
-  
-  Seller ->> UI : edit_bid_item(session , bid_item_id)
-    activate UI
-    UI ->> System : get_bid_item_by_id(bid_item_id)
-    activate System
-    System -->> UI : Return bid item data
-    deactivate System
 
+    Seller ->> UI : edit_bid_item(session , bid_item_id)
+    activate UI 
+    UI ->> System : get_bid_item_by_id(bid_item_id) 
+    activate System 
+    System -->> UI : Return bid item data deactivate System
+    
     UI ->> System : edit_bid_item(session , name , ... )
     activate System
     System ->> System : get_bid_item_by_id(bid_item_id)
@@ -25,7 +25,7 @@
             System -->> UI :  return Exception
             UI -->> Seller : show error message
         else
-            System --> BidItem : edit_bid_item(name , price , category , description , img , start_time , end_time)
+            System --> BidItem : edit_bid_item(name , ...)
             activate BidItem
             BidItem -->> System : return edited bid item
             deactivate BidItem
@@ -37,3 +37,5 @@
         end
     end
     deactivate UI
+
+    ```
