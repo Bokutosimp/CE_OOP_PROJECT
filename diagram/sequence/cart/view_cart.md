@@ -16,21 +16,26 @@ sequenceDiagram
     activate UI
     UI ->> System: get_cart(user_id)
     activate System
-    System ->> System : get_user_by_id(user_id)
-    alt find user
+
+    loop Iterate over users
+        System ->> System: Check if user_id matches
+    end
+
+    alt User found
         System ->> Customer: get_cart
         activate Customer
-        Customer ->> Cart: get_cart
+        Customer ->> Cart: retrieve cart items
         activate Cart
-        Cart -->> Customer: Cart
+        Cart -->> Customer: return cart items
         deactivate Cart
-        Customer -->> System: Cart
+        Customer -->> System: return cart
         deactivate Customer
-        System -->> UI: Cart
-    else user not found
-        System -->> UI : not found
+        System -->> UI: return cart details
+    else User not found
+        System -->> UI: return "User not found"
     end
+
     deactivate System
-    UI -->> User: response message
+    UI -->> User: display cart or error message
     deactivate UI
 ```

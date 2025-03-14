@@ -16,17 +16,31 @@ autonumber
     activate UI
     UI ->> System: get_item_by_id(item_id)
     activate System
-    System ->> System : get_item_by_id
-    alt find item
-    System ->> Item: item
-    activate Item
-    Item -->> System: item
-    else item not found
-    Item -->> System: not found
-    deactivate Item
+
+    loop Find item by ID
+        System ->> Item: match item_id
+        alt Item found
+            Item -->> System: return item
+        else Item not found
+            Item -->> System: return "Item not found"
+        end
     end
-    System -->> UI: response message
+
+    System -->> UI: return item or error message
     deactivate System
-    UI -->> Customer: response message
+
+    opt Item found and has review
+        UI ->> System: get_average_score(item_id)
+        activate System
+
+        System ->>+ Item: calculate average score
+        Item -->>- System: return average score
+
+        System -->> UI: return average score
+        deactivate System
+    end
+
+    UI -->> Customer: display item details & reviews
     deactivate UI
+
 ```
